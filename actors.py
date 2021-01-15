@@ -1,10 +1,25 @@
-class Actor:
+from py2neo import Graph
+graph = Graph("bolt://neo4j:12345@localhost:7687")
+
+class Actor(Model):
+    __primarykey__ = "imdb_id"
+
+  imdb_id = Property("tagline")
+  name = Property()
+
+  acted_in = RelatedTo(Images)
+  
   def __init__(self, id, name):
     self.id = id
     self.name = name
     
     
-  def add_image(id, title):
+  def add_image(image_imdb_id, title):
+    a = Node("Actor", name=name, imdb_id=imdb_id)
+    b = Node("Image", title=title, image_imdb_id=image_imdb_id)
+    ACTED_IN = Relationship.type("ACTED_IN")
+    graph.merge(ACTED_IN(a, b), "Image", "image_imdb_id")
+
   def add_images([ids_titles]):
   
   def list():
