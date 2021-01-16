@@ -1,7 +1,8 @@
-class Image(Model):
-  __primarykey__ = "imdb_id"
+from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node
+class Title(GraphObject):
+  #__primarykey__ = "id"
 
-  imdb_id = Property("tagline")
+  id = Property()#("tagline")
   title = Property()
   released = Property()
 
