@@ -2,7 +2,7 @@ from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Nod
 class Title(GraphObject):
   #__primarykey__ = "id"
 
-  id = Property()#("tagline")
+  uid = Property()
   title = Property()
   released = Property()
 
@@ -13,9 +13,9 @@ class Title(GraphObject):
     self.title = title
     
     
-  def add_actor([ids_names]):
+  # def add_actor([imdb_ids_names]):
   
-  def find():
+  # def find():
   
-  def list():
+  # def list():
   
