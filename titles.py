@@ -8,12 +8,17 @@ class Title(GraphObject):
 
   actors = RelatedFrom("Actor", "ACTED_IN")
 
-  def __init__(self, id, title):
-    self.id = id
+  def __init__(self, uid, title, released):
+    self.uid = uid
     self.title = title
+    self.released = released
     
     
-  # def add_actor([imdb_ids_names]):
+  def add_cast(uids_names):
+    pass
+
+  def get_cast():
+    pass
   
   # def find():
   
