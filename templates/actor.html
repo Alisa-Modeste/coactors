@@ -26,32 +26,27 @@
 
 <h1>Sanaa Lathan</h1>
 
-<div class="coactors">
+<!-- <div class="coactors">
 <p>Co-acted with</p>
 <ul>
-    <li>Ricky Whittle<div class="group-link"> <a href='actor_group.html'>Add to group</a></div></li>
-    <li>Lyriq Bent <div class="group-link">Add to group</div></li>
-    <li>Lynn Whitfield <div class="group-link">Add to group</div></li>
-    <li>Ernie Hudson <div class="group-link">Add to group</div></li>
-    <li>Daria Johns <div class="group-link">Add to group</div></li>
-    <li>Camille Guaty <div class="group-link">Add to group</div></li>
-    <li>Brittany S. Hall <div class="group-link">Add to group</div></li>
-    <li>Terry Serpico <div class="group-link">Add to group</div></li>
-    <li>Jen Harper <div class="group-link">Add to group</div></li>
-    <li>Danielle Lyn <div class="group-link">Add to group</div></li>
-    <li>George Wallace <div class="group-link">Add to group</div></li>
-    <li>John Salley <div class="group-link">Add to group</div></li>
-    <li>RonReaco Lee <div class="group-link">Add to group</div></li>
-    <li>Bo Yokely <div class="group-link">Add to group</div></li>
+<!-- { for user in users } ->
+{% for actor in ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
+    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
+    "John Salley", "RonReaco Lee", "Bo Yokely"] %}
+    <!-- { for actor in actors %} -->
+    <!-- <li>{ actor.name }}<div class="group-link"> <a href="{ user.url }}">Add to group</a></div></li> ->
+    
+    <li>{{ actor }} <div class="group-link"> <a href="actor_group.html">Add to group</a></div></li>
+{% endfor %}
 </ul>
-</div>
+</div> 
 
 <div class="titles">
     <p>Acted in</p>
     <ul>
         <li>Nappily Ever After (2008)</li>
     </ul>
-</div>
+</div> -->
 
 <div style="clear:both"></div>
 
@@ -59,20 +54,9 @@
     <div class="coactors2">
     <p>Co-acted with</p>
     <ul>
-        <li>Ricky Whittle<div class="group-link"> <a href='actor_group.html'>Make a group with</a></div></li>
-        <li>Lyriq Bent <div class="group-link">Add to group</div></li>
-        <li>Lynn Whitfield <div class="group-link">Add to group</div></li>
-        <li>Ernie Hudson <div class="group-link">Add to group</div></li>
-        <li>Daria Johns <div class="group-link">Add to group</div></li>
-        <li>Camille Guaty <div class="group-link">Add to group</div></li>
-        <li>Brittany S. Hall <div class="group-link">Add to group</div></li>
-        <li>Terry Serpico <div class="group-link">Add to group</div></li>
-        <li>Jen Harper <div class="group-link">Add to group</div></li>
-        <li>Danielle Lyn <div class="group-link">Add to group</div></li>
-        <li>George Wallace <div class="group-link">Add to group</div></li>
-        <li>John Salley <div class="group-link">Add to group</div></li>
-        <li>RonReaco Lee <div class="group-link">Add to group</div></li>
-        <li>Bo Yokely <div class="group-link">Add to group</div></li>
+    {% for actor in actors %}
+        <li>{{ actor }} <div class="group-link"> <a href="actor_group.html">Make a group with</a></div></li>
+    {% endfor %}
     </ul>
     </div>
     

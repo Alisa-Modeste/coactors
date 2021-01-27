@@ -12,9 +12,10 @@ class Actor:
 
   # acted_in = RelatedTo(Title)
 
-  def __init__(self, uid, name):
+  def __init__(self, uid, name, level=1):
     self.uid = uid
     self.name = name
+    self.level = level
     
   # def add_title(title_uid, title):
   #   a = Node("Actor", name=name, uid=uid)
@@ -23,12 +24,82 @@ class Actor:
   #   graph.merge(ACTED_IN(a, b), "Title", "uid")
 
 
+  def create(self):
+    tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=name)
+    #add titles while possibly creating actor node
+    #loop that checks to see if any titles were created. those that were get an Title instance 
+    # and its create checks to see if any actors were created. however because of its level, nothing further will happen
+
   def add_title(self, tx, title_uid, title):
     tx.run("MATCH(a:Actor {uid: $uid}) "
     "MERGE(b:Title {title: $title, uid: $uid}) "
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
-  # def add_titles(tx, title_uid, title):
+  def add_titles(self, tx, titles):
+    # tx.run("foreach(uid,title in length | MERGE(t:Title {title: $title, uid: $uid}) )")
+    
+    # query = "MERGE (a:Actor {name:" + self.name + ", uid:" + self.uid + ""}) "
+    # query = "MERGE (a:Actor {name: $name, uid: $uid}) "
+    query = ""
+    other_params = {}
+    # other_params = {"name": self.name, "uid": self.uid}
+
+    # with_clause = []#""
+    for i in range(0,len(titles)):
+      # query += f"""(t{i}:Title {title:"{titles[i].title}", uid:"{titles[i].uid}"}) 
+      # MERGE (a)-[:ACTED_IN]->(t{i}) 
+      # ON CREATE SET t{i}.found=FALSE 
+      # ON MATCH SET t{i}.found=TRUE 
+      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title 
+      # UNION """
+      
+      # query += f"""MERGE (t{i}:Title {title:$titles[i].title, uid:"$titles[i].uid"}) 
+      # MERGE (a)-[:ACTED_IN]->(t{i}) 
+      # ON CREATE SET t{i}.found=FALSE 
+      # ON MATCH SET t{i}.found=TRUE 
+      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title 
+      # UNION """
+
+      # query += f"MERGE (t{i}:Title "
+      # # query += "{title:$titles[i].title, uid:'$titles[i].uid'}) "
+      # query += "{title:$titles, uid:'$titlesuid'}) "
+      # query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
+      # ON CREATE SET t{i}.found=FALSE 
+      # ON MATCH SET t{i}.found=TRUE 
+      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
+      # UNION """
+
+      # query += f"MERGE (t{i}:Title "
+      # query += "{title:$titles" + str(i) + "_title, uid:'$titles" + str(i) + "_uid'}) "
+      # query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
+      # ON CREATE SET t{i}.found=FALSE 
+      # ON MATCH SET t{i}.found=TRUE 
+      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
+      # UNION """
+
+      # other_params[f"titles{i}_uid"] = titles[i]["uid"]
+      # other_params[f"titles{i}_title"] = titles[i]["title"]
+
+      query += "MERGE (a:Actor {name: $name, uid: $uid}) "
+      query += f"MERGE (t{i}:Title "
+      query += "{title:$titles" + str(i) + "_title, uid:'$titles" + str(i) + "_uid'}) "
+      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
+      ON CREATE SET t{i}.found=FALSE 
+      ON MATCH SET t{i}.found=TRUE 
+      RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
+      UNION """
+
+      other_params[f"titles{i}_uid"] = titles[i]["uid"]
+      other_params[f"titles{i}_title"] = titles[i]["title"]
+
+
+      # with_clause.append("t"+str(i))
+
+    # query += " WITH " + ", ".join(with_clause) + " "
+    # query += "RETURN "
+    query = query[:-6]
+    print(query)
+    tx.run(query, other_params, uid=self.uid, name = self.name)
 
   def get_coactors(self, tx):
     payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
@@ -86,6 +157,9 @@ class Actor:
      WHERE NOT c.id IN [32,17] 
      with collect(c) as cc, bb
      RETURN distinct cc,bb""", actor_uids=actor_uids, rels = len(actor_uids))
+
+  def titles_string(self, titles):
+    str = ""
 
 # /////////////// compare explain query
     #  WHERE NOT c.id IN $inc_ids 
