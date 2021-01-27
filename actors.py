@@ -38,59 +38,21 @@ class Actor:
   def add_titles(self, tx, titles):
     # tx.run("foreach(uid,title in length | MERGE(t:Title {title: $title, uid: $uid}) )")
     
-    # query = "MERGE (a:Actor {name:" + self.name + ", uid:" + self.uid + ""}) "
-    # query = "MERGE (a:Actor {name: $name, uid: $uid}) "
     query = ""
-    other_params = {}
-    # other_params = {"name": self.name, "uid": self.uid}
+    params = {"name": self.name, "uid": self.uid}
 
-    # with_clause = []#""
     for i in range(0,len(titles)):
-      # query += f"""(t{i}:Title {title:"{titles[i].title}", uid:"{titles[i].uid}"}) 
-      # MERGE (a)-[:ACTED_IN]->(t{i}) 
-      # ON CREATE SET t{i}.found=FALSE 
-      # ON MATCH SET t{i}.found=TRUE 
-      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title 
-      # UNION """
-      
-      # query += f"""MERGE (t{i}:Title {title:$titles[i].title, uid:"$titles[i].uid"}) 
-      # MERGE (a)-[:ACTED_IN]->(t{i}) 
-      # ON CREATE SET t{i}.found=FALSE 
-      # ON MATCH SET t{i}.found=TRUE 
-      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title 
-      # UNION """
-
-      # query += f"MERGE (t{i}:Title "
-      # # query += "{title:$titles[i].title, uid:'$titles[i].uid'}) "
-      # query += "{title:$titles, uid:'$titlesuid'}) "
-      # query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
-      # ON CREATE SET t{i}.found=FALSE 
-      # ON MATCH SET t{i}.found=TRUE 
-      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
-      # UNION """
-
-      # query += f"MERGE (t{i}:Title "
-      # query += "{title:$titles" + str(i) + "_title, uid:'$titles" + str(i) + "_uid'}) "
-      # query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
-      # ON CREATE SET t{i}.found=FALSE 
-      # ON MATCH SET t{i}.found=TRUE 
-      # RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
-      # UNION """
-
-      # other_params[f"titles{i}_uid"] = titles[i]["uid"]
-      # other_params[f"titles{i}_title"] = titles[i]["title"]
-
       query += "MERGE (a:Actor {name: $name, uid: $uid}) "
       query += f"MERGE (t{i}:Title "
-      query += "{title:$titles" + str(i) + "_title, uid:'$titles" + str(i) + "_uid'}) "
+      query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
       query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
       ON CREATE SET t{i}.found=FALSE 
       ON MATCH SET t{i}.found=TRUE 
       RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
       UNION """
 
-      other_params[f"titles{i}_uid"] = titles[i]["uid"]
-      other_params[f"titles{i}_title"] = titles[i]["title"]
+      params[f"titles{i}_uid"] = titles[i]["uid"]
+      params[f"titles{i}_title"] = titles[i]["title"]
 
 
       # with_clause.append("t"+str(i))
@@ -99,7 +61,7 @@ class Actor:
     # query += "RETURN "
     query = query[:-6]
     print(query)
-    tx.run(query, other_params, uid=self.uid, name = self.name)
+    tx.run(query, params)
 
   def get_coactors(self, tx):
     payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
