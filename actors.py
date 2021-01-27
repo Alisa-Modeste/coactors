@@ -1,11 +1,12 @@
 #from py2neo import Graph
 # from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node
-# from titles import Title
+from titles import Title
 # graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 # class Actor(GraphObject):
 class Actor:
     #__primarykey__ = "id"
+  max_level = 3
 
   # uid = Property()
   # name = Property()
@@ -24,24 +25,35 @@ class Actor:
   #   graph.merge(ACTED_IN(a, b), "Title", "uid")
 
 
-  def create(self):
-    tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=name)
+  def create(self, tx, titles_info):
     #add titles while possibly creating actor node
     #loop that checks to see if any titles were created. those that were get an Title instance 
     # and its create checks to see if any actors were created. however because of its level, nothing further will happen
+
+    if self.level > Actor.max_level:
+      return
+    elif self.level == Actor.max_level:
+      tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=self.name)
+      return
+
+    titles_added = self.add_titles(tx, titles_info)
+
+    for title in titles_added:
+      print(title['found']) #to do: delete
+      if not title['found']:
+        t = Title(title['uid'], title['title'], self.level+1)
+        # t.create()
 
   def add_title(self, tx, title_uid, title):
     tx.run("MATCH(a:Actor {uid: $uid}) "
     "MERGE(b:Title {title: $title, uid: $uid}) "
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
-  def add_titles(self, tx, titles):
-    # tx.run("foreach(uid,title in length | MERGE(t:Title {title: $title, uid: $uid}) )")
-    
+  def add_titles(self, tx, titles_info):    
     query = ""
     params = {"name": self.name, "uid": self.uid}
 
-    for i in range(0,len(titles)):
+    for i in range(0,len(titles_info)):
       query += "MERGE (a:Actor {name: $name, uid: $uid}) "
       query += f"MERGE (t{i}:Title "
       query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
@@ -51,17 +63,11 @@ class Actor:
       RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
       UNION """
 
-      params[f"titles{i}_uid"] = titles[i]["uid"]
-      params[f"titles{i}_title"] = titles[i]["title"]
+      params[f"titles{i}_uid"] = titles_info[i]["uid"]
+      params[f"titles{i}_title"] = titles_info[i]["title"]
 
-
-      # with_clause.append("t"+str(i))
-
-    # query += " WITH " + ", ".join(with_clause) + " "
-    # query += "RETURN "
     query = query[:-6]
-    print(query)
-    tx.run(query, params)
+    return tx.run(query, params)
 
   def get_coactors(self, tx):
     payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
