@@ -103,6 +103,29 @@ class Actor:
      WHERE rels = $len(actor_uids) 
      RETURN distinct b.uid, b.title""", uid=self.uid)
 
+  # def get_groups_coactors_and_titlesDELETE(self, tx, actor_uids):
+  #   actor_uids.append(self.uid)
+
+  #   payload = tx.run("""MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
+  #    WHERE a.uid IN $actor_uids 
+  #    WITH count(r1) as rels, b 
+  #    WHERE rels = $rels 
+  #    MATCH (b)<-[ACTED_IN]-(c:Actor) 
+  #    WHERE NOT c.id IN $actor_uids 
+  #    RETURN distinct c.uid, c.name as cname
+     
+     
+  #    MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
+  #    WHERE a.uid IN [32,17] 
+  #    WITH count(r1) as rels, b 
+  #    WHERE rels = 2 
+	#  WITH collect(b) as bb, b
+	 
+  #    MATCH (b)<-[ACTED_IN]-(c:Actor) 
+  #    WHERE NOT c.id IN [32,17] 
+  #    with collect(c) as cc, bb
+  #    RETURN distinct cc,bb""", actor_uids=actor_uids, rels = len(actor_uids))
+
   def get_groups_coactors_and_titles(self, tx, actor_uids):
     actor_uids.append(self.uid)
 
@@ -110,24 +133,31 @@ class Actor:
      WHERE a.uid IN $actor_uids 
      WITH count(r1) as rels, b 
      WHERE rels = $rels 
+     WITH collect(b) as bb, b 
+
      MATCH (b)<-[ACTED_IN]-(c:Actor) 
      WHERE NOT c.id IN $actor_uids 
-     RETURN distinct c.uid, c.name as cname
-     
-     
-     MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
-     WHERE a.uid IN [32,17] 
-     WITH count(r1) as rels, b 
-     WHERE rels = 2 
-	 WITH collect(b) as bb, b
-	 
-     MATCH (b)<-[ACTED_IN]-(c:Actor) 
-     WHERE NOT c.id IN [32,17] 
      with collect(c) as cc, bb
      RETURN distinct cc,bb""", actor_uids=actor_uids, rels = len(actor_uids))
 
+
   def titles_string(self, titles):
     str = ""
+
+  @staticmethod
+  def find_by_uid(uid):
+    pass
+
+  def get_paginated_all(self, tx):
+    pass
+
+  #  @staticmethod
+  # def def find_by_name(name):
+  #   pass
+  #   name = name.split(" ")
+  #   option1 = name.join(".* ") + ".*"
+  #   option2 = name.reverse().join(".* ") + ".*"
+  #   #*sanaa*lat* or name like *lat*sanaa*
 
 # /////////////// compare explain query
     #  WHERE NOT c.id IN $inc_ids 
