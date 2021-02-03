@@ -1,18 +1,19 @@
-# from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node
-# class Title(GraphObject):
-class Title:
+from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node
+from initialClass import Title
+
+class Title(Title):
   max_level = 3
 
   def __init__(self, uid, title, released, level=1):
     self.uid = uid
     self.title = title
-    self.released = released
+    # self.released = released
     self.level = level
     
   def create(self, tx, cast_info):
-    if self.level > max_level:
+    if self.level > Title.max_level:
       return
-    elif self.level == max_level:
+    elif self.level == Title.max_level:
       tx.run("MERGE(b:Title {title: $title, uid: $uid})", uid=self.uid, title=self.title)
       return
 

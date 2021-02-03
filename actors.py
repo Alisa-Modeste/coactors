@@ -1,10 +1,9 @@
-#from py2neo import Graph
-# from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node
-from titles import Title
-# graph = Graph("bolt://neo4j:12345@localhost:7687")
+from py2neo import Graph
+from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node, Model
+from initialClass import Actor
+graph = Graph("bolt://neo4j:12345@localhost:7687")
 
-# class Actor(GraphObject):
-class Actor:
+class Actor(Actor):
     #__primarykey__ = "id"
   max_level = 3
 
