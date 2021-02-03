@@ -4,7 +4,6 @@ from initialClass import Actor
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 class Actor(Actor):
-    #__primarykey__ = "id"
   max_level = 3
 
   # uid = Property()
@@ -145,8 +144,38 @@ class Actor(Actor):
 
   @staticmethod
   def find_by_uid(uid):
-    pass
+    # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
+    actor =Actor.match(graph).where("_.uid IN ['56', 32]").first()
+    # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
 
+    return actor
+
+  @staticmethod
+  def find_by_name(query):
+    # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
+    q_parts = query.split()
+    params = {}
+
+    # if len(q_parts) > 1 and False:
+    if len(q_parts) > 1:
+      # where_clause = """WHERE _.name =~ '$name1.* $name2.*'
+      #  or _.name =~ '$name4.* $name3.*' """
+      
+      where_clause = """WHERE _.name =~ $name1
+       or _.name =~ $name2 """
+
+      params['name1'] = q_parts[0] + ".*" + q_parts[1] + ".*"
+      params['name2'] = q_parts[1] + ".*" + q_parts[0] + ".*"
+    else:
+      where_clause = "WHERE _.name =~ $name" + ".*"
+      params['name'] = query
+
+    actor = Actor.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
+    # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
+
+    return actor
+
+  @classmethod
   def get_paginated_all(self, tx):
     pass
 
