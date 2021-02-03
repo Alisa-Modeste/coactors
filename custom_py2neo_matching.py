@@ -32,12 +32,12 @@ class NodeMatch(NodeMatch):
         else:
             for record in self.graph.run(*self._query_and_parameters()):
 
-                Printer.ready("what are in these records anyway?",record)
                 yield record[0]
 
     def raw_query(self, query):
         """ Evaluate the selection and return a list of all matched
         :class:`.Node` objects.
+        :param query: A raw Cypher query without the RETURN clause
 
         :return: list of matching :class:`.Node` objects
 
