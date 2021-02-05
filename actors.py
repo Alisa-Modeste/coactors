@@ -22,24 +22,31 @@ class Actor(Actor):
   #   ACTED_IN = Relationship.type("ACTED_IN")
   #   graph.merge(ACTED_IN(a, b), "Title", "uid")
 
+  def tester(self):
+    print(self.__class__.__name__)
 
-  def create(self, tx, titles_info):
+  def create(self, titles_info):
     #add titles while possibly creating actor node
     #loop that checks to see if any titles were created. those that were get an Title instance 
     # and its create checks to see if any actors were created. however because of its level, nothing further will happen
+    from titles import Title
 
-    if self.level > Actor.max_level:
+    if self.level > self.__class__.max_level:
       return
-    elif self.level == Actor.max_level:
-      tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=self.name)
+    elif self.level == self.__class__.max_level:
+      # tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=self.name)
+      u = graph.run("MERGE(b:Actor {name: $name, uid: $uid})", {"uid": self.uid, "name": self.name})
       return
 
-    titles_added = self.add_titles(tx, titles_info)
+    # titles_added = self.add_titles(tx, titles_info)
+    titles_added = self.add_titles(titles_info)
 
     for title in titles_added:
       print(title['found']) #to do: delete
       if not title['found']:
-        t = Title(title['uid'], title['title'], self.level+1)
+        # t = Title(title['uid'], title['title'], self.level+1)
+        
+        t = Title(title.uid, title.title, self.level+1)
         # t.create()
 
   def add_title(self, tx, title_uid, title):
@@ -47,7 +54,7 @@ class Actor(Actor):
     "MERGE(b:Title {title: $title, uid: $uid}) "
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
-  def add_titles(self, tx, titles_info):    
+  def add_titles(self, titles_info):    
     query = ""
     params = {"name": self.name, "uid": self.uid}
 
@@ -65,7 +72,7 @@ class Actor(Actor):
       params[f"titles{i}_title"] = titles_info[i]["title"]
 
     query = query[:-6]
-    return tx.run(query, params)
+    return graph.run(query, params)
 
   def get_coactors(self, tx):
     payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
@@ -142,16 +149,16 @@ class Actor(Actor):
   def titles_string(self, titles):
     str = ""
 
-  @staticmethod
-  def find_by_uid(uid):
+  @classmethod
+  def find_by_uid(cls, uid):
     # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
-    actor =Actor.match(graph).where("_.uid IN ['56', 32]").first()
+    actor = cls.match(graph).where("_.uid IN ['56', 32]").first()
     # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
 
     return actor
 
-  @staticmethod
-  def find_by_name(query):
+  @classmethod
+  def find_by_name(cls, query):
     # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
     q_parts = query.split()
     params = {}
@@ -170,14 +177,41 @@ class Actor(Actor):
       where_clause = "WHERE _.name =~ $name" + ".*"
       params['name'] = query
 
-    actor = Actor.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
+    actor = cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
     # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
 
     return actor
 
   @classmethod
-  def get_paginated_all(self, tx):
+  def get_paginated_all(cls, tx):
     pass
+
+  @staticmethod
+  def parse_filmography(values):
+    from pprintpp import pprint
+    # pprint(values)
+    import json
+    values = json.loads(values)
+    titles = values['filmography']
+    # pprint(titles[0])
+    title = titles[0]
+    print(f"the uid is {title['id']}")
+    print(f"the title is {title['title']}")
+    # print(f"the start year is {title['startYear']}")
+    print(f"the  (real) start year is {title['year']}")
+
+    title = titles[3]
+    # pprint(title)
+    print(f"the uid is {title['id']}")
+    print(f"the title is {title['title']}")
+    # print(f"the start year is {title['startYear']}")
+    print(f"the (real) start year is {title['year']}")
+
+    result = []
+    for title in titles:
+      result.append({"uid": title['id'], "title": title['title'], "year": title['year']})
+
+    return result
 
   #  @staticmethod
   # def def find_by_name(name):
