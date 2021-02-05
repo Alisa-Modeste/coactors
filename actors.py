@@ -39,15 +39,15 @@ class Actor(Actor):
       return
 
     # titles_added = self.add_titles(tx, titles_info)
-    titles_added = self.add_titles(titles_info)
+    return self.add_titles(titles_info)
 
-    for title in titles_added:
-      print(title['found']) #to do: delete
-      if not title['found']:
-        # t = Title(title['uid'], title['title'], self.level+1)
+    # for title in titles_added:
+    #   print(title['found']) #to do: delete
+    #   if not title['found']:
+    #     # t = Title(title['uid'], title['title'], self.level+1)
         
-        t = Title(title.uid, title.title, self.level+1)
-        # t.create()
+    #     t = Title(title.uid, title.title, self.level+1)
+    #     # t.create()
 
   def add_title(self, tx, title_uid, title):
     tx.run("MATCH(a:Actor {uid: $uid}) "

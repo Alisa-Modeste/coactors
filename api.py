@@ -1,9 +1,11 @@
 import requests
 import os
-
+#remove
+import app
 class API:
-  @classmethod
-  def retrieve(cls, route, querystring):
+  # @classmethod
+  @staticmethod
+  def retrieve(route, querystring):
   # url = "https://imdb8.p.rapidapi.com/title/get-top-cast"
     url = "https://imdb8.p.rapidapi.com/" + route
     
@@ -14,7 +16,7 @@ class API:
       'x-rapidapi-key': apiKey,
       'x-rapidapi-host': "imdb8.p.rapidapi.com"
       }
-
+    app.api_count += 1
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     # print(response.text)    
