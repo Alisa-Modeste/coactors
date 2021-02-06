@@ -4,6 +4,10 @@ from initialClass import Title
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 class Title(Title):
+  # uid = Property()
+  # title = Property()
+  # released = Property()
+  
   max_level = 3
 
   def __init__(self, uid, title, level=1):
@@ -55,3 +59,18 @@ class Title(Title):
   
   # def list():
   
+  @staticmethod
+  def parse_cast(cast):
+    from pprintpp import pprint
+    # pprint(values)
+    import json
+    import re
+    cast = json.loads(cast)
+    # print(mvalues[0])
+
+    result = []
+    for actor in cast:
+      result.append({
+        "uid": re.search("e/(.*)/", actor)[1] })
+
+    return result

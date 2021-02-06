@@ -55,24 +55,46 @@ class Actor(Actor):
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
   def add_titles(self, titles_info):    
-    query = ""
+    from titles import Title
+    query = "MERGE (a:Actor {name: $name, uid: $uid}) "
     params = {"name": self.name, "uid": self.uid}
 
+    # for i in range(0,len(titles_info)):
+    #   query += "MERGE (a:Actor {name: $name, uid: $uid}) "
+    #   query += f"MERGE (t{i}:Title "
+    #   query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
+    #   query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
+    #   ON CREATE SET t{i}.found=FALSE 
+    #   ON MATCH SET t{i}.found=TRUE 
+    #   RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
+    #   UNION """
+
+    #   params[f"titles{i}_uid"] = titles_info[i]["uid"]
+    #   params[f"titles{i}_title"] = titles_info[i]["title"]
+
+    # query = query[:-6]
+
+    #######same
+    title_uids = []
     for i in range(0,len(titles_info)):
-      query += "MERGE (a:Actor {name: $name, uid: $uid}) "
       query += f"MERGE (t{i}:Title "
       query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
       query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
       ON CREATE SET t{i}.found=FALSE 
-      ON MATCH SET t{i}.found=TRUE 
-      RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
-      UNION """
+      ON MATCH SET t{i}.found=TRUE """
 
       params[f"titles{i}_uid"] = titles_info[i]["uid"]
       params[f"titles{i}_title"] = titles_info[i]["title"]
+      title_uids.append(titles_info[i]["uid"])
 
-    query = query[:-6]
-    return graph.run(query, params)
+    # query = query[:-6]
+    graph.run(query, params)
+
+    titles = Title.match(graph ).raw_query("""MATCH (_:Title) 
+      WHERE _.uid IN $title_uids """, {"title_uids":title_uids})
+
+    # query = query + "RETURN "
+    return titles
 
   def get_coactors(self, tx):
     payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
@@ -86,6 +108,8 @@ class Actor(Actor):
   def get_titles(self, tx):
     tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title)  
      RETURN b.uid, b.title""", uid=self.uid)
+    from titles import Title
+    # titles = Title.match(graph ).raw_query(MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) , params)
 
   def get_groups_coactors(self, tx, actor_uids):
     actor_uids.append(self.uid)
@@ -101,12 +125,20 @@ class Actor(Actor):
     for record in payload:
       print("" + str(record["c.uid"]) + " and name:" + record["cname"])
 
-  def get_groups_titles(self, tx):
+  def get_groups_titles(self, tx, actor_uids):
     tx.run("""MATCH(a:Actor)-[:ACTED_IN]->(b:Title) 
      WHERE a.uid IN $actor_uids 
      WITH count(r1) as rels, b 
      WHERE rels = $len(actor_uids) 
      RETURN distinct b.uid, b.title""", uid=self.uid)
+
+    from titles import Title
+    #here: distinct needed?
+    actor_uids.append(self.uid)
+    titles = Title.match(graph ).raw_query("""MATCH(a:Actor)-[:ACTED_IN]->(_:Title) 
+     WHERE a.uid IN $actor_uids 
+     WITH count(r1) as rels, _ 
+     WHERE rels = $right_num""", {"actor_uids":actor_uids, "right_num":len(actor_uids) })
 
   # def get_groups_coactors_and_titlesDELETE(self, tx, actor_uids):
   #   actor_uids.append(self.uid)
@@ -191,6 +223,7 @@ class Actor(Actor):
     from pprintpp import pprint
     # pprint(values)
     import json
+    import re
     values = json.loads(values)
     titles = values['filmography']
     # pprint(titles[0])
@@ -209,7 +242,9 @@ class Actor(Actor):
 
     result = []
     for title in titles:
-      result.append({"uid": title['id'], "title": title['title'], "year": title['year']})
+      result.append({
+        "uid": re.search("e/(.*)/", title['id'])[1],
+        "title": title['title'], "year": title['year']})
 
     return result
 
