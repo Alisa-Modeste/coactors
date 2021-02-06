@@ -49,19 +49,27 @@ def create_actor():
    actor = get_actors_data([{'uid': uid, 'name': name}])
    level = 1
    a = Actor(actor[0]['uid'], actor[0]['name'], level)
-   titles_added = a.create(actor[0]['titles'])
+   titles_added = a.create(actor[0]['data']['titles'])
 
    # titles = get_titles_data(titles_added) # cast_uids
    casts_uids = get_titles_data(titles_added) # cast_uids
    # new_titles = []
    actors = []
    for actor_uids in casts_uids:
-       actors.append( get_actors_data(actor_uids) )
+      #  actors.append( get_actors_data(actor_uids) )
+       actors += get_actors_data(actor_uids)
 
    for actor in actors:
        level = 2 #really 3. change class
-       a = Actor(actor['uid'], actor['name'], level)
-       a.create(actor['titles'])
+      #  a = Actor(
+      #     actor['uid'] if 'uid' in actor else actor['data']['uid'], 
+      #     actor['name'] if 'name' in actor else actor['data']['name'], 
+      #     level)
+       a = Actor(
+          actor['data']['uid'], 
+          actor['data']['name'], 
+          level)
+       a.create(actor['data']['titles'])
 
    t = Demo
    t.including()
@@ -72,7 +80,7 @@ def create_actor():
 
 def get_actors_data(actors_attr):
     new_actors = []
-    for actor in actors_attr:
+    for actor in actors_attr['filmography'] if 'filmography' in actors_attr else actors_attr:
        uid = None
        if type(actor) == dict and (not 'found' in actor or not actor['found']):
            uid = actor['uid']
@@ -81,13 +89,21 @@ def get_actors_data(actors_attr):
 
        if True: #uid
             # resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-           with open('sanaaFilms2.txt') as f: resource = f.read()
-           titles = Actor.parse_filmography(resource)
+           if 'name' in actor:#remove here:
+               with open('sanaaFilms2.txt') as f: resource = f.read()
+           else:
+         #       resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
+               with open('CuocoFilms2.txt') as f: resource = f.read()
+           data = Actor.parse_filmography(resource)
 
-           this_actor = {'titles': titles}
+           this_actor = {'data': data}
            this_actor['uid'] = actor['uid']
-           this_actor['name'] = actor['name']
+           this_actor['data']['uid'] = actor['uid']
+           this_actor['name'] = actor['name'] if 'name' in actor else data['name']
            new_actors.append(this_actor)
+
+       if not 'name' in actor:
+           break
 
     return new_actors
 

@@ -76,6 +76,7 @@ class Actor(Actor):
 
     #######same
     title_uids = []
+    # for i in range(0,len(titles_info['filmography'])):
     for i in range(0,len(titles_info)):
       query += f"MERGE (t{i}:Title "
       query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
@@ -239,6 +240,7 @@ class Actor(Actor):
     print(f"the title is {title['title']}")
     # print(f"the start year is {title['startYear']}")
     print(f"the (real) start year is {title['year']}")
+    # pprint(title)
 
     result = []
     for title in titles:
@@ -246,7 +248,8 @@ class Actor(Actor):
         "uid": re.search("e/(.*)/", title['id'])[1],
         "title": title['title'], "year": title['year']})
 
-    return result
+    return {"titles": result, 
+    "name": values['base']["name"]}
 
   #  @staticmethod
   # def def find_by_name(name):
