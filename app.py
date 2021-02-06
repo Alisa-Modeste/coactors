@@ -60,23 +60,43 @@ def create_actor():
        actors += get_actors_data(actor_uids)
 
    for actor in actors:
-       level = 2 #really 3. change class
-      #  a = Actor(
-      #     actor['uid'] if 'uid' in actor else actor['data']['uid'], 
-      #     actor['name'] if 'name' in actor else actor['data']['name'], 
-      #     level)
+       level = 2 #really 3. here: change class
+
        a = Actor(
           actor['data']['uid'], 
           actor['data']['name'], 
           level)
+
        a.create(actor['data']['titles'])
 
-   t = Demo
-   t.including()
-   actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
-    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
-    "John Salley", "RonReaco Lee", "Bo Yokely"]
+   # t = Demo
+   # t.including()
+   # actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
+   #  "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
+   #  "John Salley", "RonReaco Lee", "Bo Yokely"]
    return render_template('actor.html',actors=actors)
+
+@app.route('/create_title',methods = ['GET'])#post
+def create_title():
+   uid = "tt0482571"
+   title = "The Prestige"
+   released = 2006
+
+   cast_uids = get_titles_data([{'uid':uid, 'title': title, 'released': released}])
+   actors = get_actors_data(cast_uids[0])
+
+   for actor in actors:
+       level = 2 #really 1? here:
+
+       a = Actor(
+          actor['data']['uid'], 
+          actor['data']['name'], 
+          level)
+
+       a.create(actor['data']['titles'])
+
+   return "Template here"
+
 
 def get_actors_data(actors_attr):
     new_actors = []
