@@ -10,47 +10,54 @@ class Title(Title):
   
   max_level = 3
 
-  def __init__(self, uid, title, level=1):
+  def __init__(self, uid, title, released, title_type, level=1):
     self.uid = uid
     self.title = title
-    # self.released = released
+    self.released = released
     self.level = level
+    self.title_type = title_type
     
-  def create(self, tx, cast_info):
+  def create(self, cast_info):
     from actors import Actor
     if self.level > Title.max_level:
       return
     elif self.level == Title.max_level:
-      tx.run("MERGE(b:Title {title: $title, uid: $uid})", uid=self.uid, title=self.title)
+      u = graph.run("MERGE(b:Title {title: $title, uid: $uid})", uid=self.uid, title=self.title)
       return
 
-    actors_added = self.add_cast(tx, cast_info)
+    return self.add_cast(cast_info)
 
-    for actor in actors_added:
-      if not actor['found']:
-        # a = Actor(actor['uid'], actor['name'], self.level+1)
-        a = Actor(actor.uid, actor.name, self.level+1)
-        # t.create()
+    # for actor in actors_added:
+    #   if not actor['found']:
+    #     # a = Actor(actor['uid'], actor['name'], self.level+1)
+    #     a = Actor(actor.uid, actor.name, self.level+1)
+    #     # t.create()
     
-  def add_cast(self, tx, cast_info):
-    query = ""
-    params = {"name": self.name, "uid": self.uid, "released": self.released}
+  def add_cast(self, cast_info):
+    from actors import Actor
+    query = "MERGE (t:Title {title: $title, uid: $uid, released: $released, title_type: $title_type}) "
+    params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
 
+    actor_uids = []
     for i in range(0,len(cast_info)):
-      query += "MERGE (t:Title {title: $title, uid: $uid, released: $released}) "
       query += f"MERGE (a{i}:Actor "
       query += "{name:$actors" + str(i) + "_name, uid:$actors" + str(i) + "_uid}) "
-      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
-      ON CREATE SET t{i}.found=FALSE 
-      ON MATCH SET t{i}.found=TRUE 
-      RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
-      UNION """
+      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) 
+      ON CREATE SET a{i}.found=FALSE 
+      ON MATCH SET a{i}.found=TRUE """
 
-      params[f"titles{i}_uid"] = titles_info[i]["uid"]
-      params[f"titles{i}_title"] = titles_info[i]["title"]
+      params[f"actors{i}_uid"] = cast_info[i]["uid"]
+      params[f"actors{i}_name"] = cast_info[i]["name"]
+      actor_uids.append(cast_info[i]["uid"])
 
-    query = query[:-6]
-    return tx.run(query, params)
+    # query = query[:-6]
+    graph.run(query, params)
+    #graph.run doesn't return results
+    actors = Actor.match(graph ).raw_query("""MATCH (_:Actor) 
+      WHERE _.uid IN $actor_uids """, {"actor_uids":actor_uids})
+
+    return actors
+
 
   def get_cast(self):
     pass
@@ -64,13 +71,14 @@ class Title(Title):
     from pprintpp import pprint
     # pprint(values)
     import json
-    import re
-    cast = json.loads(cast)
+    # import re
+    cast = json.loads(cast)['cast']
     # print(mvalues[0])
 
     result = []
     for actor in cast:
       result.append({
-        "uid": re.search("e/(.*)/", actor)[1] })
+        "uid": "na" + str(actor['id']),
+        "name": actor['name'] }) #re.search("e/(.*)/", actor)[1] })
 
     return result

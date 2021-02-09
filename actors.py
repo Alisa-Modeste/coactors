@@ -79,13 +79,16 @@ class Actor(Actor):
     # for i in range(0,len(titles_info['filmography'])):
     for i in range(0,len(titles_info)):
       query += f"MERGE (t{i}:Title "
-      query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
+      query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid, "
+      query += "released:$titles" + str(i) + "_released, title_type:$titles" + str(i) + "_title_type}) "
       query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
       ON CREATE SET t{i}.found=FALSE 
       ON MATCH SET t{i}.found=TRUE """
 
       params[f"titles{i}_uid"] = titles_info[i]["uid"]
       params[f"titles{i}_title"] = titles_info[i]["title"]
+      params[f"titles{i}_released"] = titles_info[i]["released"]
+      params[f"titles{i}_title_type"] = titles_info[i]["title_type"]
       title_uids.append(titles_info[i]["uid"])
 
     # query = query[:-6]
@@ -224,32 +227,36 @@ class Actor(Actor):
     from pprintpp import pprint
     # pprint(values)
     import json
-    import re
+    # import re
     values = json.loads(values)
-    titles = values['filmography']
+    titles = values['cast']
     # pprint(titles[0])
     title = titles[0]
     print(f"the uid is {title['id']}")
-    print(f"the title is {title['title']}")
+    # print(f"the title is {title['title']}")
     # print(f"the start year is {title['startYear']}")
-    print(f"the  (real) start year is {title['year']}")
+    # print(f"the  (real) start year is {title['year']}")
 
     title = titles[3]
     # pprint(title)
     print(f"the uid is {title['id']}")
-    print(f"the title is {title['title']}")
+    # print(f"the title is {title['title']}")
     # print(f"the start year is {title['startYear']}")
-    print(f"the (real) start year is {title['year']}")
+    # print(f"the (real) start year is {title['year']}")
     # pprint(title)
 
     result = []
     for title in titles:
+      title_type = title['media_type']
       result.append({
-        "uid": re.search("e/(.*)/", title['id'])[1],
-        "title": title['title'], "year": title['year']})
+        "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
+        "title": title['title'] if title_type == 'movie' else title['name'], 
+        "released": title['first_air_date'] if title_type == 'tv' else title['release_date'],
+        "title_type": title['media_type']})
 
-    return {"titles": result, 
-    "name": values['base']["name"]}
+    # return {"titles": result, 
+    # "name": values['base']["name"]}
+    return result
 
   #  @staticmethod
   # def def find_by_name(name):

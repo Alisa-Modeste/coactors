@@ -78,52 +78,62 @@ def create_actor():
 
 @app.route('/create_title',methods = ['GET'])#post
 def create_title():
-   uid = "tt0482571"
+   uid = "551"
    title = "The Prestige"
    released = 2006
+   title_type = 'movie'
 
-   cast_uids = get_titles_data([{'uid':uid, 'title': title, 'released': released}])
-   actors = get_actors_data(cast_uids[0])
+   cast = get_titles_data([{'uid':uid, 'title': title, 'released': released,
+        "title_type": title_type}])
+   t = Title(uid, title, released, title_type)
+   t.create(cast)
+   #--------------------------------------------
+   actors = get_actors_data(cast)
 
    for actor in actors:
        level = 2 #really 1? here:
 
        a = Actor(
-          actor['data']['uid'], 
-          actor['data']['name'], 
+          actor['uid'], 
+          actor['name'], 
           level)
 
-       a.create(actor['data']['titles'])
+       a.create(actor['titles'])
 
    return "Template here"
 
 
 def get_actors_data(actors_attr):
     new_actors = []
-    for actor in actors_attr['filmography'] if 'filmography' in actors_attr else actors_attr:
+    for actor in actors_attr: #['filmography'] if 'filmography' in actors_attr else actors_attr:
        uid = None
        if type(actor) == dict and (not 'found' in actor or not actor['found']):
-           uid = actor['uid']
+           uid = actor['uid'][2:] if type(actor['uid']) is str else actor['uid']
+       
        elif type(actor) == Actor and (actor.found is None or not actor.found):
-           uid = actor.uid
+           uid = actor.uid[2:] if type(actor.uid) is str else actor.uid
 
        if True: #uid
-            # resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-           if 'name' in actor:#remove here:
-               with open('sanaaFilms2.txt') as f: resource = f.read()
-           else:
-         #       resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-               with open('CuocoFilms2.txt') as f: resource = f.read()
-           data = Actor.parse_filmography(resource)
+            # response = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
+        #    response = API.retrieve(f"/person/{uid}/combined_credits")
+        #    if 'name' in actor:#remove here:
+        #        with open('sanaaFilms2.txt') as f: resource = f.read()
+        #    else:
+        #  #       resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
+        #        with open('CuocoFilms2.txt') as f: resource = f.read()
+           with open('geneFilms2.txt') as f: response = f.read()
+        #    from pprintpp import pprint
+        #    pprint(response)
+           titles = Actor.parse_filmography(response)
 
-           this_actor = {'data': data}
+           this_actor = {'titles': titles}
            this_actor['uid'] = actor['uid']
-           this_actor['data']['uid'] = actor['uid']
-           this_actor['name'] = actor['name'] if 'name' in actor else data['name']
+        #    this_actor['data']['uid'] = actor['uid']
+           this_actor['name'] = actor['name']
            new_actors.append(this_actor)
 
-       if not 'name' in actor:
-           break
+    #    if not 'name' in actor:
+       break
 
     return new_actors
 
@@ -136,26 +146,30 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
         uid = None
         if type(title) == dict and (not 'found' in title or not title['found']):
             uid = title['uid']
+            title_type = title['title_type']
         elif type(title) == Title and (title.found is None or not title.found):
             uid = title.uid
+            title_type = title.title_type
 
         if True: # uid:
-            # resource = API.retrieve( "/title/get-top-cast", {"tconst": uid})
-            with open('aCast2.txt') as f: resource = f.read()
+            # # resource = API.retrieve( "/title/get-top-cast", {"tconst": uid})
+            # response = API.retrieve(f'/{title_type}/{uid}/credits',{})
+            # # response = API.retrieve('/tv/551',{})
+            with open('aCast3.txt') as f: response = f.read()
             from pprintpp import pprint
-            pprint(resource)
-            cast_uids = Title.parse_cast(resource) #uids, no names
+            # pprint(response)
+            cast = Title.parse_cast(response) #uids, no names
 
             # for actor_uid in cast_uids:
             #     related_actors_data.append( get_actors_data(actor_uid) )
 
-            # this_title = {'cast_uids': cast_uids}
-            # this_title['uid'] = title['uid']
-            # this_title['title'] = title['title']
-            new_titles.append(cast_uids)
+            # # this_title = {'cast_uids': cast_uids}
+            # # this_title['uid'] = title['uid']
+            # # this_title['title'] = title['title']
+            # new_titles.append(cast_uids)
             break#here: break
 
-    return new_titles
+    return cast #new_titles
 
 
 # print(f"__name__ is {__name__ }")

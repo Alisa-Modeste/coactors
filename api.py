@@ -1,23 +1,24 @@
 import requests
 import os
 #remove
-import app
+# import app
 class API:
   # @classmethod
-  @staticmethod
-  def retrieve(route, querystring):
-  # url = "https://imdb8.p.rapidapi.com/title/get-top-cast"
-    url = "https://imdb8.p.rapidapi.com/" + route
-    
-    apiKey = os.environ['IMDB_APIKEY'] 
-    # querystring = {"tconst":"tt0944947"}
+    @staticmethod
+    def retrieve(route, querystring = {}):
+    # url = "https://api.themoviedb.org/3/movie/550?api_key="
+        url = "https://api.themoviedb.org/3" + route
+        
+        apiKey = os.environ['THEMOVIEDB_APIKEY'] 
+        querystring['api_key']= apiKey
 
-    headers = {
-      'x-rapidapi-key': apiKey,
-      'x-rapidapi-host': "imdb8.p.rapidapi.com"
-      }
-    app.api_count += 1
-    response = requests.request("GET", url, headers=headers, params=querystring)
+        # headers = {
+        #   'x-rapidapi-key': apiKey,
+        #   'x-rapidapi-host': "imdb8.p.rapidapi.com"
+        #   }
+        # app.api_count += 1
+        # response = requests.request("GET", url, headers=headers, params=querystring)
+        response = requests.request("GET", url, params=querystring)
 
-    # print(response.text)    
-    return response.text
+        # print(response.text)    
+        return response.text
