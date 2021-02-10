@@ -46,11 +46,11 @@ api_count = 0
 def create_actor():
    # uid = "nm0005125"
    uid = "5411"
-   name = "Sanaa Lanthan"
-   actor = get_actors_data([{'uid': uid, 'name': name}])
+   name = "Sanaa Lathan"
+   actor_data = get_actors_data([{'uid': uid, 'name': name}])
    level = 1
-   a = Actor(actor[0]['uid'], actor[0]['name'], level)
-   titles_added = a.create(actor[0]['titles'])
+   a = Actor(actor_data[0]['uid'], actor_data[0]['name'], level)
+   titles_added = a.create(actor_data[0]['titles'])
 
    # titles = get_titles_data(titles_added) # cast_uids
    casts = get_titles_data(titles_added) # cast_uids
@@ -93,12 +93,13 @@ def create_title():
    title_data = get_titles_data([{'uid':uid, 'title': title, 'released': released,
         "title_type": title_type}])
    t = Title(uid, title, released, title_type)
-   t.create(title_data[0]['cast'])
+   actors_added = t.create(title_data[0]['cast'])
    #--------------------------------------------
-   actors = []
+   # actors = []
    
-   for title in title_data:
-      actors += get_actors_data(title['cast'])
+   # for title in title_data: #here: actors_added
+   # for actor in actors_added:
+   actors = get_actors_data(actors_added)
 
    for actor in actors:
        level = 2 #really 1? here:
@@ -138,7 +139,7 @@ def get_actors_data(actors_attr):
            titles = Actor.parse_filmography(response)
 
            this_actor = {'titles': titles}
-           this_actor['uid'] = actor['uid'] if type(actor) == dict else actor.uid
+           this_actor['uid'] = "na" + (actor['uid'] if type(actor) == dict else actor.uid)
         #    this_actor['data']['uid'] = actor['uid']
            this_actor['name'] = actor['name'] if type(actor) == dict else actor.name
            new_actors.append(this_actor)
