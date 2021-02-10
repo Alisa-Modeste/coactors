@@ -12,6 +12,8 @@ class Title(GraphObject):
   title = Property()
   released = Property()
   found = Property()
+  released = Property()
+  title_type = Property()
 
   # actors = RelatedFrom("Actor2", "ACTED_IN")
   # from actors_py2neo import Actor
@@ -23,7 +25,6 @@ class Actor(Model):
     #__primarykey__ = "id"
 
   uid = Property()
-  id = Property()
   name = Property()
   found = Property()
 

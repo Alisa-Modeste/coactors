@@ -49,31 +49,37 @@ def create_actor():
    actor = get_actors_data([{'uid': uid, 'name': name}])
    level = 1
    a = Actor(actor[0]['uid'], actor[0]['name'], level)
-   titles_added = a.create(actor[0]['data']['titles'])
+   titles_added = a.create(actor[0]['titles'])
 
    # titles = get_titles_data(titles_added) # cast_uids
-   casts_uids = get_titles_data(titles_added) # cast_uids
-   # new_titles = []
-   actors = []
-   for actor_uids in casts_uids:
-      #  actors.append( get_actors_data(actor_uids) )
-       actors += get_actors_data(actor_uids)
+   casts = get_titles_data(titles_added) # cast_uids
+   # # new_titles = []
+   # actors = []
+   for cast in casts:
+      t = Title(cast['uid'],
+         cast['title'],
+         cast['released'],
+         cast['title_type'])
 
-   for actor in actors:
-       level = 2 #really 3. here: change class
+      t.create(cast['cast'])
+   #    #  actors.append( get_actors_data(actor_uids) )
+   #     actors += get_actors_data(cast)
 
-       a = Actor(
-          actor['data']['uid'], 
-          actor['data']['name'], 
-          level)
+   # for actor in actors:
+   #     level = 2 #really 3. here: change class
 
-       a.create(actor['data']['titles'])
+   #     a = Actor(
+   #        actor['data']['uid'], 
+   #        actor['data']['name'], 
+   #        level)
+
+   #     a.create(actor['data']['titles'])
 
    # t = Demo
    # t.including()
-   # actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
-   #  "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
-   #  "John Salley", "RonReaco Lee", "Bo Yokely"]
+   actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
+    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
+    "John Salley", "RonReaco Lee", "Bo Yokely"]
    return render_template('actor.html',actors=actors)
 
 @app.route('/create_title',methods = ['GET'])#post
@@ -127,9 +133,9 @@ def get_actors_data(actors_attr):
            titles = Actor.parse_filmography(response)
 
            this_actor = {'titles': titles}
-           this_actor['uid'] = actor['uid']
+           this_actor['uid'] = actor['uid'] if type(actor) == dict else actor.uid
         #    this_actor['data']['uid'] = actor['uid']
-           this_actor['name'] = actor['name']
+           this_actor['name'] = actor['name'] if type(actor) == dict else actor.name
            new_actors.append(this_actor)
 
     #    if not 'name' in actor:
@@ -145,10 +151,11 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
       #   if title.found is None or not title.found:
         uid = None
         if type(title) == dict and (not 'found' in title or not title['found']):
-            uid = title['uid']
+            uid = title['uid'][2:] if type(title['uid']) is str else title['uid']
             title_type = title['title_type']
+
         elif type(title) == Title and (title.found is None or not title.found):
-            uid = title.uid
+            uid = title.uid[2:] if type(title.uid) is str else title.uid
             title_type = title.title_type
 
         if True: # uid:
@@ -163,13 +170,16 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
             # for actor_uid in cast_uids:
             #     related_actors_data.append( get_actors_data(actor_uid) )
 
-            # # this_title = {'cast_uids': cast_uids}
-            # # this_title['uid'] = title['uid']
-            # # this_title['title'] = title['title']
-            # new_titles.append(cast_uids)
+            this_title = {'cast': cast}
+            this_title['uid'] = title['uid'] if type(title) == dict else title.uid
+            this_title['released'] = title['released'] if type(title) == dict else title.released
+            this_title['title_type'] = title_type
+            this_title['title'] = title['title'] if type(title) == dict else title.title
+            new_titles.append(this_title)
             break#here: break
 
-    return cast #new_titles
+   #  return cast #new_titles
+    return new_titles
 
 
 # print(f"__name__ is {__name__ }")
