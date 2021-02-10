@@ -251,7 +251,8 @@ class Actor(Actor):
       result.append({
         "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
         "title": title['title'] if title_type == 'movie' else title['name'], 
-        "released": title['first_air_date'][:4] if title_type == 'tv' else title['release_date'][:4],
+        # "released": title['first_air_date'][:4] if title_type == 'tv' else title['release_date'][:4],
+        "released": title['first_air_date'][:4] if 'first_air_date' in title else title['release_date'][:4] if 'release_date' in title else "",
         "title_type": title['media_type']})
 
     # return {"titles": result, 
