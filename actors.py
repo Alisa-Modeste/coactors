@@ -56,7 +56,7 @@ class Actor(Actor):
 
   def add_titles(self, titles_info):    
     from titles import Title
-    query = "MERGE (a:Actor {name: $name, uid: $uid}) "
+    query = "MERGE (a:Actor {name: $name, uid: $uid}) SET a.children_known = True "
     params = {"name": self.name, "uid": self.uid}
 
     # for i in range(0,len(titles_info)):
@@ -81,9 +81,9 @@ class Actor(Actor):
       query += f"MERGE (t{i}:Title "
       query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid, "
       query += "released:$titles" + str(i) + "_released, title_type:$titles" + str(i) + "_title_type}) "
-      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
-      ON CREATE SET t{i}.found=FALSE 
-      ON MATCH SET t{i}.found=TRUE """
+      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) """
+      # ON CREATE SET t{i}.found=FALSE 
+      # ON MATCH SET t{i}.found=TRUE """
 
       params[f"titles{i}_uid"] = titles_info[i]["uid"]
       params[f"titles{i}_title"] = titles_info[i]["title"]
@@ -196,7 +196,7 @@ class Actor(Actor):
   @classmethod
   def find_by_name(cls, query):
     # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
-    q_parts = query.split()
+    q_parts = query.replace(',',' ').split()
     params = {}
 
     # if len(q_parts) > 1 and False:
@@ -210,8 +210,8 @@ class Actor(Actor):
       params['name1'] = q_parts[0] + ".*" + q_parts[1] + ".*"
       params['name2'] = q_parts[1] + ".*" + q_parts[0] + ".*"
     else:
-      where_clause = "WHERE _.name =~ $name" + ".*"
-      params['name'] = query
+      where_clause = "WHERE _.name =~ $name"
+      params['name'] = query + ".*"
 
     actor = cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
     # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
@@ -224,7 +224,7 @@ class Actor(Actor):
 
   @staticmethod
   def parse_filmography(values):
-    from pprintpp import pprint
+    # from pprintpp import pprint
     # pprint(values)
     import json
     # import re

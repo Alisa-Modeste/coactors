@@ -35,16 +35,17 @@ class Title(Title):
     
   def add_cast(self, cast_info):
     from actors import Actor
-    query = "MERGE (t:Title {title: $title, uid: $uid, released: $released, title_type: $title_type}) "
+    query = """MERGE (t:Title {title: $title, uid: $uid, released: $released, title_type: $title_type}) 
+       SET t.children_known = True  """
     params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
 
     actor_uids = []
     for i in range(0,len(cast_info)):
       query += f"MERGE (a{i}:Actor "
       query += "{name:$actors" + str(i) + "_name, uid:$actors" + str(i) + "_uid}) "
-      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) 
-      ON CREATE SET a{i}.found=FALSE 
-      ON MATCH SET a{i}.found=TRUE """
+      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) """
+      # ON CREATE SET a{i}.found=FALSE 
+      # ON MATCH SET a{i}.found=TRUE """
 
       params[f"actors{i}_uid"] = cast_info[i]["uid"]
       params[f"actors{i}_name"] = cast_info[i]["name"]
@@ -68,7 +69,7 @@ class Title(Title):
   
   @staticmethod
   def parse_cast(cast):
-    from pprintpp import pprint
+    # from pprintpp import pprint
     # pprint(values)
     import json
     # import re

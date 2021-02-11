@@ -119,13 +119,14 @@ def get_actors_data(actors_attr):
     count = 0 #here:
     for actor in actors_attr: #['filmography'] if 'filmography' in actors_attr else actors_attr:
        uid = None
-       if type(actor) == dict and (not 'found' in actor or not actor['found']):
-           uid = actor['uid'][2:] if actor['uid'][0].isalpha() else actor['uid']
+       if type(actor) == dict:# and (not 'found' in actor or not actor['found']):
+           uid = actor['uid'] #[2:] if actor['uid'][0].isalpha() else actor['uid']
        
-       elif type(actor) == Actor and (actor.found is None or not actor.found):
-           uid = actor.uid[2:] if actor.uid[0].isalpha() else actor.uid
+       elif type(actor) == Actor and (actor.children_known is None or not actor.children_known):
+           uid = actor.uid[2:] #if actor.uid[0].isalpha() else actor.uid
 
-       if True: #uid
+      #  if True: #uid
+       if uid:
             # response = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
            response = API.retrieve(f"/person/{uid}/combined_credits")
         #    if 'name' in actor:#remove here:
@@ -147,8 +148,8 @@ def get_actors_data(actors_attr):
     #    if not 'name' in actor:
       #  break
        count += 1
-       if count == 2:
-          break
+      #  if count == 2:
+      #     break
 
     return new_actors
 
@@ -160,15 +161,16 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
       #   if 'found' not in title or not title['found']:
       #   if title.found is None or not title.found:
         uid = None
-        if type(title) == dict and (not 'found' in title or not title['found']):
-            uid = title['uid'][2:] if title['uid'][0].isalpha() else title['uid']
+        if type(title) == dict:# and (not 'children_known' in title or not title['children_known']):
+            uid = title['uid'] #[2:] if title['uid'][0].isalpha() else title['uid']
             title_type = title['title_type']
 
-        elif type(title) == Title and (title.found is None or not title.found):
-            uid = title.uid[2:] if title.uid[0].isalpha() else title.uid
+        elif type(title) == Title and (title.children_known is None or not title.children_known):
+            uid = title.uid[2:] #if title.uid[0].isalpha() else title.uid
             title_type = title.title_type
 
-        if True: # uid:
+      #   if True: # uid:
+        if uid:
             # # resource = API.retrieve( "/title/get-top-cast", {"tconst": uid})
             response = API.retrieve(f'/{title_type}/{uid}/credits',{})
             # # response = API.retrieve('/tv/551',{})
@@ -189,8 +191,8 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
             # break#here: break
 
         count += 1
-        if count == 2:
-           break
+      #   if count == 2:
+         #   break
    #  return cast #new_titles
     return new_titles
 

@@ -11,8 +11,7 @@ class Title(GraphObject):
   uid = Property()
   title = Property()
   released = Property()
-  found = Property()
-  released = Property()
+  children_known = Property()
   title_type = Property()
 
   # actors = RelatedFrom("Actor2", "ACTED_IN")
@@ -26,7 +25,7 @@ class Actor(Model):
 
   uid = Property()
   name = Property()
-  found = Property()
+  children_known = Property()
 
   acted_in = RelatedTo(Title)
 
