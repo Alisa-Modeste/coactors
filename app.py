@@ -128,7 +128,8 @@ def get_actors_data(actors_attr):
       #  if True: #uid
        if uid:
             # response = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-           response = API.retrieve(f"/person/{uid}/combined_credits")
+         #   response = API.retrieve(f"/person/{uid}/combined_credits")
+           response = API.retrieve(f"/person/{uid}",{'append_to_response': "combined_credits"})
         #    if 'name' in actor:#remove here:
         #        with open('sanaaFilms2.txt') as f: resource = f.read()
         #    else:
@@ -139,17 +140,19 @@ def get_actors_data(actors_attr):
         #    pprint(response)
            titles = Actor.parse_filmography(response)
 
-           this_actor = {'titles': titles}
-           this_actor['uid'] = "na" + (actor['uid'] if type(actor) == dict else actor.uid)
-        #    this_actor['data']['uid'] = actor['uid']
-           this_actor['name'] = actor['name'] if type(actor) == dict else actor.name
-           new_actors.append(this_actor)
+      #      this_actor = {'titles': titles}
+      #      this_actor['uid'] = "na" + (actor['uid'] if type(actor) == dict else actor.uid)
+      #   #    this_actor['data']['uid'] = actor['uid']
+      #      this_actor['name'] = actor['name'] if type(actor) == dict else actor.name
+           
+         #   new_actors.append(this_actor)
+           new_actors.append(titles)
 
     #    if not 'name' in actor:
       #  break
        count += 1
-      #  if count == 2:
-      #     break
+       if count == 2:
+          break
 
     return new_actors
 
@@ -172,27 +175,33 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
       #   if True: # uid:
         if uid:
             # # resource = API.retrieve( "/title/get-top-cast", {"tconst": uid})
-            response = API.retrieve(f'/{title_type}/{uid}/credits',{})
+            # response = API.retrieve(f'/{title_type}/{uid}/credits',{})
+            if title_type == "movie":
+               response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
+            else:
+               response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "aggregate_credits"})
             # # response = API.retrieve('/tv/551',{})
             # with open('aCast3.txt') as f: response = f.read()
             # from pprintpp import pprint
             # pprint(response)
-            cast = Title.parse_cast(response) #uids, no names
-
+            cast = Title.parse_cast(response, title_type) #uids, no names
+            # cast['title_type'] = title_type
             # for actor_uid in cast_uids:
             #     related_actors_data.append( get_actors_data(actor_uid) )
 
-            this_title = {'cast': cast}
-            this_title['uid'] = title['uid'] if type(title) == dict else title.uid
-            this_title['released'] = title['released'] if type(title) == dict else title.released
-            this_title['title_type'] = title_type
-            this_title['title'] = title['title'] if type(title) == dict else title.title
-            new_titles.append(this_title)
+            # this_title = {'cast': cast}
+            # this_title['uid'] = title['uid'] if type(title) == dict else title.uid
+            # this_title['released'] = title['released'] if type(title) == dict else title.released
+            # this_title['title_type'] = title_type
+            # this_title['title'] = title['title'] if type(title) == dict else title.title
+
+            # new_titles.append(this_title)
+            new_titles.append(cast)
             # break#here: break
 
         count += 1
-      #   if count == 2:
-         #   break
+        if count == 2:
+           break
    #  return cast #new_titles
     return new_titles
 

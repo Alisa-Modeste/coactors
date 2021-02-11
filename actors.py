@@ -223,13 +223,14 @@ class Actor(Actor):
     pass
 
   @staticmethod
-  def parse_filmography(values):
+  def parse_filmography(actor_data):
     # from pprintpp import pprint
     # pprint(values)
     import json
     # import re
-    values = json.loads(values)
-    titles = values['cast']
+    actor_data = json.loads(actor_data)
+    # titles = values['cast']
+    titles = actor_data['combined_credits']['cast']
     # pprint(titles[0])
     title = titles[0]
     print(f"the uid is {title['id']}")
@@ -250,14 +251,16 @@ class Actor(Actor):
       title_type = title['media_type']
       result.append({
         "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
+        # "uid": "mo" + title['id'] if title_type == 'movie' else "tv" + title['id'],
         "title": title['title'] if title_type == 'movie' else title['name'], 
         # "released": title['first_air_date'][:4] if title_type == 'tv' else title['release_date'][:4],
         "released": title['first_air_date'][:4] if 'first_air_date' in title else title['release_date'][:4] if 'release_date' in title else "",
-        "title_type": title['media_type']})
+        "title_type": title_type})
 
     # return {"titles": result, 
     # "name": values['base']["name"]}
-    return result
+    return {"titles": result, "uid": "na" + str(actor_data['id']),
+        "name": actor_data['name']}
 
   #  @staticmethod
   # def def find_by_name(name):
