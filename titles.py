@@ -56,7 +56,8 @@ class Title(Model):
 
 
   def get_cast(self):
-    pass
+    from actors import Actor
+    return Actor.match(graph ).raw_query("MATCH(t:Title {uid: $uid})<-[:ACTED_IN]-(_:Actor) ", {"uid":self.uid})
   
   # def find():
   
@@ -70,7 +71,7 @@ class Title(Model):
     cast = title_data['credits']['cast'] if 'credits' in title_data else title_data['aggregate_credits']['cast']
 
     uid = "tv" + str(title_data['id']) if title_type == "tv" else "mo" + str(title_data['id'])
-    released =  title_data['first_air_date'][:4] if 'first_air_date' in title_data else title_data['release_date'][:4] if 'release_date' in title_data else "",
+    released =  title_data['first_air_date'][:4] if 'first_air_date' in title_data else title_data['release_date'][:4] if 'release_date' in title_data else ""
     title = title_data['title'] if title_type == 'movie' else title_data['name']
 
     result = []
@@ -86,3 +87,22 @@ class Title(Model):
       'released': released,
       "title_type": title_type,
       'title': title}
+
+  @classmethod
+  def find_by_uid(cls, uid):
+    #here: safe handling of where clause
+    # where() doesn't seem to allow for parameterized queries and so the related problem of SQL/Cypher injection
+    # return cls.match(graph).where(f"_.uid = '{uid}'").first()
+    title = cls.match(graph).raw_query("MATCH (_:Title {uid: $uid}) ", {'uid':uid})
+
+    if title:
+      return title[0]
+
+  @classmethod
+  def find_by_title(cls, query):
+    q_parts = query.replace(',',' ').split()
+ 
+    where_clause = "WHERE _.title =~ $title"
+    params = {'title': "(?i).*" + '.*'.join(q_parts) + ".*"} #"(?i)" + query + ".*"
+
+    return cls.match(graph ).raw_query("MATCH (_:Title) " + where_clause, params)

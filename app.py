@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from os import getenv
 from actors import Actor
 from titles import Title
@@ -60,10 +60,11 @@ def create_actor():
 
       t.create(cast['cast'])
 
-   actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
-    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
-    "John Salley", "RonReaco Lee", "Bo Yokely"]
-   return render_template('actor.html',actors=actors)
+   # actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
+   #  "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
+   #  "John Salley", "RonReaco Lee", "Bo Yokely"]
+   # return render_template('actor.html',actors=actors)
+   return redirect(url_for('find_actor', uid=actor_data[0]['uid']))
 
 @app.route('/create_title',methods = ['GET'])#post
 def create_title():
@@ -74,7 +75,10 @@ def create_title():
 
    title_data = get_titles_data([{'uid':uid, 'title': title, 'released': released,
         "title_type": title_type}])
-   t = Title(uid, title, released, title_type)
+   t = Title(title_data[0]['uid'],
+      title_data[0]['title'],
+      title_data[0]['released'],
+      title_data[0]['title_type'])
    actors_added = t.create(title_data[0]['cast'])
 
    actors = get_actors_data(actors_added)
@@ -89,7 +93,8 @@ def create_title():
 
        a.create(actor['titles'])
 
-   return "Template here"
+   # return "Template here"
+   return redirect(url_for('find_title', uid=title_data[0]['uid']))
 
 
 def get_actors_data(actors_attr):
@@ -156,10 +161,24 @@ def find_actor(uid):
    print(request.query_string)
    # actor = Actor.find_by_uid("na5411")
    actor = Actor.find_by_uid(uid)
-   coactors = actor.get_coactors()
-   titles = actor.get_titles()
+   if actor:
+      coactors = actor.get_coactors()
+      titles = actor.get_titles()
+      return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
+   else:
+      return "404" #here:
 
-   return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
+@app.route('/title/<uid>',methods = ['GET'])#post
+def find_title(uid):
+   print(request.query_string)
+   # actor = Actor.find_by_uid("na5411")
+   title = Title.find_by_uid(uid)
+   if title:
+      cast = title.get_cast()
+
+      return render_template('title.html',title=title, cast=cast)
+   else:
+      return "404" #here:
 
 
 if getenv("DEBUGGER") == "True" or  __name__ == '__main__':

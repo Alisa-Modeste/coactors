@@ -130,7 +130,10 @@ class Actor(Model):
     #here: safe handling of where clause
     # where() doesn't seem to allow for parameterized queries and so the related problem of SQL/Cypher injection
     # return cls.match(graph).where(f"_.uid = '{uid}'").first()
-    return cls.match(graph).raw_query("MATCH (_:Actor {uid: $uid}) ", {'uid':uid})[0]
+    actor = cls.match(graph).raw_query("MATCH (_:Actor {uid: $uid}) ", {'uid':uid})
+
+    if actor:
+      return actor[0]
 
 
   @classmethod
@@ -143,11 +146,11 @@ class Actor(Model):
       where_clause = """WHERE _.name =~ $name1
        or _.name =~ $name2 """
 
-      params['name1'] = q_parts[0] + ".*" + q_parts[1] + ".*"
-      params['name2'] = q_parts[1] + ".*" + q_parts[0] + ".*"
+      params['name1'] = "(?i).*" + q_parts[0] + ".*" + q_parts[1] + ".*"
+      params['name2'] = "(?i).*" + q_parts[1] + ".*" + q_parts[0] + ".*"
     else:
       where_clause = "WHERE _.name =~ $name"
-      params['name'] = query + ".*"
+      params['name'] = "(?i)" + query + ".*"
 
     return cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
 
