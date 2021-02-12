@@ -23,9 +23,9 @@ def result():
       return render_template("result.html",result = result)
 
 
-@app.route('/actor/<string:url_frag>')
-def profiles(url_frag):
-   pass
+# @app.route('/actor/<string:url_frag>')
+# def profiles(url_frag):
+#    pass
 
 
 @app.route('/actordemo',methods = ['GET'])
@@ -151,9 +151,11 @@ def get_titles_data(titles_attr):
 
     return new_titles
 
-@app.route('/find_actor',methods = ['GET'])#post
-def find_actor():
-   actor = Actor.find_by_uid("na5411")
+@app.route('/actor/<uid>',methods = ['GET'])#post
+def find_actor(uid):
+   print(request.query_string)
+   # actor = Actor.find_by_uid("na5411")
+   actor = Actor.find_by_uid(uid)
    coactors = actor.get_coactors()
    titles = actor.get_titles()
 

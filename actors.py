@@ -70,7 +70,8 @@ class Actor(Model):
   def get_coactors(self):
     return self.__class__.match(graph ).raw_query("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
     <-[:ACTED_IN]-(_:Actor) 
-      WHERE _.uid <> $uid  """ , {"uid":self.uid})
+      WHERE _.uid <> $uid  
+      WITH distinct _ """ , {"uid":self.uid})
 
   def get_titles(self):
     from titles import Title
@@ -127,7 +128,9 @@ class Actor(Model):
   @classmethod
   def find_by_uid(cls, uid):
     #here: safe handling of where clause
-    return cls.match(graph).where(f"_.uid = '{uid}'").first()
+    # where() doesn't seem to allow for parameterized queries and so the related problem of SQL/Cypher injection
+    # return cls.match(graph).where(f"_.uid = '{uid}'").first()
+    return cls.match(graph).raw_query("MATCH (_:Actor {uid: $uid}) ", {'uid':uid})[0]
 
 
   @classmethod
