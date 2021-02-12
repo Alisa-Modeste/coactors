@@ -1,15 +1,13 @@
-from py2neo import Graph
-from py2neo.ogm import GraphObject, Property, RelatedTo, RelatedFrom, Graph, Node, Model
-from initialClass import Actor
+from py2neo import Graph #here: here or ogm?
+from py2neo.ogm import Property, Graph, Model
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
-class Actor(Actor):
+class Actor(Model):
   max_level = 3
 
-  # uid = Property()
-  # name = Property()
-
-  # acted_in = RelatedTo(Title)
+  uid = Property()
+  name = Property()
+  children_known = Property()
 
   def __init__(self, uid, name, level=1):
     self.uid = uid
@@ -22,9 +20,6 @@ class Actor(Actor):
   #   ACTED_IN = Relationship.type("ACTED_IN")
   #   graph.merge(ACTED_IN(a, b), "Title", "uid")
 
-  def tester(self):
-    print(self.__class__.__name__)
-
   def create(self, titles_info):
     #add titles while possibly creating actor node
     #loop that checks to see if any titles were created. those that were get an Title instance 
@@ -34,20 +29,11 @@ class Actor(Actor):
     if self.level > self.__class__.max_level:
       return
     elif self.level == self.__class__.max_level:
-      # tx.run("MERGE(b:Actor {name: $name, uid: $uid})", uid=self.uid, name=self.name)
       u = graph.run("MERGE(b:Actor {name: $name, uid: $uid})", {"uid": self.uid, "name": self.name})
       return
 
-    # titles_added = self.add_titles(tx, titles_info)
     return self.add_titles(titles_info)
 
-    # for title in titles_added:
-    #   print(title['found']) #to do: delete
-    #   if not title['found']:
-    #     # t = Title(title['uid'], title['title'], self.level+1)
-        
-    #     t = Title(title.uid, title.title, self.level+1)
-    #     # t.create()
 
   def add_title(self, tx, title_uid, title):
     tx.run("MATCH(a:Actor {uid: $uid}) "
@@ -56,39 +42,17 @@ class Actor(Actor):
 
   def add_titles(self, titles_info):    
     from titles import Title
-    # query = "MERGE (a:Actor {name: $name, uid: $uid}) SET a.children_known = True "
     query = """MERGE (a:Actor {uid: $uid}) 
      SET a += {name: $name, children_known: True} """
     params = {"name": self.name, "uid": self.uid}
 
-    # for i in range(0,len(titles_info)):
-    #   query += "MERGE (a:Actor {name: $name, uid: $uid}) "
-    #   query += f"MERGE (t{i}:Title "
-    #   query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid}) "
-    #   query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
-    #   ON CREATE SET t{i}.found=FALSE 
-    #   ON MATCH SET t{i}.found=TRUE 
-    #   RETURN t{i}.found as found, t{i}.uid as uid, t{i}.title as title 
-    #   UNION """
-
-    #   params[f"titles{i}_uid"] = titles_info[i]["uid"]
-    #   params[f"titles{i}_title"] = titles_info[i]["title"]
-
-    # query = query[:-6]
-
-    #######same
     title_uids = []
-    # for i in range(0,len(titles_info['filmography'])):
     for i in range(0,len(titles_info)):
-      # query += f"MERGE (t{i}:Title "
-      # query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid, "
-      # query += "released:$titles" + str(i) + "_released, title_type:$titles" + str(i) + "_title_type}) "
+
       query += f"MERGE (t{i}:Title " + "{uid:$titles" + str(i) + "_uid}) "
       query += f" SET t{i} += " + "{title:$titles" + str(i) + "_title, released:$titles" + str(i) 
       query += "_released, title_type:$titles" + str(i) + "_title_type} "      
       query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) """
-      # ON CREATE SET t{i}.found=FALSE 
-      # ON MATCH SET t{i}.found=TRUE """
 
       params[f"titles{i}_uid"] = titles_info[i]["uid"]
       params[f"titles{i}_title"] = titles_info[i]["title"]
@@ -96,32 +60,19 @@ class Actor(Actor):
       params[f"titles{i}_title_type"] = titles_info[i]["title_type"]
       title_uids.append(titles_info[i]["uid"])
 
-    # query = query[:-6]
     graph.run(query, params)
 
     titles = Title.match(graph ).raw_query("""MATCH (_:Title) 
       WHERE _.uid IN $title_uids """, {"title_uids":title_uids})
 
-    # query = query + "RETURN "
     return titles
 
   def get_coactors(self):
-    # # payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
-    # return graph.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
-    # <-[:ACTED_IN]-(c:Actor) 
-    #   WHERE c.uid <> $uid  """, uid=self.uid)
-      # RETURN distinct c.uid, c.name as cname""", uid=self.uid) #RETURN b.id, b.title, c.id, c.name""", uid=self.uid)
-    
-    # for record in payload:
-    #   print("" + str(record["c.uid"]) + " and name:" + record["cname"])
     return self.__class__.match(graph ).raw_query("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
     <-[:ACTED_IN]-(_:Actor) 
       WHERE _.uid <> $uid  """ , {"uid":self.uid})
 
   def get_titles(self):
-    # tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title)  
-    #  RETURN b.uid, b.title""", uid=self.uid)
-    # # titles = Title.match(graph ).raw_query(MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) , params)
     from titles import Title
     return Title.match(graph ).raw_query("MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) ", {"uid":self.uid})
 
@@ -154,28 +105,6 @@ class Actor(Actor):
      WITH count(r1) as rels, _ 
      WHERE rels = $right_num""", {"actor_uids":actor_uids, "right_num":len(actor_uids) })
 
-  # def get_groups_coactors_and_titlesDELETE(self, tx, actor_uids):
-  #   actor_uids.append(self.uid)
-
-  #   payload = tx.run("""MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
-  #    WHERE a.uid IN $actor_uids 
-  #    WITH count(r1) as rels, b 
-  #    WHERE rels = $rels 
-  #    MATCH (b)<-[ACTED_IN]-(c:Actor) 
-  #    WHERE NOT c.id IN $actor_uids 
-  #    RETURN distinct c.uid, c.name as cname
-     
-     
-  #    MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
-  #    WHERE a.uid IN [32,17] 
-  #    WITH count(r1) as rels, b 
-  #    WHERE rels = 2 
-	#  WITH collect(b) as bb, b
-	 
-  #    MATCH (b)<-[ACTED_IN]-(c:Actor) 
-  #    WHERE NOT c.id IN [32,17] 
-  #    with collect(c) as cc, bb
-  #    RETURN distinct cc,bb""", actor_uids=actor_uids, rels = len(actor_uids))
 
   def get_groups_coactors_and_titles(self, tx, actor_uids):
     actor_uids.append(self.uid)
@@ -197,22 +126,16 @@ class Actor(Actor):
 
   @classmethod
   def find_by_uid(cls, uid):
-    # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
-    actor = cls.match(graph).where(f"_.uid = '{uid}'").first()
-    # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
+    #here: safe handling of where clause
+    return cls.match(graph).where(f"_.uid = '{uid}'").first()
 
-    return actor
 
   @classmethod
   def find_by_name(cls, query):
-    # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
     q_parts = query.replace(',',' ').split()
     params = {}
 
-    # if len(q_parts) > 1 and False:
     if len(q_parts) > 1:
-      # where_clause = """WHERE _.name =~ '$name1.* $name2.*'
-      #  or _.name =~ '$name4.* $name3.*' """
       
       where_clause = """WHERE _.name =~ $name1
        or _.name =~ $name2 """
@@ -223,10 +146,8 @@ class Actor(Actor):
       where_clause = "WHERE _.name =~ $name"
       params['name'] = query + ".*"
 
-    actor = cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
-    # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
+    return cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
 
-    return actor
 
   @classmethod
   def get_paginated_all(cls, tx):
@@ -234,60 +155,22 @@ class Actor(Actor):
 
   @staticmethod
   def parse_filmography(actor_data):
-    # from pprintpp import pprint
-    # pprint(values)
     import json
-    # import re
-    actor_data = json.loads(actor_data)
-    # titles = values['cast']
-    titles = actor_data['combined_credits']['cast']
-    # pprint(titles[0])
-    title = titles[0]
-    print(f"the uid is {title['id']}")
-    # print(f"the title is {title['title']}")
-    # print(f"the start year is {title['startYear']}")
-    # print(f"the  (real) start year is {title['year']}")
 
-    title = titles[3]
-    # pprint(title)
-    print(f"the uid is {title['id']}")
-    # print(f"the title is {title['title']}")
-    # print(f"the start year is {title['startYear']}")
-    # print(f"the (real) start year is {title['year']}")
-    # pprint(title)
+    actor_data = json.loads(actor_data)
+
+    titles = actor_data['combined_credits']['cast']
 
     result = []
     for title in titles:
       title_type = title['media_type']
       result.append({
         "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
-        # "uid": "mo" + title['id'] if title_type == 'movie' else "tv" + title['id'],
         "title": title['title'] if title_type == 'movie' else title['name'], 
-        # "released": title['first_air_date'][:4] if title_type == 'tv' else title['release_date'][:4],
         "released": title['first_air_date'][:4] if 'first_air_date' in title else title['release_date'][:4] if 'release_date' in title else "",
         "title_type": title_type})
 
-    # return {"titles": result, 
-    # "name": values['base']["name"]}
     return {"titles": result, "uid": "na" + str(actor_data['id']),
         "name": actor_data['name']}
 
-  #  @staticmethod
-  # def def find_by_name(name):
-  #   pass
-  #   name = name.split(" ")
-  #   option1 = name.join(".* ") + ".*"
-  #   option2 = name.reverse().join(".* ") + ".*"
-  #   #*sanaa*lat* or name like *lat*sanaa*
-
-# /////////////// compare explain query
-    #  WHERE NOT c.id IN $inc_ids 
-    #  with [b.id, b.title] as hh,[c.id,c.name] as g
-    #  return  collect(hh),collect(g)
-     
-  # def add_titles([imdb_ids_titles]):
-  
-  # def list():
-  
-  # def connected_actors():
     

@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request
-# from debugger import initialize_flask_server_debugger_if_needed
 from os import getenv
-from demo9_meets_demo5 import Demo
 from actors import Actor
 from titles import Title
 from api import API
@@ -52,10 +50,8 @@ def create_actor():
    a = Actor(actor_data[0]['uid'], actor_data[0]['name'], level)
    titles_added = a.create(actor_data[0]['titles'])
 
-   # titles = get_titles_data(titles_added) # cast_uids
-   casts = get_titles_data(titles_added) # cast_uids
-   # # new_titles = []
-   # actors = []
+   casts = get_titles_data(titles_added)
+
    for cast in casts:
       t = Title(cast['uid'],
          cast['title'],
@@ -63,21 +59,7 @@ def create_actor():
          cast['title_type'])
 
       t.create(cast['cast'])
-   #    #  actors.append( get_actors_data(actor_uids) )
-   #     actors += get_actors_data(cast)
 
-   # for actor in actors:
-   #     level = 2 #really 3. here: change class
-
-   #     a = Actor(
-   #        actor['data']['uid'], 
-   #        actor['data']['name'], 
-   #        level)
-
-   #     a.create(actor['data']['titles'])
-
-   # t = Demo
-   # t.including()
    actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
     "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
     "John Salley", "RonReaco Lee", "Bo Yokely"]
@@ -94,11 +76,7 @@ def create_title():
         "title_type": title_type}])
    t = Title(uid, title, released, title_type)
    actors_added = t.create(title_data[0]['cast'])
-   #--------------------------------------------
-   # actors = []
-   
-   # for title in title_data: #here: actors_added
-   # for actor in actors_added:
+
    actors = get_actors_data(actors_added)
 
    for actor in actors:
@@ -117,92 +95,60 @@ def create_title():
 def get_actors_data(actors_attr):
     new_actors = []
     count = 0 #here:
-    for actor in actors_attr: #['filmography'] if 'filmography' in actors_attr else actors_attr:
+    for actor in actors_attr:
        uid = None
-       if type(actor) == dict:# and (not 'found' in actor or not actor['found']):
-           uid = actor['uid'] #[2:] if actor['uid'][0].isalpha() else actor['uid']
+       if type(actor) == dict:
+           uid = actor['uid']
        
        elif type(actor) == Actor and (actor.children_known is None or not actor.children_known):
-           uid = actor.uid[2:] #if actor.uid[0].isalpha() else actor.uid
+           uid = actor.uid[2:] 
 
-      #  if True: #uid
        if uid:
-            # response = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-         #   response = API.retrieve(f"/person/{uid}/combined_credits")
+
            response = API.retrieve(f"/person/{uid}",{'append_to_response': "combined_credits"})
-        #    if 'name' in actor:#remove here:
-        #        with open('sanaaFilms2.txt') as f: resource = f.read()
-        #    else:
-        #  #       resource = API.retrieve( "/actors/get-all-filmography", {"nconst": actor['uid']})
-        #        with open('CuocoFilms2.txt') as f: resource = f.read()
          #   with open('geneFilms2.txt') as f: response = f.read()
-        #    from pprintpp import pprint
-        #    pprint(response)
            titles = Actor.parse_filmography(response)
 
-      #      this_actor = {'titles': titles}
-      #      this_actor['uid'] = "na" + (actor['uid'] if type(actor) == dict else actor.uid)
-      #   #    this_actor['data']['uid'] = actor['uid']
-      #      this_actor['name'] = actor['name'] if type(actor) == dict else actor.name
-           
-         #   new_actors.append(this_actor)
            new_actors.append(titles)
 
-    #    if not 'name' in actor:
-      #  break
        count += 1
        if count == 2:
           break
 
     return new_actors
 
-def get_titles_data(titles_attr): #get_data_related_to_titles
+def get_titles_data(titles_attr): 
     new_titles = []
     count = 0 #here:
-   #  related_actors_data = []
+
     for title in titles_attr:
-      #   if 'found' not in title or not title['found']:
-      #   if title.found is None or not title.found:
+
         uid = None
-        if type(title) == dict:# and (not 'children_known' in title or not title['children_known']):
-            uid = title['uid'] #[2:] if title['uid'][0].isalpha() else title['uid']
+        if type(title) == dict:
+            uid = title['uid'] 
             title_type = title['title_type']
 
         elif type(title) == Title and (title.children_known is None or not title.children_known):
-            uid = title.uid[2:] #if title.uid[0].isalpha() else title.uid
+            uid = title.uid[2:] 
             title_type = title.title_type
 
-      #   if True: # uid:
         if uid:
-            # # resource = API.retrieve( "/title/get-top-cast", {"tconst": uid})
-            # response = API.retrieve(f'/{title_type}/{uid}/credits',{})
+
             if title_type == "movie":
                response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
             else:
                response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "aggregate_credits"})
-            # # response = API.retrieve('/tv/551',{})
+
             # with open('aCast3.txt') as f: response = f.read()
-            # from pprintpp import pprint
-            # pprint(response)
-            cast = Title.parse_cast(response, title_type) #uids, no names
-            # cast['title_type'] = title_type
-            # for actor_uid in cast_uids:
-            #     related_actors_data.append( get_actors_data(actor_uid) )
 
-            # this_title = {'cast': cast}
-            # this_title['uid'] = title['uid'] if type(title) == dict else title.uid
-            # this_title['released'] = title['released'] if type(title) == dict else title.released
-            # this_title['title_type'] = title_type
-            # this_title['title'] = title['title'] if type(title) == dict else title.title
+            cast = Title.parse_cast(response, title_type) 
 
-            # new_titles.append(this_title)
             new_titles.append(cast)
-            # break#here: break
 
         count += 1
         if count == 2:
            break
-   #  return cast #new_titles
+
     return new_titles
 
 @app.route('/find_actor',methods = ['GET'])#post
@@ -213,12 +159,6 @@ def find_actor():
 
    return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
 
-# print(f"__name__ is {__name__ }")
-# print(f"__main__ is {__main__ }")
-# if __name__ == '__main__':
-# print("hello1")
-# print( getenv("DEBUGGER"))
+
 if getenv("DEBUGGER") == "True" or  __name__ == '__main__':
-   # print("hello?")
-   # app.run(debug = True)
    app.run()
