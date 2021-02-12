@@ -56,7 +56,9 @@ class Actor(Actor):
 
   def add_titles(self, titles_info):    
     from titles import Title
-    query = "MERGE (a:Actor {name: $name, uid: $uid}) SET a.children_known = True "
+    # query = "MERGE (a:Actor {name: $name, uid: $uid}) SET a.children_known = True "
+    query = """MERGE (a:Actor {uid: $uid}) 
+     SET a += {name: $name, children_known: True} """
     params = {"name": self.name, "uid": self.uid}
 
     # for i in range(0,len(titles_info)):
@@ -78,9 +80,12 @@ class Actor(Actor):
     title_uids = []
     # for i in range(0,len(titles_info['filmography'])):
     for i in range(0,len(titles_info)):
-      query += f"MERGE (t{i}:Title "
-      query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid, "
-      query += "released:$titles" + str(i) + "_released, title_type:$titles" + str(i) + "_title_type}) "
+      # query += f"MERGE (t{i}:Title "
+      # query += "{title:$titles" + str(i) + "_title, uid:$titles" + str(i) + "_uid, "
+      # query += "released:$titles" + str(i) + "_released, title_type:$titles" + str(i) + "_title_type}) "
+      query += f"MERGE (t{i}:Title " + "{uid:$titles" + str(i) + "_uid}) "
+      query += f" SET t{i} += " + "{title:$titles" + str(i) + "_title, released:$titles" + str(i) 
+      query += "_released, title_type:$titles" + str(i) + "_title_type} "      
       query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) """
       # ON CREATE SET t{i}.found=FALSE 
       # ON MATCH SET t{i}.found=TRUE """

@@ -35,14 +35,18 @@ class Title(Title):
     
   def add_cast(self, cast_info):
     from actors import Actor
-    query = """MERGE (t:Title {title: $title, uid: $uid, released: $released, title_type: $title_type}) 
+    # query = """MERGE (t:Title {title: $title, uid: $uid, released: $released, title_type: $title_type}) 
+    query = """MERGE (t:Title {uid: $uid}) 
+       SET t += {title: $title, released: $released, title_type: $title_type} 
        SET t.children_known = True  """
     params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
 
     actor_uids = []
     for i in range(0,len(cast_info)):
-      query += f"MERGE (a{i}:Actor "
-      query += "{name:$actors" + str(i) + "_name, uid:$actors" + str(i) + "_uid}) "
+      # query += f"MERGE (a{i}:Actor "
+      # query += "{name:$actors" + str(i) + "_name, uid:$actors" + str(i) + "_uid}) "
+      query += f"MERGE (a{i}:Actor " + "{uid:$actors" + str(i) + "_uid}) "
+      query += f"SET a{i}.name = $actors" + str(i) + "_name "
       query += f"""MERGE (a{i})-[:ACTED_IN]->(t) """
       # ON CREATE SET a{i}.found=FALSE 
       # ON MATCH SET a{i}.found=TRUE """
