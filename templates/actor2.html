@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Sanaa, {{actor.name}}
+                    <small>Subheading</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Home</a>
+                    </li>
+                    <li class="active">Two Column Portfolio</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Projects Row -->
+        <div class="row">
+            <div class="col-md-6 img-portfolio">
+                <a href="portfolio-item.html">
+                    <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
+                </a>
+                <h3>
+                    <a href="portfolio-item.html">Co-actors</a>
+                </h3>
+                <!-- <p>Co-acted with</p> -->
+    <ul>
+    {% for coactor in coactors %}
+        <li>{{ coactor.name }} <div class="group-link"> <a href="actor_group.html">Make a group with</a></div></li>
+    {% endfor %}
+    </ul>
+            </div>
+            <div class="col-md-6 img-portfolio">
+                <a href="portfolio-item.html">
+                    <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
+                </a>
+                <h3>
+                    <a href="portfolio-item.html">Acted in</a>
+                </h3>
+                <!-- <p>Acted in</p> -->
+    <ul>
+    {% for title in titles %}
+        <li>{{ title.title }} </li>
+    {% endfor %}
+    </ul>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Pagination -->
+        <!-- <div class="row text-center">
+            <div class="col-lg-12">
+                <ul class="pagination">
+                    <li>
+                        <a href="#">&laquo;</a>
+                    </li>
+                    <li class="active">
+                        <a href="#">1</a>
+                    </li>
+                    <li>
+                        <a href="#">2</a>
+                    </li>
+                    <li>
+                        <a href="#">3</a>
+                    </li>
+                    <li>
+                        <a href="#">4</a>
+                    </li>
+                    <li>
+                        <a href="#">5</a>
+                    </li>
+                    <li>
+                        <a href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website, year</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    {% endblock %}
