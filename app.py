@@ -205,6 +205,13 @@ def get_titles_data(titles_attr): #get_data_related_to_titles
    #  return cast #new_titles
     return new_titles
 
+@app.route('/find_actor',methods = ['GET'])#post
+def find_actor():
+   actor = Actor.find_by_uid("na5411")
+   coactors = actor.get_coactors()
+   titles = actor.get_titles()
+
+   return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
 
 # print(f"__name__ is {__name__ }")
 # print(f"__main__ is {__main__ }")

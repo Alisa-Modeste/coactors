@@ -105,20 +105,25 @@ class Actor(Actor):
     # query = query + "RETURN "
     return titles
 
-  def get_coactors(self, tx):
-    payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
-    <-[:ACTED_IN]-(c:Actor) 
-      WHERE c.uid <> $uid  
-      RETURN distinct c.uid, c.name as cname""", uid=self.uid) #RETURN b.id, b.title, c.id, c.name""", uid=self.uid)
+  def get_coactors(self):
+    # # payload = tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
+    # return graph.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
+    # <-[:ACTED_IN]-(c:Actor) 
+    #   WHERE c.uid <> $uid  """, uid=self.uid)
+      # RETURN distinct c.uid, c.name as cname""", uid=self.uid) #RETURN b.id, b.title, c.id, c.name""", uid=self.uid)
     
-    for record in payload:
-      print("" + str(record["c.uid"]) + " and name:" + record["cname"])
+    # for record in payload:
+    #   print("" + str(record["c.uid"]) + " and name:" + record["cname"])
+    return self.__class__.match(graph ).raw_query("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title) 
+    <-[:ACTED_IN]-(_:Actor) 
+      WHERE _.uid <> $uid  """ , {"uid":self.uid})
 
-  def get_titles(self, tx):
-    tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title)  
-     RETURN b.uid, b.title""", uid=self.uid)
+  def get_titles(self):
+    # tx.run("""MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(b:Title)  
+    #  RETURN b.uid, b.title""", uid=self.uid)
+    # # titles = Title.match(graph ).raw_query(MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) , params)
     from titles import Title
-    # titles = Title.match(graph ).raw_query(MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) , params)
+    return Title.match(graph ).raw_query("MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) ", {"uid":self.uid})
 
   def get_groups_coactors(self, tx, actor_uids):
     actor_uids.append(self.uid)
@@ -193,7 +198,7 @@ class Actor(Actor):
   @classmethod
   def find_by_uid(cls, uid):
     # actor = match(graph ).where("_.uid IN ['56', 32]").all()#first()
-    actor = cls.match(graph).where("_.uid IN ['56', 32]").first()
+    actor = cls.match(graph).where(f"_.uid = '{uid}'").first()
     # actor = NodeMatcher(graph).match("Actor").where("_.uid IN ['56', 32]").all()#works
 
     return actor
