@@ -31,14 +31,17 @@
                     <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
                 </a>
                 <h3>
-                    <a href="portfolio-item.html">Co-actors</a>
+                    <!-- <a href="portfolio-item.html">Co-actors</a> -->
+                    Co-actors
                 </h3>
                 <!-- <p>Co-acted with</p> -->
     <ul>
     {% for coactor in coactors %}
         <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{ url_for('find_actor', uid = actor.uid, ca = ca, ca = 5) }}">Make a group with</a></div></li> -->
         <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{ url_for('find_actor', uid = actor.uid, 'z' = f'ca = {ca}, ca = 5') }}">Make a group with</a></div></li> -->
-        <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{{ url_for('find_actor', uid = actor.uid, group = ca, ca = 5) }}">Make a group with</a></div></li>
+        <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{ url_for('find_actor', uid = actor.uid, group = ca, ca = 5) }}">Make a group with</a></div></li> -->
+        <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{{ url_for('find_actor', uid = actor.uid) + querystring + '&ca=33&ca=5' }}">Make a group with</a></div></li> -->
+        <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{{ url_for('find_actor', uid = actor.uid) + querystring + '&ca=' + coactor.uid }}">Make a group with</a></div></li>
     {% endfor %}
     </ul>
             </div>
@@ -47,7 +50,8 @@
                     <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
                 </a>
                 <h3>
-                    <a href="portfolio-item.html">Acted in</a>
+                    <!-- <a href="portfolio-item.html">Acted in</a> -->
+                    Acted in
                 </h3>
                 <!-- <p>Acted in</p> -->
     <ul>

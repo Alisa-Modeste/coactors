@@ -165,13 +165,16 @@ def find_actor(uid):
 
    if actor and group:
       group_members = Actor.find_by_uids(group)
+      querystring = '?ca=' + '&ca='.join(group)
       coactors = actor.get_groups_coactors(group.copy())
       titles = actor.get_groups_titles(group.copy())
-      return render_template('actor2.html',actor=actor, group=group_members, coactors=coactors, titles=titles, ca=group)
+      return render_template('actor2.html',actor=actor, group=group_members, 
+         coactors=coactors, titles=titles, querystring=querystring)
    elif actor:
       coactors = actor.get_coactors()
       titles = actor.get_titles()
-      return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
+      return render_template('actor2.html',actor=actor, coactors=coactors, 
+         titles=titles, querystring='?')
    else:
       return "404" #here:
 
