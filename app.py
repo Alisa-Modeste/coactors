@@ -158,10 +158,17 @@ def get_titles_data(titles_attr):
 
 @app.route('/actor/<uid>',methods = ['GET'])#post
 def find_actor(uid):
-   print(request.query_string)
+   print( request.args.getlist('ca') )
    # actor = Actor.find_by_uid("na5411")
+   group = request.args.getlist('ca')
    actor = Actor.find_by_uid(uid)
-   if actor:
+
+   if actor and group:
+      group_members = Actor.find_by_uids(group)
+      coactors = actor.get_groups_coactors(group.copy())
+      titles = actor.get_groups_titles(group.copy())
+      return render_template('actor2.html',actor=actor, group=group_members, coactors=coactors, titles=titles, ca=group)
+   elif actor:
       coactors = actor.get_coactors()
       titles = actor.get_titles()
       return render_template('actor2.html',actor=actor, coactors=coactors, titles=titles)
@@ -170,8 +177,6 @@ def find_actor(uid):
 
 @app.route('/title/<uid>',methods = ['GET'])#post
 def find_title(uid):
-   print(request.query_string)
-   # actor = Actor.find_by_uid("na5411")
    title = Title.find_by_uid(uid)
    if title:
       cast = title.get_cast()

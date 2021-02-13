@@ -8,8 +8,12 @@
         <!-- Page Heading/Breadcrumbs -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">{{actor.name}}
-                    <small>Subheading</small>
+                <h1 class="page-header">{{actor.name}}{% if group -%}
+                        {% for actor in group -%}
+                        , {{actor.name}}
+                        {%- endfor %}
+                    {%- endif %}
+                    <!-- <small>Subheading</small> -->
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="index.html">Home</a>
@@ -32,7 +36,9 @@
                 <!-- <p>Co-acted with</p> -->
     <ul>
     {% for coactor in coactors %}
-        <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="actor_group.html">Make a group with</a></div></li>
+        <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{ url_for('find_actor', uid = actor.uid, ca = ca, ca = 5) }}">Make a group with</a></div></li> -->
+        <!-- <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{ url_for('find_actor', uid = actor.uid, 'z' = f'ca = {ca}, ca = 5') }}">Make a group with</a></div></li> -->
+        <li><a href="{{ url_for('find_actor', uid = coactor.uid) }}" >{{ coactor.name }} </a><div class="group-link"> <a href="{{ url_for('find_actor', uid = actor.uid, group = ca, ca = 5) }}">Make a group with</a></div></li>
     {% endfor %}
     </ul>
             </div>

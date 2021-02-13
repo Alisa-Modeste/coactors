@@ -77,34 +77,44 @@ class Actor(Model):
     from titles import Title
     return Title.match(graph ).raw_query("MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) ", {"uid":self.uid})
 
-  def get_groups_coactors(self, tx, actor_uids):
+  def get_groups_coactors(self, actor_uids):
     actor_uids.append(self.uid)
 
-    payload = tx.run("""MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
+    # payload = tx.run("""MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
+    return self.__class__.match(graph ).raw_query("""MATCH(a:Actor)-[r1:ACTED_IN]->(b:Title) 
      WHERE a.uid IN $actor_uids 
      WITH count(r1) as rels, b 
      WHERE rels = $rels 
-     MATCH (b)<-[ACTED_IN]-(c:Actor) 
-     WHERE NOT c.id IN $actor_uids 
-     RETURN distinct c.uid, c.name as cname""", actor_uids=actor_uids, rels = len(actor_uids)) #RETURN b.id, b.title, c.id, c.name""", uid=self.uid, inc_ids=inc_ids)
+     MATCH (b)<-[ACTED_IN]-(_:Actor) 
+     WHERE NOT _.uid IN $actor_uids 
+     WITH distinct _ """ , {"actor_uids":actor_uids, "rels": len(actor_uids)})
 
-    for record in payload:
-      print("" + str(record["c.uid"]) + " and name:" + record["cname"])
+    #  RETURN distinct c.uid, c.name as cname""", actor_uids=actor_uids, rels = len(actor_uids)) #RETURN b.id, b.title, c.id, c.name""", uid=self.uid, inc_ids=inc_ids)
 
-  def get_groups_titles(self, tx, actor_uids):
-    tx.run("""MATCH(a:Actor)-[:ACTED_IN]->(b:Title) 
-     WHERE a.uid IN $actor_uids 
-     WITH count(r1) as rels, b 
-     WHERE rels = $len(actor_uids) 
-     RETURN distinct b.uid, b.title""", uid=self.uid)
+
+    # for record in payload:
+    #   print("" + str(record["c.uid"]) + " and name:" + record["cname"])
+
+  def get_groups_titles(self, actor_uids):
+    # tx.run("""MATCH(a:Actor)-[:ACTED_IN]->(b:Title) 
+    #  WHERE a.uid IN $actor_uids 
+    #  WITH count(r1) as rels, b 
+    #  WHERE rels = $len(actor_uids) 
+    #  RETURN distinct b.uid, b.title""", uid=self.uid)
 
     from titles import Title
     #here: distinct needed?
     actor_uids.append(self.uid)
-    titles = Title.match(graph ).raw_query("""MATCH(a:Actor)-[:ACTED_IN]->(_:Title) 
+    # titles = Title.match(graph ).raw_query("""MATCH(a:Actor)-[:ACTED_IN]->(_:Title) 
+    #  WHERE a.uid IN $actor_uids 
+    #  WITH count(r1) as rels, _ 
+    #  WHERE rels = $right_num""", {"actor_uids":actor_uids, "right_num":len(actor_uids) })
+
+    return Title.match(graph ).raw_query("""MATCH(a:Actor)-[r1:ACTED_IN]->(_:Title) 
      WHERE a.uid IN $actor_uids 
      WITH count(r1) as rels, _ 
-     WHERE rels = $right_num""", {"actor_uids":actor_uids, "right_num":len(actor_uids) })
+     WHERE rels = $rels 
+     WITH distinct _ """, {"actor_uids":actor_uids, "rels": len(actor_uids)})
 
 
   def get_groups_coactors_and_titles(self, tx, actor_uids):
@@ -134,6 +144,16 @@ class Actor(Model):
 
     if actor:
       return actor[0]
+
+  @classmethod
+  def find_by_uids(cls, uids):
+    #here: safe handling of where clause
+    # where() doesn't seem to allow for parameterized queries and so the related problem of SQL/Cypher injection
+    # return cls.match(graph).where(f"_.uid = '{uid}'").first()
+    return cls.match(graph).raw_query("MATCH (_:Actor) WHERE _.uid IN $uids", {'uids':uids})
+
+    # if actor:
+    #   return actor[0]
 
 
   @classmethod
