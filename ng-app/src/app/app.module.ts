@@ -8,6 +8,7 @@ import { ActorsComponent } from './actors/actors.component';
 import { TitlesComponent } from './titles/titles.component';
 import { ActorDetailComponent } from './actor-detail/actor-detail.component';
 import { MessagesComponent } from './messages/messages.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { MessagesComponent } from './messages/messages.component';
     ActorsComponent,
     TitlesComponent,
     ActorDetailComponent,
-    MessagesComponent
+    MessagesComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
