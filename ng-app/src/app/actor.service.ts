@@ -18,4 +18,11 @@ export class ActorService {
     const actors = of(ACTORS);
     return actors;
   }
+
+  getActor(uid: string): Observable<Actor | undefined> {
+  // getActor(uid: string): Observable<Actor > {
+    // TODO: send the message _after_ fetching the actor
+    // this.messageService.add(`ActorService: fetched actor id=${id}`);
+    return of(ACTORS.find(actor => actor.uid === uid));
+  }
 }

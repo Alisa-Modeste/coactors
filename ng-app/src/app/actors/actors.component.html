@@ -4,9 +4,10 @@
     <!-- <li *ngFor="let actor of actors"
         [class.selected]="actor === selectedActor"
         (click)="onSelect(actor)"> -->
-        <li *ngFor="let actor of actors"
-          routerLink="/actor/{{actor.uid}}">
+        <li *ngFor="let actor of actors">
+          <a routerLink="/actor/{{actor.uid}}">
     <span class="badge">{{actor.uid}}</span> {{actor.name}}
+          </a>
   </li>
 </ul>
 
