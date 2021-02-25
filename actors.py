@@ -40,30 +40,37 @@ class Actor(Model):
     "MERGE(b:Title {title: $title, uid: $uid}) "
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
-  def add_titles(self, titles_info):    
+  def add_titles(self, titles_info):
+    query = "CALL {"
     from titles import Title
-    query = """MERGE (a:Actor {uid: $uid}) 
-     SET a += {name: $name, children_known: True} """
     params = {"name": self.name, "uid": self.uid}
 
-    title_uids = []
+    # title_uids = []
     for i in range(0,len(titles_info)):
+      query += """MERGE (a:Actor {uid: $uid}) 
+        SET a += {name: $name, children_known: True} """
+
+# -      RETURN t{i} as _.found as found, t{i}.uid as uid, t{i}.title as title
 
       query += f"MERGE (t{i}:Title " + "{uid:$titles" + str(i) + "_uid}) "
       query += f" SET t{i} += " + "{title:$titles" + str(i) + "_title, released:$titles" + str(i) 
       query += "_released, title_type:$titles" + str(i) + "_title_type} "      
-      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) """
+      query += f"""MERGE (a)-[:ACTED_IN]->(t{i}) 
+      ON CREATE SET t{i}.found=FALSE 
+      ON MATCH SET t{i}.found=TRUE 
+      RETURN t{i} as _ 
+      UNION """
+
 
       params[f"titles{i}_uid"] = titles_info[i]["uid"]
       params[f"titles{i}_title"] = titles_info[i]["title"]
       params[f"titles{i}_released"] = titles_info[i]["released"]
       params[f"titles{i}_title_type"] = titles_info[i]["title_type"]
-      title_uids.append(titles_info[i]["uid"])
+# +      title_uids.append(titles_info[i]["uid"])
 
-    graph.run(query, params)
+    query = query[:-6] + "} "
 
-    titles = Title.match(graph ).raw_query("""MATCH (_:Title) 
-      WHERE _.uid IN $title_uids """, {"title_uids":title_uids})
+    titles = Title.match(graph ).raw_query(query, params)
 
     return titles
 

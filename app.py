@@ -9,6 +9,11 @@ import re
 
 app = Flask(__name__)
 
+@app.after_request
+def after_request_func(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
 @app.route('/')
 def student():
    actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
@@ -182,15 +187,6 @@ def find_actor(uid):
    else:
       return "404" #here:
 
-@app.before_request
-def before_request_func():
-    print("before_request is running!")
-
-@app.after_request
-def after_request_func(response):
-    print("after_request is running!")
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response
 
 @app.route('/title/<uid>',methods = ['GET'])#post
 def find_title(uid):
