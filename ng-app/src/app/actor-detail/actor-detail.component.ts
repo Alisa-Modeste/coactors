@@ -28,7 +28,12 @@ export class ActorDetailComponent implements OnInit {
     console.log("uid:" + uid)
     console.log( this.route)
     this.actorService.getActor(uid)
-      .subscribe(actor => this.actor = actor);
+      // .subscribe(actor => this.actor = actor);
+      .subscribe(actor => {
+        this.actor = actor
+    console.log("actor:" )
+    console.log( actor)
+  });
   }
 
 }

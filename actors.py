@@ -135,6 +135,20 @@ class Actor(Model):
   def titles_string(self, titles):
     str = ""
 
+
+  # def toJSON(self):
+  #   import json
+  #   print(self.__dict__)
+  #   print(vars(self))
+  #   print( json.dumps(self, default=lambda o: o.__dict__, 
+  #           sort_keys=True, indent=4) )
+  #   return json.dumps(self, default=lambda o: o.__dict__, 
+  #           sort_keys=True, indent=4)
+
+  def serialize(self):
+    return {"uid": self.uid,
+            "name": self.name}
+
   @classmethod
   def find_by_uid(cls, uid):
     #here: safe handling of where clause

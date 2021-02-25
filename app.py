@@ -43,8 +43,8 @@ api_count = 0
 @app.route('/create_actor',methods = ['GET'])#post
 def create_actor():
    # uid = "nm0005125"
-   uid = "5411"
-   name = "Sanaa Lathan"
+   uid = "2888"
+   name = "Will Smith"
    actor_data = get_actors_data([{'uid': uid, 'name': name}])
    level = 1
    a = Actor(actor_data[0]['uid'], actor_data[0]['name'], level)
@@ -117,8 +117,8 @@ def get_actors_data(actors_attr):
            new_actors.append(titles)
 
        count += 1
-       if count == 2:
-          break
+      #  if count == 2:
+      #     break
 
     return new_actors
 
@@ -151,8 +151,8 @@ def get_titles_data(titles_attr):
             new_titles.append(cast)
 
         count += 1
-        if count == 2:
-           break
+      #   if count == 2:
+      #      break
 
     return new_titles
 
@@ -173,10 +173,24 @@ def find_actor(uid):
    elif actor:
       coactors = actor.get_coactors()
       titles = actor.get_titles()
-      return render_template('actor2.html',actor=actor, coactors=coactors, 
-         titles=titles, querystring='?')
+      # return render_template('actor2.html',actor=actor, coactors=coactors, 
+      #    titles=titles, querystring='?')
+      from flask import jsonify
+      actor.serialize()
+      # return jsonify({'actor': actor.serialize()} )
+      return actor.serialize()
    else:
       return "404" #here:
+
+@app.before_request
+def before_request_func():
+    print("before_request is running!")
+
+@app.after_request
+def after_request_func(response):
+    print("after_request is running!")
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route('/title/<uid>',methods = ['GET'])#post
 def find_title(uid):
