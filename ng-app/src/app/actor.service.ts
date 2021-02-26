@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actor } from './actor';
-import { ACTORS } from './mock-data';
+// import { ACTORS } from './mock-data';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 

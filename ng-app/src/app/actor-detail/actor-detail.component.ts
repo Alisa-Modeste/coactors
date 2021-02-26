@@ -12,6 +12,7 @@ import { ActorService } from '../actor.service';
 })
 export class ActorDetailComponent implements OnInit {
   @Input() actor?: Actor;
+  queryString:string = ""
 
   constructor(
     private route: ActivatedRoute,
@@ -46,17 +47,19 @@ export class ActorDetailComponent implements OnInit {
       // .subscribe(actor => this.actor = actor);
       .subscribe(actor => {
         this.actor = actor
-    console.log("actor:" )
-    console.log( actor)
+        
+        if (this.route.snapshot.queryParams['ca']){
+          this.queryString = (this.route.snapshot.queryParams['ca']) + ","
+        }
   });
 
-  console.log(this.route.snapshot.routeConfig!.path)
-  console.log(this.route.snapshot.params)
-  console.log(this.route.snapshot.queryParams)
-  console.log("k param")
-  console.log(this.route.snapshot.queryParams['k'])
-  console.log(this.route.snapshot.queryParams.k)
-  console.log("s param")
+  // console.log(this.route.snapshot.routeConfig!.path)
+  // console.log(this.route.snapshot.params)
+  // console.log(this.route.snapshot.queryParams)
+  // console.log("k param")
+  // console.log(this.route.snapshot.queryParams['k'])
+  // console.log(this.route.snapshot.queryParams.k)
+  // console.log("s param")
   console.log(this.route.snapshot.queryParams['ca'])
 }
 

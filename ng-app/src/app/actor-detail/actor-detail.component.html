@@ -18,11 +18,18 @@
 <a [routerLink]="['/actor/na5411']" [queryParams]="{ca: 'na52139'}">Add to group</a>
 
 <div *ngIf="actor">
+  <ul class="actors">
+
+    <li *ngFor="let coactor of actor.coactors">
+      <a [routerLink]="['/actor/' +coactor.uid]">{{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
+      <!-- {{coactor}} -->
+</li>
+</ul>
+
 <ul class="actors">
 
-        <li *ngFor="let title of actor.titles">
-          {{title.title}}
-          {{title}}
-  </li>
+  <li *ngFor="let title of actor.titles">
+    {{title.title}}
+</li>
 </ul>
 </div>

@@ -165,18 +165,18 @@ def get_titles_data(titles_attr):
 def find_actor(uid):
    print( request.args.getlist('ca') )
    # actor = Actor.find_by_uid("na5411")
-   group = request.args.getlist('ca')
+   group = request.args.get('ca').split(",")
    actor = Actor.find_by_uid(uid)
 
    if actor and group:
       group_members = Actor.find_by_uids(group)
-      querystring = '?ca=' + '&ca='.join(group)
+      # querystring = '?ca=' + '&ca='.join(group)
       coactors = actor.get_groups_coactors(group.copy())
       titles = actor.get_groups_titles(group.copy())
 
-      return actor.serialize2(titles)
-      return render_template('actor2.html',actor=actor, group=group_members, 
-         coactors=coactors, titles=titles, querystring=querystring)
+      return actor.serialize2(titles, coactors, group_members)
+      # return render_template('actor2.html',actor=actor, group=group_members, 
+      #    coactors=coactors, titles=titles, querystring=querystring)
    elif actor:
       coactors = actor.get_coactors()
       titles = actor.get_titles()
@@ -185,7 +185,7 @@ def find_actor(uid):
       from flask import jsonify
       actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
-      return actor.serialize2(titles)
+      return actor.serialize2(titles, coactors)
    else:
       return "404" #here:
 
