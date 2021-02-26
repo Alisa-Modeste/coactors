@@ -173,6 +173,8 @@ def find_actor(uid):
       querystring = '?ca=' + '&ca='.join(group)
       coactors = actor.get_groups_coactors(group.copy())
       titles = actor.get_groups_titles(group.copy())
+
+      return actor.serialize2(titles)
       return render_template('actor2.html',actor=actor, group=group_members, 
          coactors=coactors, titles=titles, querystring=querystring)
    elif actor:
@@ -183,7 +185,7 @@ def find_actor(uid):
       from flask import jsonify
       actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
-      return actor.serialize()
+      return actor.serialize2(titles)
    else:
       return "404" #here:
 

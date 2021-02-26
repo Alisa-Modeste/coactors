@@ -28,11 +28,16 @@ export class ActorService {
   }
 
   // getActor(uid: string): Observable<Actor | undefined> {
-  getActor(uid: string): Observable<Actor > {
+  getActor(uid: string, queryString: string = ""): Observable<Actor > {
     // TODO: send the message _after_ fetching the actor
     // this.messageService.add(`ActorService: fetched actor id=${id}`);
     // return of(ACTORS.find(actor => actor.uid === uid));
-    const url = `${this.actorUrl}/${uid}`;
+    let url = `${this.actorUrl}/${uid}`;
+    if (queryString){
+      url += `?ca=${queryString}`
+    }
+
+    console.log('url'+url)
     return this.http.get<Actor>(url)//.pipe(
     // tap(_ => this.log(`fetched hero uid=${uid}`)),
     // catchError(this.handleError<Actor>(`getActor uid=${uid}`))

@@ -155,6 +155,18 @@ class Actor(Model):
   def serialize(self):
     return {"uid": self.uid,
             "name": self.name}
+  
+  def serialize2(self,titles,group_members=None):
+    title_list = []
+
+    for title in titles:
+      title_list.append( {"uid": title.uid,
+      "title": title.title,
+      "released": title.released})
+
+    return {"uid": self.uid,
+            "name": self.name,
+            "titles": title_list}
 
   @classmethod
   def find_by_uid(cls, uid):
