@@ -161,7 +161,7 @@ def get_titles_data(titles_attr):
 
     return new_titles
 
-@app.route('/actor/<uid>',methods = ['GET'])#post
+@app.route('/actor/<uid>',methods = ['GET'])
 def find_actor(uid):
    print( request.args.getlist('ca') )
    # actor = Actor.find_by_uid("na5411")
@@ -186,6 +186,19 @@ def find_actor(uid):
       return actor.serialize()
    else:
       return "404" #here:
+
+@app.route('/actors',methods = ['GET'])
+def get_actors():
+   actors = Actor.get_all()
+      
+   actor_list = []
+   for actor in actors:
+      actor_list.append( actor.serialize() )
+      # return jsonify({'actor': actor.serialize()} )
+   
+   from flask import jsonify
+   return jsonify(actor_list)
+  
 
 
 @app.route('/title/<uid>',methods = ['GET'])#post

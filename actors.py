@@ -197,8 +197,12 @@ class Actor(Model):
 
 
   @classmethod
-  def get_paginated_all(cls, tx):
-    pass
+  # def get_paginated_all(cls, tx):
+  def get_all(cls, skip=0, limit=500):
+    #here: created_date or alpha
+    return cls.match(graph ).raw_query(
+      "CALL { MATCH (_:Actor) return _ skip $skip limit $limit } ", {"skip": skip, "limit": limit}
+    ) 
 
   @staticmethod
   def parse_filmography(actor_data):
