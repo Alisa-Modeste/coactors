@@ -1,11 +1,9 @@
-import { Component, ViewEncapsulation, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { OffsetHeaderHeightDirective } from './offset-header-height.directive';
+import { Component, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'Have We Worked Together?';
@@ -35,6 +33,14 @@ export class AppComponent {
     console.log(this.navbar)
     console.log(this.navbar.nativeElement.clientHeight)
 
+    this.resizeMe()
+  }
+
+  resizeMe() {
+    console.log("i'm in APPP 2");
+    console.log(this.navbar)
+    console.log(this.navbar.nativeElement.clientHeight)
+
     let currentHeight = this.navbar.nativeElement.clientHeight
     this.renderer.setStyle(this.navbarOffset.nativeElement, 'height', currentHeight+20);
   }
@@ -46,4 +52,10 @@ export class AppComponent {
   //   this.navbarOffset.nativeElement.style.backgroundColor = 'red';
   //   this.renderer.setStyle(this.navbarOffset.nativeElement, 'background-color', 'red');
   // }
+
+  @HostListener('window:resize') 
+    onResize() {
+      this.resizeMe()
+
+    }
 }
