@@ -3,8 +3,14 @@
 <!-- <app-actors></app-actors> -->
 
 <!-- Navigation -->
+<!-- <div>my my name</div>
+<input #myname  value="John Doe">
+<div  id='yes'></div> -->
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<!-- <input #phone placeholder="phone number" />
+<button (click)="callPhone(phone.value)">Call</button> -->
+
+<nav #theNavbar class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -88,8 +94,10 @@
     </div>
     <!-- /.container -->
 </nav>
-<div offsetHeaderHeight></div>
+<div #navbarOffset></div>
 <!-- </head><body> -->
+    <!-- Page Content -->
+<div class="container">
 <div>
 <!-- <h1>Have We Worked Together?</h1> -->
 <nav>
@@ -101,8 +109,7 @@
 <p><input type="text" /></p>
 </div>
 
-<!-- Page Content -->
-<div class="container">
+
 <router-outlet></router-outlet>
 
 <hr>

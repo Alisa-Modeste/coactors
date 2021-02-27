@@ -11,7 +11,6 @@ import { ActorDetailComponent } from './actor-detail/actor-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
-import { HeaderBufferComponent } from './header-buffer/header-buffer.component';
 
 @NgModule({
   declarations: [
@@ -21,8 +20,7 @@ import { HeaderBufferComponent } from './header-buffer/header-buffer.component';
     ActorDetailComponent,
     MessagesComponent,
     HomeComponent,
-    SearchResultComponent,
-    HeaderBufferComponent
+    SearchResultComponent
   ],
   imports: [
     BrowserModule,
