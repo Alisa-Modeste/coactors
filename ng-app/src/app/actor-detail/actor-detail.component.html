@@ -1,35 +1,78 @@
-<div *ngIf="actor">
+<!-- Page Content -->
+<div class="container" *ngIf="actor">
 
-    <h2>{{actor.name | uppercase}} Details</h2>
-    <div><span>id: </span>{{actor.uid}}</div>
+  <!-- Page Heading/Breadcrumbs -->
+  <div class="row">
+      <div class="col-lg-12">
+          <h1 class="page-header">{{actor.name | uppercase}} Details</h1>
+    <!-- <div><span>id: </span>{{actor.uid}}</div>
     <div>
       <label>name:
         <input [(ngModel)]="actor.name" placeholder="name"/>
       </label>
-    </div>
+    </div> -->
 
+ <!-- <small>Subheading</small> -->
+<ol class="breadcrumb">
+    <li><a href="index.html">Home</a>
+    </li>
+    <li class="active">Two Column Portfolio</li>
+</ol>
 </div>
+</div>
+<!-- /.row -->
+
+<!-- </div>
   <a routerLink="/actor/na5411">
     <span class="badge">na5411</span> Sanaa Lathan
   </a> <div style="display: inline-block;border: 1px solid black; "><a style="text-decoration: none;" routerLink="/actor/na5411">
     Make group with
   </a> </div>
 
-<a [routerLink]="['/actor/na5411']" [queryParams]="{ca: 'na52139'}">Add to group</a>
+<a [routerLink]="['/actor/na5411']" [queryParams]="{ca: 'na52139'}">Add to group</a> -->
 
-<div *ngIf="actor">
+<!-- <div *ngIf="actor"> -->
+
+        <!-- Projects Row -->
+        <div class="row">
+          <div class="col-md-6 img-portfolio">
+              <a href="portfolio-item.html">
+                  <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
+              </a>
+              <h3>
+                  <!-- <a href="portfolio-item.html">Co-actors</a> -->
+                  Co-actors
+              </h3>
+  <!-- <ul class="actors" style="float: left;"> -->
   <ul class="actors">
 
     <li *ngFor="let coactor of actor.coactors">
       <a [routerLink]="['/actor/' +coactor.uid]">{{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
       <!-- {{coactor}} -->
-</li>
-</ul>
-
-<ul class="actors">
+  </li>
+  </ul>
+  </div>
+<div class="col-md-6 img-portfolio">
+    <a href="portfolio-item.html">
+        <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
+    </a>
+    <h3>
+        <!-- <a href="portfolio-item.html">Acted in</a> -->
+        Acted in
+    </h3>
+<!-- <ul class="actors" style="float: left;"> -->
+  <ul class="actors">
 
   <li *ngFor="let title of actor.titles">
     {{title.title}}
 </li>
 </ul>
 </div>
+</div>
+<!-- /.row -->
+
+
+<!-- /.row -->
+
+
+<!-- <div class="removeable" style="clear: left;">here:</div> -->

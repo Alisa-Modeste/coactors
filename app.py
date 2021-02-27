@@ -165,7 +165,7 @@ def get_titles_data(titles_attr):
 def find_actor(uid):
    print( request.args.getlist('ca') )
    # actor = Actor.find_by_uid("na5411")
-   group = request.args.get('ca').split(",")
+   group = request.args.get('ca').split(",") if request.args.get('ca') else None
    actor = Actor.find_by_uid(uid)
 
    if actor and group:
