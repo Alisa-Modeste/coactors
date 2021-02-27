@@ -1,0 +1,12 @@
+.flexing {
+    display:flex;
+    justify-content: center;
+}
+
+.group-link {
+    border:1px solid black;
+    display: inline-block;
+}
+a {
+    text-decoration: none;
+}

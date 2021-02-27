@@ -10,6 +10,8 @@ import { TitlesComponent } from './titles/titles.component';
 import { ActorDetailComponent } from './actor-detail/actor-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { HomeComponent } from './home/home.component';
+import { SearchResultComponent } from './search-result/search-result.component';
+import { HeaderBufferComponent } from './header-buffer/header-buffer.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { HomeComponent } from './home/home.component';
     TitlesComponent,
     ActorDetailComponent,
     MessagesComponent,
-    HomeComponent
+    HomeComponent,
+    SearchResultComponent,
+    HeaderBufferComponent
   ],
   imports: [
     BrowserModule,
