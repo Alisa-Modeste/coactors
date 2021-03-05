@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ActorDetailComponent } from './actor-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { ActorDetailComponent } from './actor-detail.component';
 
 
 class MockActorService {

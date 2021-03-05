@@ -18,8 +18,15 @@ describe('MessageService', () => {
     expect(service.messages).toEqual([]);
   });
 
-  it('should display message', () => {
+  it('should contain sent message', () => {
     service.add("My first message");
     expect(service.messages[0]).toEqual("My first message");
+  });
+
+  it('should contain no messages', () => {
+    service.add("My first message");
+
+    service.clear()
+    expect(service.messages).toEqual([]);
   });
 });

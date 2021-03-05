@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Actor } from './actor';
 // import { ACTORS } from './mock-data';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { Actor } from './actor';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,9 @@ export class ActorService {
   private actorsUrl = 'http://127.0.0.1:5000/actors';
   private actorUrl = 'http://127.0.0.1:5000/actor';
 
-  constructor(private http: HttpClient
+  constructor(private http: HttpClient,
     // ,private messageService: MessageService) { }
-    ) { }
+    private messageService: MessageService) { }
 
   // getActors(): Actor[] {
   //   return ACTORS;
