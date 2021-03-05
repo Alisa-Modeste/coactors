@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { Actor } from '../actor'
 import { ActorService } from '../actor.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-actor-detail',
@@ -18,7 +19,8 @@ export class ActorDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private actorService: ActorService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
 
     // so components can be updated when a different param is used
@@ -51,6 +53,9 @@ export class ActorDetailComponent implements OnInit {
         if (this.route.snapshot.queryParams['ca']){
           this.queryString = (this.route.snapshot.queryParams['ca']) + ","
         }
+
+        this.messageService.clear();
+
   });
 
   // console.log(this.route.snapshot.routeConfig!.path)

@@ -27,15 +27,16 @@ export class ActorService {
   getActors(): Observable<Actor[]> {
     // const actors = of(ACTORS);
     // return actors;
+    
     return this.http.get<Actor[]>(this.actorsUrl)
   }
-
+  
   // getActor(uid: string): Observable<Actor | undefined> {
-  getActor(uid: string, queryString: string = ""): Observable<Actor > {
-    // TODO: send the message _after_ fetching the actor
-    // this.messageService.add(`ActorService: fetched actor id=${id}`);
-    // return of(ACTORS.find(actor => actor.uid === uid));
-
+    getActor(uid: string, queryString: string = ""): Observable<Actor > {
+      // TODO: send the message _after_ fetching the actor
+      // this.messageService.add(`ActorService: fetched actor id=${id}`);
+      // return of(ACTORS.find(actor => actor.uid === uid));
+      
     // warn if there will be a delay
     let childrenStatus = this.childrenKnown(uid);
     this.notifyDelay(childrenStatus);
