@@ -1,0 +1,9 @@
+<p>search-result works!</p>
+
+<div *ngIf="actors">
+    <div *ngFor="let actor of actors">
+        <a routerLink="/actor/{{actor.uid}}">
+            <span class="badge">{{actor.uid}}</span> {{actor.name}}
+        </a>
+    </div>
+</div>
