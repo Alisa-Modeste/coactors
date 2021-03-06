@@ -66,13 +66,16 @@ class Title(Model):
   @staticmethod
   def parse_cast(title_data, title_type):
     import json
+    from titles import Title
 
     title_data = json.loads(title_data) 
     cast = title_data['credits']['cast'] if 'credits' in title_data else title_data['aggregate_credits']['cast']
 
-    uid = "tv" + str(title_data['id']) if title_type == "tv" else "mo" + str(title_data['id'])
-    released =  title_data['first_air_date'][:4] if 'first_air_date' in title_data else title_data['release_date'][:4] if 'release_date' in title_data else ""
-    title = title_data['title'] if title_type == 'movie' else title_data['name']
+    # uid = "tv" + str(title_data['id']) if title_type == "tv" else "mo" + str(title_data['id'])
+    # released =  title_data['first_air_date'][:4] if 'first_air_date' in title_data else title_data['release_date'][:4] if 'release_date' in title_data else ""
+    # title = title_data['title'] if title_type == 'movie' else title_data['name']
+    properties = Title.parse_properties(title_data, title_type) 
+
 
     result = []
     min_episodes = int(title_data['number_of_episodes'] * 0.05) if 'number_of_episodes' in title_data else None
@@ -83,10 +86,10 @@ class Title(Model):
         "uid": "na" + str(actor['id']),
         "name": actor['name'] }) 
 
-    return {'cast': result, 'uid': uid, 
-      'released': released,
+    return {'cast': result, 'uid': properties['uid'], 
+      'released': properties['released'],
       "title_type": title_type,
-      'title': title}
+      'title': properties['title']}
 
   @classmethod
   def find_by_uid(cls, uid):
@@ -106,3 +109,20 @@ class Title(Model):
     params = {'title': "(?i).*" + '.*'.join(q_parts) + ".*"} #"(?i)" + query + ".*"
 
     return cls.match(graph ).raw_query("MATCH (_:Title) " + where_clause, params)
+
+  @classmethod
+  def parse_properties(cls, result, title_type=None):
+    if title_type:
+      return {
+        "uid": "mo" + str(result['id']) if title_type == 'movie' else "tv" + str(result['id']),
+        "title": result['title'] if title_type == 'movie' else result['name'], 
+        "released": result['first_air_date'][:4] if 'first_air_date' in result else result['release_date'][:4] if 'release_date' in result else "",
+        "title_type": title_type
+      }
+    else:
+      return {
+        "uid": "mo" + str(result['id']) if result['media_type'] == 'movie' else "tv" + str(result['id']),
+        "title": result['title'] if result['media_type'] == 'movie' else result['name'], 
+        "released": result['first_air_date'][:4] if 'first_air_date' in result else result['release_date'][:4] if 'release_date' in result else "",
+        "title_type": result['media_type']
+      }

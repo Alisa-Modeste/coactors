@@ -163,7 +163,7 @@ def get_titles_data(titles_attr):
 
 @app.route('/actor/<uid>',methods = ['GET'])
 def find_actor(uid):
-   print( request.args.getlist('ca') )
+   # print( request.args.getlist('ca') )
    # actor = Actor.find_by_uid("na5411")
    group = request.args.get('ca').split(",") if request.args.get('ca') else None
    actor = Actor.find_by_uid(uid)
@@ -182,7 +182,7 @@ def find_actor(uid):
       titles = actor.get_titles()
       # return render_template('actor2.html',actor=actor, coactors=coactors, 
       #    titles=titles, querystring='?')
-      from flask import jsonify
+      # from flask import jsonify
       actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
       return actor.serialize2(titles, coactors)
@@ -214,5 +214,64 @@ def find_title(uid):
       return "404" #here:
 
 
-if getenv("DEBUGGER") == "True" or  __name__ == '__main__':
+@app.route('/actor_search',methods = ['GET'])
+def actor_text_search():
+   query = request.args.get('query')
+   not_listed = request.args.get('more') if request.args.get('more') else None
+   actors = Actor.find_by_name(query)
+   
+   # if not not_listed and actors: #not_listed != "1":
+   if not not_listed: #not_listed != "1":
+      if actors:
+         response = []
+         for actor in actors:
+            response.append( {"uid": actor.uid, "name": actor.name} )
+         
+         from flask import jsonify
+         return jsonify(response)
+
+   # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
+   response = API.retrieve('search/people',{'query': query})
+   actors = parse_search_results(response, "actors")
+   return actors
+
+@app.route('/title_search',methods = ['GET'])
+def title_text_search():
+   query = request.args.get('query')
+   not_listed = request.args.get('more') if request.args.get('more') else None
+   titles = Title.find_by_title(query)
+   
+   if not not_listed: #not_listed != "1":
+      if titles:
+         8==8 #return
+
+   # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
+   response = API.retrieve('search/multi',{'query': query})
+   titles = parse_search_results(response, "titles")
+   return titles
+
+
+def parse_search_results(response, search_type):
+   import json
+   response = json.loads(response)
+   response = response['results']
+
+   result = []
+
+   if search_type == "titles":
+      for el in response:
+         if el['media_type'] == "tv" or el['media_type'] == "movie":
+            result.append( Title.parse_properties(el) )
+
+   #people search
+   else:
+      for el in response:
+         result.append( 
+            {'uid': 'na ' + el['id'],
+            'name': el['name']}
+         )
+
+   return result
+
+if getenv("DEBUGGER") == "True" or  __name__ == '__main__':#here
    app.run()

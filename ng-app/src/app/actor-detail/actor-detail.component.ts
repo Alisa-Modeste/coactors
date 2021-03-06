@@ -28,9 +28,8 @@ export class ActorDetailComponent implements OnInit {
       return false;
     };
 
-}
+  }
 
-  
 
   ngOnInit(): void {
     this.getActor();

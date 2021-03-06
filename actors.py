@@ -224,6 +224,7 @@ class Actor(Model):
   @staticmethod
   def parse_filmography(actor_data):
     import json
+    from titles import Title
 
     actor_data = json.loads(actor_data)
 
@@ -232,11 +233,12 @@ class Actor(Model):
     result = []
     for title in titles:
       title_type = title['media_type']
-      result.append({
-        "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
-        "title": title['title'] if title_type == 'movie' else title['name'], 
-        "released": title['first_air_date'][:4] if 'first_air_date' in title else title['release_date'][:4] if 'release_date' in title else "",
-        "title_type": title_type})
+      # result.append({
+      #   "uid": "mo" + str(title['id']) if title_type == 'movie' else "tv" + str(title['id']),
+      #   "title": title['title'] if title_type == 'movie' else title['name'], 
+      #   "released": title['first_air_date'][:4] if 'first_air_date' in title else title['release_date'][:4] if 'release_date' in title else "",
+      #   "title_type": title_type})
+      result.append( Title.parse_properties(title, title_type) )
 
     return {"titles": result, "uid": "na" + str(actor_data['id']),
         "name": actor_data['name']}

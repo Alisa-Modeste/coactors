@@ -1,4 +1,7 @@
 import { Component, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { SearchService } from './search.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +11,7 @@ import { Component, ViewChild, ElementRef, Renderer2, HostListener } from '@angu
 export class AppComponent {
   title = 'Have We Worked Together?';
 
-  callPhone(val:string): void {
+  callPhone(val:string): void { //here:
     alert(val)
   }
 
@@ -19,7 +22,11 @@ export class AppComponent {
 
   // // constructor(private el: ElementRef) {
   // constructor(private navbarOffset: ElementRef, private navbar: ElementRef, private renderer: Renderer2) {
-    constructor(private renderer: Renderer2) {
+    constructor(
+      private renderer: Renderer2,
+      private searchService: SearchService,
+      private router: Router
+      ) {
   // constructor() {
   //   console.log("i'm in APPPPPPPPP");
 
@@ -57,5 +64,23 @@ export class AppComponent {
     onResize() {
       this.resizeMe()
 
+  }
+
+    getActors() {
+      // this.searchService.getActors()
+      //   .subscribe(actors => this.actors = actors);
+
+        // this.router.navigateByUrl('/actor_search');
+
+        this.router.navigateByUrl(
+          this.router.createUrlTree(
+            // ['actor_search'], {queryParams: {"query": "sana"}}
+            ['search'], {queryParams: {"query": "sana", "type": "actor"}}
+          )
+        );
+    }
+
+    getTitles() {
+      
     }
 }
