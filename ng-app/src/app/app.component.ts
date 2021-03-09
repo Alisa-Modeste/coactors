@@ -1,3 +1,4 @@
+import { query } from '@angular/animations';
 import { Component, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -18,6 +19,7 @@ export class AppComponent {
   // // @ViewChild('hello', { static: false }) navbar!: ElementRef;
   @ViewChild('theNavbar') navbar!: ElementRef;
   @ViewChild('navbarOffset') navbarOffset!: ElementRef;
+  @ViewChild('searchTerm') searchTerm!: HTMLInputElement;
   
 
   // // constructor(private el: ElementRef) {
@@ -27,6 +29,11 @@ export class AppComponent {
       private searchService: SearchService,
       private router: Router
       ) {
+  
+        // so components can be updated when a different param is used
+        this.router.routeReuseStrategy.shouldReuseRoute = function () {
+          return false;
+        };
   // constructor() {
   //   console.log("i'm in APPPPPPPPP");
 
@@ -66,7 +73,7 @@ export class AppComponent {
 
   }
 
-    getActors() {
+    getActors(searchTerm: string) {
       // this.searchService.getActors()
       //   .subscribe(actors => this.actors = actors);
 
@@ -75,7 +82,9 @@ export class AppComponent {
         this.router.navigateByUrl(
           this.router.createUrlTree(
             // ['actor_search'], {queryParams: {"query": "sana"}}
-            ['search'], {queryParams: {"query": "sana", "type": "actor"}}
+            // ['search'], {queryParams: {"query": "sana", "type": "actor"}}
+
+            ['search'], {queryParams: {"query": searchTerm, "type": "actor"}}
           )
         );
     }

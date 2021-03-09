@@ -48,9 +48,12 @@ api_count = 0
 @app.route('/create_actor',methods = ['GET'])#post
 def create_actor():
    # uid = "nm0005125"
-   uid = "2888"
-   name = "Will Smith"
-   actor_data = get_actors_data([{'uid': uid, 'name': name}])
+   # uid = "2888"
+   # name = "Will Smith"
+   uid = request.args.get('uid')
+
+   # actor_data = get_actors_data([{'uid': uid, 'name': name}])
+   actor_data = get_actors_data([{'uid': uid,'name': "name"}])
    level = 1
    a = Actor(actor_data[0]['uid'], actor_data[0]['name'], level)
    titles_added = a.create(actor_data[0]['titles'])
@@ -218,22 +221,27 @@ def find_title(uid):
 def actor_text_search():
    query = request.args.get('query')
    not_listed = request.args.get('more') if request.args.get('more') else None
-   actors = Actor.find_by_name(query)
+   actors = None
+
+   if not not_listed: #not_listed != "1":
+      actors = Actor.find_by_name(query)
    
    # if not not_listed and actors: #not_listed != "1":
-   if not not_listed: #not_listed != "1":
-      if actors:
-         response = []
-         for actor in actors:
-            response.append( {"uid": actor.uid, "name": actor.name} )
-         
-         from flask import jsonify
-         return jsonify(response)
+   if actors:
+      response = []
+      for actor in actors:
+         response.append( {"uid": actor.uid, "name": actor.name} )
+      
+      # from flask import jsonify
+      # return jsonify(response)
+      return {"unknown": False, "results": response}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
-   response = API.retrieve('search/people',{'query': query})
+   response = API.retrieve('/search/person',{'query': query})
    actors = parse_search_results(response, "actors")
-   return actors
+   # return actors
+   return {"unknown": True, "results": actors}
+
 
 @app.route('/title_search',methods = ['GET'])
 def title_text_search():
@@ -261,13 +269,14 @@ def parse_search_results(response, search_type):
    if search_type == "titles":
       for el in response:
          if el['media_type'] == "tv" or el['media_type'] == "movie":
-            result.append( Title.parse_properties(el) )
+            result.append( Title.parse_properties(el, None, False) )
 
    #people search
    else:
       for el in response:
          result.append( 
-            {'uid': 'na ' + el['id'],
+            # {'uid': 'na' + str(el['id']),
+            {'uid': str(el['id']),
             'name': el['name']}
          )
 

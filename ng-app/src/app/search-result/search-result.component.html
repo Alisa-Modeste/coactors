@@ -2,8 +2,17 @@
 
 <div *ngIf="actors">
     <div *ngFor="let actor of actors">
-        <a routerLink="/actor/{{actor.uid}}">
+        <!-- <a routerLink="/actor/{{actor.uid}}"> -->
+        <a routerLink="/actor/{{actor.uid}}" [queryParams]="{unknown: unknown}">
             <span class="badge">{{actor.uid}}</span> {{actor.name}}
         </a>
     </div>
 </div>
+
+<!-- <div *ngIf="titles">
+    <div *ngFor="let actor of actors">
+        <a routerLink="/actor/{{actor.uid}}">
+            <span class="badge">{{actor.uid}}</span> {{actor.name}}
+        </a>
+    </div>
+</div> -->

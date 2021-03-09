@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Actor } from './actor';
+import { SearchResult } from './search-result';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class SearchService {
 
   getActors(query: string) {
     let url = this.actorsUrl + `?query=${query}&type=actor`
-    return this.http.get<Actor[]>(url)
+    // return this.http.get<Actor[]>(url)
+    return this.http.get<SearchResult>(url)
   }
 
   getTitles() {

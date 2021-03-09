@@ -106,9 +106,9 @@
    
   <a routerLink="/titles">Titles</a>
 </nav>
-<p><input type="text" /></p>
+<p><input #searchTerm type="text" /></p>
 <button class="clear" 
-            (click)="getActors()">Search actors</button>
+            (click)="getActors(searchTerm.value)">Search actors</button>
 <button class="clear" 
             (click)="getTitles()">Search titles</button>
 </div>

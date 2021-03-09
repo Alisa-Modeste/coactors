@@ -11,11 +11,19 @@ import { SearchService } from '../search.service';
 })
 export class SearchResultComponent implements OnInit {
   @Input() actors?: Actor[];
+  @Input() unknown?: boolean;
   // @Input() ?: Actor;
   constructor(
     private route: ActivatedRoute,
-    private searchService: SearchService
-  ) { }
+    private searchService: SearchService,
+    private router: Router
+      ) {
+  
+        // so components can be updated when a different param is used
+        this.router.routeReuseStrategy.shouldReuseRoute = function () {
+          return false;
+        };
+    }
 
   ngOnInit(): void {
     let type = this.route.snapshot.queryParams['type'];
@@ -31,8 +39,14 @@ export class SearchResultComponent implements OnInit {
 
     this.searchService.getActors(query)
       // .subscribe(actor => this.actor = actor);
-      .subscribe(actors => {
-        this.actors = actors
+      .subscribe(results => {
+        console.log('the results are...')
+        console.log(results)
+        // this.actors = actors
+        this.actors = results.results;
+        console.log("this actors")
+        console.log(this.actors)
+        this.unknown = results.unknown;
       
       });
   }

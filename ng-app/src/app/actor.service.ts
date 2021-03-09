@@ -15,6 +15,7 @@ export class ActorService {
   private actorsUrl = 'http://127.0.0.1:5000/actors';
   private actorUrl = 'http://127.0.0.1:5000/actor';
   private actorExistUrl = 'http://127.0.0.1:5000/actor_exist';
+  private newActorUrl = 'http://127.0.0.1:5000/create_actor';
 
   constructor(private http: HttpClient,
     // ,private messageService: MessageService) { }
@@ -32,25 +33,35 @@ export class ActorService {
   }
   
   // getActor(uid: string): Observable<Actor | undefined> {
-    getActor(uid: string, queryString: string = ""): Observable<Actor > {
+  getActor(uid: string, unknown:boolean, queryString: string = ""): Observable<Actor > {
       // TODO: send the message _after_ fetching the actor
       // this.messageService.add(`ActorService: fetched actor id=${id}`);
       // return of(ACTORS.find(actor => actor.uid === uid));
-      
-    // warn if there will be a delay
-    let childrenStatus = this.childrenKnown(uid);
-    this.notifyDelay(childrenStatus);
+      console.log("uid: "+ uid+"unknown: "+unknown+"queryString: "+queryString)
+    if(unknown){
+      console.log("if statement")
+      this.newActorNotifyDelay();
+      let url = `${this.newActorUrl}?uid=${uid}`;
+      return this.http.get<Actor>(url)//.pipe(
 
-    let url = `${this.actorUrl}/${uid}`;
-    if (queryString){
-      url += `?ca=${queryString}`
     }
+    else {
+      console.log("else statement")
+      // warn if there will be a delay
+      let childrenStatus = this.childrenKnown(uid);
+      this.notifyDelay(childrenStatus);
 
-    console.log('url'+url)
-    return this.http.get<Actor>(url)//.pipe(
-    // tap(_ => this.log(`fetched hero uid=${uid}`)),
-    // catchError(this.handleError<Actor>(`getActor uid=${uid}`))
-  // );
+      let url = `${this.actorUrl}/${uid}`;
+      if (queryString){
+        url += `?ca=${queryString}`
+      }
+
+      console.log('url'+url)
+      return this.http.get<Actor>(url)//.pipe(
+      // tap(_ => this.log(`fetched hero uid=${uid}`)),
+      // catchError(this.handleError<Actor>(`getActor uid=${uid}`))
+    // );
+    }
   }
 
   childrenKnown(uid: string): Observable<string> {
@@ -68,5 +79,11 @@ export class ActorService {
           this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
         }
   });
+}
+
+  newActorNotifyDelay(): void {
+    
+    this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
+     
   }
 }

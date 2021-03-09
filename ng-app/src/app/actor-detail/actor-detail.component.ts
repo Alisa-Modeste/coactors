@@ -42,9 +42,10 @@ export class ActorDetailComponent implements OnInit {
   getActor(): void {
     const uid = ""+this.route.snapshot.paramMap.get('uid');
     const ca = this.route.snapshot.queryParams['ca']
+    const unknown = this.route.snapshot.queryParams['unknown']
     console.log("uid:" + uid)
     console.log( this.route)
-    this.actorService.getActor(uid, ca)
+    this.actorService.getActor(uid, unknown, ca)
       // .subscribe(actor => this.actor = actor);
       .subscribe(actor => {
         this.actor = actor
