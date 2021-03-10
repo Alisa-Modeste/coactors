@@ -24,7 +24,7 @@ class Actor(Model):
     #add titles while possibly creating actor node
     #loop that checks to see if any titles were created. those that were get an Title instance 
     # and its create checks to see if any actors were created. however because of its level, nothing further will happen
-    from titles import Title
+    # from titles import Title
 
     if self.level > self.__class__.max_level:
       return
@@ -41,15 +41,15 @@ class Actor(Model):
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
   def add_titles(self, titles_info):
-    query = "CALL {"
+    query = """CALL {
+        MERGE (a:Actor {uid: $uid}) 
+        SET a += {name: $name, children_known: True} """
+        
     from titles import Title
     params = {"name": self.name, "uid": self.uid}
 
     # title_uids = []
     for i in range(0,len(titles_info)):
-      query += """MERGE (a:Actor {uid: $uid}) 
-        SET a += {name: $name, children_known: True} """
-
 # -      RETURN t{i} as _.found as found, t{i}.uid as uid, t{i}.title as title
 
       query += f"MERGE (t{i}:Title " + "{uid:$titles" + str(i) + "_uid}) "

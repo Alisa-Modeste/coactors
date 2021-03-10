@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import {MatTabsModule} from '@angular/material/tabs';
 
 import { Actor } from '../actor'
 import { ActorService } from '../actor.service';

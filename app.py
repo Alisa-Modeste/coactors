@@ -274,11 +274,12 @@ def parse_search_results(response, search_type):
    #people search
    else:
       for el in response:
-         result.append( 
-            # {'uid': 'na' + str(el['id']),
-            {'uid': str(el['id']),
-            'name': el['name']}
-         )
+         if el['known_for_department'] == "Acting" or el['known_for_department'] == "acting":
+            result.append( 
+               # {'uid': 'na' + str(el['id']),
+               {'uid': str(el['id']),
+               'name': el['name']}
+            )
 
    return result
 
