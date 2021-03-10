@@ -51,6 +51,11 @@ def create_actor():
    # uid = "2888"
    # name = "Will Smith"
    uid = request.args.get('uid')
+   if not uid.isnumeric():
+      return "404" #here:
+   actor = find_actor("na" + uid)
+   if actor:
+      return actor
 
    # actor_data = get_actors_data([{'uid': uid, 'name': name}])
    actor_data = get_actors_data([{'uid': uid,'name': "name"}])
@@ -189,8 +194,8 @@ def find_actor(uid):
       actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
       return actor.serialize2(titles, coactors)
-   else:
-      return "404" #here:
+   # else:
+   #    return "404" #here:
 
 @app.route('/actors',methods = ['GET'])
 def get_actors():
