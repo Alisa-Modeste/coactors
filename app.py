@@ -221,6 +221,18 @@ def find_title(uid):
    else:
       return "404" #here:
 
+@app.route('/titles',methods = ['GET'])
+def get_titles():
+   titles = Title.get_all()
+      
+   title_list = []
+   for title in titles:
+      title_list.append( title.serialize() )
+      # return jsonify({'actor': actor.serialize()} )
+   
+   from flask import jsonify
+   return jsonify(title_list)
+
 
 @app.route('/actor_search',methods = ['GET'])
 def actor_text_search():

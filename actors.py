@@ -1,5 +1,6 @@
 from py2neo import Graph #here: here or ogm?
 from py2neo.ogm import Property, Graph, Model
+import py2neo_monkeypatch
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 class Actor(Model):
@@ -41,9 +42,10 @@ class Actor(Model):
     "MERGE(a)-[:ACTED_IN]->(b) ", uid=self.uid, title=title, title_uid=title_uid)
 
   def add_titles(self, titles_info):
-    query = """CALL {
-        MERGE (a:Actor {uid: $uid}) 
-        SET a += {name: $name, children_known: True} """
+    query = """MERGE (a:Actor {uid: $uid}) 
+        SET a += {name: $name, children_known: True} 
+        WITH a 
+        CALL {"""
         
     from titles import Title
     params = {"name": self.name, "uid": self.uid}
@@ -52,6 +54,7 @@ class Actor(Model):
     for i in range(0,len(titles_info)):
 # -      RETURN t{i} as _.found as found, t{i}.uid as uid, t{i}.title as title
 
+      query += "WITH a "
       query += f"MERGE (t{i}:Title " + "{uid:$titles" + str(i) + "_uid}) "
       query += f" SET t{i} += " + "{title:$titles" + str(i) + "_title, released:$titles" + str(i) 
       query += "_released, title_type:$titles" + str(i) + "_title_type} "      

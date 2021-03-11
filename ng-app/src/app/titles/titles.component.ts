@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { TitleService } from '../title.service';
+import { Title } from '../title';
+
 @Component({
   selector: 'app-titles',
   templateUrl: './titles.component.html',
@@ -7,9 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TitlesComponent implements OnInit {
 
-  constructor() { }
+  titles!: Title[];
+
+  constructor(private titleService: TitleService) { }
+
+
+  getTitles(): void {
+    this.titleService.getTitles()
+        .subscribe(titles => this.titles = titles);
+  }
 
   ngOnInit(): void {
+    this.getTitles();
   }
+
 
 }

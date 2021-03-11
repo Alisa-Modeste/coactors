@@ -25,13 +25,11 @@ def __iter__(self):
     """ Iterate through all matching nodes.
     """
     if self.has_raw_query:
-        for record in self.graph.run(self.partial_raw_query + " RETURN _", self.query_params):
-            
+        for record in self.graph.run(self.partial_raw_query + " RETURN _", self.query_params):            
             yield record[0]
-    # 
+
     else:
         for record in self.graph.run(*self._query_and_parameters()):
-
             yield record[0]
 
 def raw_query(self, query, params = {}):
@@ -40,8 +38,6 @@ def raw_query(self, query, params = {}):
     :param query: A raw Cypher query without the RETURN clause
 
     :return: list of matching :class:`.Node` objects
-
-    *New in version 2020.0.*
     """
     self.has_raw_query = True
     self.partial_raw_query = query

@@ -31,6 +31,9 @@ export class SearchResultComponent implements OnInit {
     if (type=="actor"){
       this.getActors();
     }
+    else if(type=="title"){
+      // this.getTitles();
+    }
   }
 
   getActors(): void {
