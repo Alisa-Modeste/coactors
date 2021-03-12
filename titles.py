@@ -35,24 +35,32 @@ class Title(Model):
 
     query = """MERGE (t:Title {uid: $uid}) 
        SET t += {title: $title, released: $released, title_type: $title_type} 
-       SET t.children_known = True  """
+       SET t.children_known = True  
+       WITH t 
+       CALL {"""
     params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
 
-    actor_uids = []
+    # actor_uids = []
     for i in range(0,len(cast_info)):
 
+      query += "WITH t "
       query += f"MERGE (a{i}:Actor " + "{uid:$actors" + str(i) + "_uid}) "
       query += f"SET a{i}.name = $actors" + str(i) + "_name "
-      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) """
+      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) 
+      ON CREATE SET a{i}.found=FALSE 
+      ON MATCH SET a{i}.found=TRUE 
+      RETURN a{i} as _ 
+      UNION """
 
       params[f"actors{i}_uid"] = cast_info[i]["uid"]
       params[f"actors{i}_name"] = cast_info[i]["name"]
-      actor_uids.append(cast_info[i]["uid"])
+      # actor_uids.append(cast_info[i]["uid"])
 
-    graph.run(query, params)
+    # graph.run(query, params)
+    query = query[:-6] + "} "
 
-    return Actor.match(graph ).raw_query("""MATCH (_:Actor) 
-      WHERE _.uid IN $actor_uids """, {"actor_uids":actor_uids})
+
+    return Actor.match(graph ).raw_query(query, params)
 
 
 

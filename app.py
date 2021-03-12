@@ -144,7 +144,7 @@ def get_actors_data(actors_attr):
 
            new_actors.append(titles)
 
-       count += 1
+      #  count += 1 #here:
       #  if count == 2:
       #     break
 
