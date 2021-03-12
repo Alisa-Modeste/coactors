@@ -20,8 +20,10 @@ export class SearchService {
     return this.http.get<SearchResult>(url)
   }
 
-  getTitles() {
-    // return this.http.get<Title[]>(this.titlesUrl)
+  getTitles(query: string) {
+    let url = this.titlesUrl + `?query=${query}&type=title`
+    
+    return this.http.get<SearchResult>(url)
     
   }
 }

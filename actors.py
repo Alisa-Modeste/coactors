@@ -159,8 +159,8 @@ class Actor(Model):
     return {"uid": self.uid,
             "name": self.name}
   
-  def serialize2(self,titles, coactors, group_members=None):
-    title_list, coactor_list = [], []
+  def serialize2(self,titles, coactors, group_members=[]):
+    title_list, coactor_list, member_list = [], [], []
 
     for title in titles:
       title_list.append( {"uid": title.uid,
@@ -171,10 +171,15 @@ class Actor(Model):
       coactor_list.append( {"uid": coactor.uid,
             "name": coactor.name})
 
+    for member in group_members:
+      member_list.append( {"uid": member.uid,
+            "name": member.name})
+
     return {"uid": self.uid,
             "name": self.name,
             "titles": title_list,
-            "coactors": coactor_list}
+            "coactors": coactor_list,
+            "group_members": member_list}
 
   @classmethod
   def find_by_uid(cls, uid):
@@ -218,7 +223,7 @@ class Actor(Model):
 
   @classmethod
   # def get_paginated_all(cls, tx):
-  def get_all(cls, skip=0, limit=500):
+  def get_all(cls, skip=0, limit=100):
     #here: created_date or alpha
     return cls.match(graph ).raw_query(
       "CALL { MATCH (_:Actor) return _ skip $skip limit $limit } ", {"skip": skip, "limit": limit}

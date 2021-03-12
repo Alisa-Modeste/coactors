@@ -4,6 +4,7 @@ export interface Actor {
     // titles: Array<Object>;
     titles: Array<titles>;
     coactors: Array<coactors>;
+    group_members: Array<group_members>;
 }
 
 interface titles { 
@@ -12,9 +13,14 @@ interface titles {
     released:number
  }
 
- interface coactors {
+interface coactors {
     uid: string,
     name: string
     // titles: Array<Object>;
     
+}
+
+interface group_members {
+    uid: string,
+    name: string    
 }

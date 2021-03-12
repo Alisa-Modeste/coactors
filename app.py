@@ -81,12 +81,27 @@ def create_actor():
 
 @app.route('/create_title',methods = ['GET'])#post
 def create_title():
-   uid = "1124"
-   title = "The Prestige"
-   released = 2006
-   title_type = 'movie'
+   # uid = "1124"
+   # title = "The Prestige"
+   # released = 2006
+   # title_type = 'movie'
+   uid = request.args.get('uid')
+   title_type = request.args.get('title_type')
+   if not uid.isnumeric():
+      return "404" #here:
 
-   title_data = get_titles_data([{'uid':uid, 'title': title, 'released': released,
+   if title_type == "movie":
+      prefix = "mo"
+   elif title_type == "tv":
+      prefix = "tv"
+   else:
+      return "404" #here:
+
+   title = find_title(prefix + uid)
+   if title:
+      return title
+
+   title_data = get_titles_data([{'uid':uid, 'title': "title", 'released': "released",
         "title_type": title_type}])
    t = Title(title_data[0]['uid'],
       title_data[0]['title'],
@@ -218,8 +233,8 @@ def find_title(uid):
       cast = title.get_cast()
 
       return title.serialize2(cast)
-   else:
-      return "404" #here:
+   # else:
+   #    return "404" #here:
 
 @app.route('/titles',methods = ['GET'])
 def get_titles():
@@ -264,16 +279,22 @@ def actor_text_search():
 def title_text_search():
    query = request.args.get('query')
    not_listed = request.args.get('more') if request.args.get('more') else None
-   titles = Title.find_by_title(query)
-   
+   titles = None
+
    if not not_listed: #not_listed != "1":
-      if titles:
-         8==8 #return
+      titles = Title.find_by_title(query)
+   
+   if titles:
+      response = []
+      for title in titles:
+         response.append( {"uid": title.uid, "title": title.title,
+          "released": title.released,"title_type":title.title_type} )
+      return {"unknown": False, "results": response}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
-   response = API.retrieve('search/multi',{'query': query})
+   response = API.retrieve('/search/multi',{'query': query})
    titles = parse_search_results(response, "titles")
-   return titles
+   return {"unknown": True, "results": titles}
 
 
 def parse_search_results(response, search_type):

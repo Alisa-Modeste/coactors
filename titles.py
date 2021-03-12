@@ -118,9 +118,9 @@ class Title(Model):
     else:
       uid = str(result['id'])
 
+    title_type = title_type if title_type else result['media_type']
     title = result['title'] if title_type == 'movie' else result['name']
     released = result['first_air_date'][:4] if 'first_air_date' in result else result['release_date'][:4] if 'release_date' in result else ""
-    title_type = title_type if title_type else result['media_type']
 
     return {
         "uid": uid,
@@ -146,7 +146,7 @@ class Title(Model):
 
   @classmethod
   # def get_paginated_all(cls, tx):
-  def get_all(cls, skip=0, limit=500):
+  def get_all(cls, skip=0, limit=100):
     #here: created_date or alpha
     return cls.match(graph ).raw_query(
       "CALL { MATCH (_:Title) return _ skip $skip limit $limit } ", {"skip": skip, "limit": limit}

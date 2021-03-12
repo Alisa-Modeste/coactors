@@ -3,6 +3,7 @@ export interface Title {
     title: string;
     cast: Array<actors>;
     released: number;
+    title_type: string;
 }
 
 interface actors { 

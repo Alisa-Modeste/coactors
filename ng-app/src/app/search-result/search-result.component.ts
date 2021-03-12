@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Actor } from '../actor'
 import { SearchService } from '../search.service';
+import { Title } from '../title';
 
 @Component({
   selector: 'app-search-result',
@@ -11,6 +12,7 @@ import { SearchService } from '../search.service';
 })
 export class SearchResultComponent implements OnInit {
   @Input() actors?: Actor[];
+  @Input() titles?: Title[];
   @Input() unknown?: boolean;
   // @Input() ?: Actor;
   constructor(
@@ -32,7 +34,7 @@ export class SearchResultComponent implements OnInit {
       this.getActors();
     }
     else if(type=="title"){
-      // this.getTitles();
+      this.getTitles();
     }
   }
 
@@ -49,6 +51,24 @@ export class SearchResultComponent implements OnInit {
         this.actors = results.results;
         console.log("this actors")
         console.log(this.actors)
+        this.unknown = results.unknown;
+      
+      });
+  }
+
+  getTitles(): void {
+    let query = this.route.snapshot.queryParams['query']
+    // let type = this.route.snapshot.queryParams['type']
+
+    this.searchService.getTitles(query)
+      // .subscribe(actor => this.actor = actor);
+      .subscribe(results => {
+        console.log('the results are...')
+        console.log(results)
+        // this.actors = actors
+        this.titles = results.results;
+        console.log("this actors")
+        console.log(this.titles)
         this.unknown = results.unknown;
       
       });

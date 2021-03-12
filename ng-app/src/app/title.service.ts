@@ -32,15 +32,15 @@ export class TitleService {
   }
   
   // getActor(uid: string): Observable<Actor | undefined> {
-  getTitle(uid: string, unknown:boolean, queryString: string = ""): Observable<Title > {
+  getTitle(uid: string, unknown:boolean, titleType: string): Observable<Title > {
       // TODO: send the message _after_ fetching the actor
       // this.messageService.add(`ActorService: fetched actor id=${id}`);
       // return of(ACTORS.find(actor => actor.uid === uid));
-      console.log("uid: "+ uid+"unknown: "+unknown+"queryString: "+queryString)
+      console.log("uid: "+ uid+"unknown: "+unknown+"titleType: "+titleType)
     if(unknown){
       console.log("if statement")
       this.newTitleNotifyDelay();
-      let url = `${this.newTitleUrl}?uid=${uid}`;
+      let url = `${this.newTitleUrl}?uid=${uid}&title_type=${titleType}`;
       return this.http.get<Title>(url)//.pipe(
 
     }

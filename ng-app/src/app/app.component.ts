@@ -12,10 +12,6 @@ import { SearchService } from './search.service';
 export class AppComponent {
   title = 'Have We Worked Together?';
 
-  callPhone(val:string): void { //here:
-    alert(val)
-  }
-
   // // @ViewChild('hello', { static: false }) navbar!: ElementRef;
   @ViewChild('theNavbar') navbar!: ElementRef;
   @ViewChild('navbarOffset') navbarOffset!: ElementRef;
@@ -89,7 +85,14 @@ export class AppComponent {
         );
     }
 
-    getTitles() {
-      
+    getTitles(searchTerm: string) {
+      this.router.navigateByUrl(
+        this.router.createUrlTree(
+          // ['actor_search'], {queryParams: {"query": "sana"}}
+          // ['search'], {queryParams: {"query": "sana", "type": "actor"}}
+
+          ['search'], {queryParams: {"query": searchTerm, "type": "title"}}
+        )
+      );
     }
 }

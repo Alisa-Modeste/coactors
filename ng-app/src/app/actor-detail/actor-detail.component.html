@@ -4,7 +4,10 @@
   <!-- Page Heading/Breadcrumbs -->
   <div class="row">
       <div class="col-lg-12">
-          <h1 class="page-header">{{actor.name | uppercase}} Details</h1>
+          <h1 class="page-header"><a [routerLink]="['/actor/' +actor.uid]">{{actor.name}}</a><span *ngIf="actor.group_members">
+            <span *ngFor="let member of actor.group_members">, <a [routerLink]="['/actor/' +member.uid]">{{member.name}}</a></span>
+              <!-- {{coactor}} -->
+          </span> Details</h1>
     <!-- <div><span>id: </span>{{actor.uid}}</div>
     <div>
       <label>name:
