@@ -72,7 +72,10 @@
   <ul class="actors">
 
   <li *ngFor="let title of actor.titles">
-    {{title.title}}
+    <!-- {{title.title}} -->
+    <a routerLink="/title/{{title.uid}}">
+      <span class="badge">{{title.uid}}</span> {{title.title}} ({{title.released}})
+  </a>
 </li>
 </ul>
 </div>

@@ -217,7 +217,7 @@ def find_title(uid):
    if title:
       cast = title.get_cast()
 
-      return render_template('title.html',title=title, cast=cast)
+      return title.serialize2(cast)
    else:
       return "404" #here:
 

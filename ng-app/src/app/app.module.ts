@@ -13,6 +13,7 @@ import { ActorDetailComponent } from './actor-detail/actor-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { TitleDetailComponent } from './title-detail/title-detail.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SearchResultComponent } from './search-result/search-result.component';
     ActorDetailComponent,
     MessagesComponent,
     HomeComponent,
-    SearchResultComponent
+    SearchResultComponent,
+    TitleDetailComponent
   ],
   imports: [
     BrowserModule,

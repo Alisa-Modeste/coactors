@@ -4,6 +4,7 @@ import { ActorDetailComponent } from './actor-detail/actor-detail.component';
 import { ActorsComponent } from './actors/actors.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
+import { TitleDetailComponent } from './title-detail/title-detail.component';
 import { TitlesComponent } from './titles/titles.component';
 
 const routes: Routes = [
@@ -14,7 +15,7 @@ const routes: Routes = [
   { path: 'actor/:uid', component: ActorDetailComponent },
   { path: 'search', component: SearchResultComponent },
   { path: 'titles', component: TitlesComponent },
-  // { path: 'title/:uid', component: ActorDetailComponent },
+  { path: 'title/:uid', component: TitleDetailComponent },
 ];
 
 @NgModule({
