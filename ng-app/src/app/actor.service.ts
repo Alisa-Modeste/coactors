@@ -33,12 +33,12 @@ export class ActorService {
   }
   
   // getActor(uid: string): Observable<Actor | undefined> {
-  getActor(uid: string, unknown:boolean, queryString: string = ""): Observable<Actor > {
+  getActor(uid: string, unknown:string, queryString: string = ""): Observable<Actor > {
       // TODO: send the message _after_ fetching the actor
       // this.messageService.add(`ActorService: fetched actor id=${id}`);
       // return of(ACTORS.find(actor => actor.uid === uid));
       console.log("uid: "+ uid+"unknown: "+unknown+"queryString: "+queryString)
-    if(unknown){
+    if(unknown == "true"){
       console.log("if statement")
       this.newActorNotifyDelay();
       let url = `${this.newActorUrl}?uid=${uid}`;

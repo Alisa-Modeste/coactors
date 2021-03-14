@@ -209,8 +209,8 @@ def find_actor(uid):
       actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
       return actor.serialize2(titles, coactors)
-   # else:
-   #    return "404" #here:
+   else:
+      return {} #"404" #here:
 
 @app.route('/actors',methods = ['GET'])
 def get_actors():
@@ -233,8 +233,8 @@ def find_title(uid):
       cast = title.get_cast()
 
       return title.serialize2(cast)
-   # else:
-   #    return "404" #here:
+   else:
+      return {} #"404" #here:
 
 @app.route('/titles',methods = ['GET'])
 def get_titles():

@@ -30,26 +30,15 @@ export class AppComponent {
         this.router.routeReuseStrategy.shouldReuseRoute = function () {
           return false;
         };
-  // constructor() {
-  //   console.log("i'm in APPPPPPPPP");
 
-  //   console.log("navbar is")
-  //   console.log(this.navbar)
-  // this.renderer.setStyle(this.navbarOffset.nativeElement, 'background-color', 'red');
   }
 
   ngAfterViewInit() {
-    console.log("i'm in APPP 2");
-    console.log(this.navbar)
-    console.log(this.navbar.nativeElement.clientHeight)
 
     this.resizeMe()
   }
 
   resizeMe() {
-    console.log("i'm in APPP 2");
-    console.log(this.navbar)
-    console.log(this.navbar.nativeElement.clientHeight)
 
     let currentHeight = this.navbar.nativeElement.clientHeight
     this.renderer.setStyle(this.navbarOffset.nativeElement, 'height', currentHeight+20);
