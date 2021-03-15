@@ -14,7 +14,8 @@ import { MessageService } from '../message.service';
 })
 export class ActorDetailComponent implements OnInit {
   @Input() actor?: Actor;
-  queryString:string = ""
+  queryString:string = "";
+  p:number = 1;
 
   constructor(
     private route: ActivatedRoute,
