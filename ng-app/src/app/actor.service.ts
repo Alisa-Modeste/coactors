@@ -14,7 +14,7 @@ export class ActorService {
   // private actorUrl = '/actor';
   private actorsUrl = 'http://127.0.0.1:5000/actors';
   private actorUrl = 'http://127.0.0.1:5000/actor';
-  private actorExistUrl = 'http://127.0.0.1:5000/actor_exist';
+  private actorChildrenUrl = 'http://127.0.0.1:5000/actor_children_known';
   private newActorUrl = 'http://127.0.0.1:5000/create_actor';
 
   constructor(private http: HttpClient,
@@ -65,7 +65,7 @@ export class ActorService {
   }
 
   childrenKnown(uid: string): Observable<string> {
-    let url = `${this.actorExistUrl}/${uid}`;
+    let url = `${this.actorChildrenUrl}/${uid}`;
     return this.http.get<string>(url)
   }
 

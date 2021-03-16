@@ -15,7 +15,7 @@ describe('MessagesComponent', () => {
       declarations: [ MessagesComponent ],
       providers: [
         MessagesComponent,
-        { provide: MessageService, useClass: MockMessageService },
+        // { provide: MessageService, useClass: MockMessageService },
         // { provide: HttpClient, useClass: MockHttpClient }
       ]
     })

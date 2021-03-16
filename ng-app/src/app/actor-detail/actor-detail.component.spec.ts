@@ -16,10 +16,7 @@ class MockRouter {
   routeReuseStrategy = {};
 }
 
-class MockHttpClient {
-  isLoggedIn = true;
-  user = { name: 'Test User'};
-}
+class MockHttpClient {}
 
 describe('ActorDetailComponent', () => {
   let component: ActorDetailComponent;
@@ -39,18 +36,13 @@ describe('ActorDetailComponent', () => {
     });
 
     // inject both the component and the dependent service.
-    console.log("in before each")
     component = TestBed.inject(ActorDetailComponent);
-    console.log(component)
     activatedRoute = TestBed.inject(ActivatedRoute);
     httpClient = TestBed.inject(HttpClient);
     router = TestBed.inject(Router);
   });
 
   it('should create', () => {
-    console.log("act det comp")
-    console.log(ActorDetailComponent)
-    console.log(component)
     expect(component).toBeTruthy();
   });
 });

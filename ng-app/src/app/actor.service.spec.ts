@@ -8,10 +8,7 @@ import { MessageService } from './message.service';
 import { ACTORS } from './mock-data';
 
 
-class MockHttpClient {
-  isLoggedIn = true;
-  user = { name: 'Test User'};
-}
+class MockHttpClient {}
 
 class MockActorService extends ActorService {
   getActors(): Observable<Actor[]> {
