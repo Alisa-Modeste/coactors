@@ -296,6 +296,18 @@ def title_text_search():
    titles = parse_search_results(response, "titles")
    return {"unknown": True, "results": titles}
 
+@app.route('/actor_children_known/<uid>',methods = ['GET'])
+def actor_children_known(uid):
+   actor = Actor.find_by_uid(uid)
+   
+   return "2" if actor is None else "1" if actor.children_known else "0"
+   
+
+@app.route('/title_children_known/<uid>',methods = ['GET'])
+def title_children_known(uid):
+   title = Title.find_by_uid(uid)
+
+   return "2" if title is None else "1" if title.children_known else "0"
 
 def parse_search_results(response, search_type):
    import json

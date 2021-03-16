@@ -13,7 +13,7 @@ export class TitleService {
   // private actorUrl = '/actor';
   private titlesUrl = 'http://127.0.0.1:5000/titles';
   private titleUrl = 'http://127.0.0.1:5000/title';
-  private titleExistUrl = 'http://127.0.0.1:5000/title_exist';
+  private titleChildrenUrl = 'http://127.0.0.1:5000/title_children_known';
   private newTitleUrl = 'http://127.0.0.1:5000/create_title';
 
   constructor(private http: HttpClient,
@@ -61,7 +61,7 @@ export class TitleService {
   }
 
   childrenKnown(uid: string): Observable<string> {
-    let url = `${this.titleExistUrl}/${uid}`;
+    let url = `${this.titleChildrenUrl}/${uid}`;
     return this.http.get<string>(url)
   }
 
@@ -70,7 +70,7 @@ export class TitleService {
     response
       .subscribe(response => {
 
-          if(response != "true"){
+        if(response == "0"){
           this.messageService.add("This title's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
         }
   });

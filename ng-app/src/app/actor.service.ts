@@ -75,7 +75,10 @@ export class ActorService {
       // .subscribe(actor => this.actor = actor);
       .subscribe(response => {
 
-          if(response != "true"){
+          // if(response != "true"){
+          console.log("this.childrenKnow")
+          console.log(response)
+          if(response == "0"){
           this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
         }
   });
