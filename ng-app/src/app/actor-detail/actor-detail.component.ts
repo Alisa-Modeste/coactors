@@ -15,7 +15,8 @@ import { MessageService } from '../message.service';
 export class ActorDetailComponent implements OnInit {
   @Input() actor?: Actor;
   queryString:string = "";
-  p:number = 1;
+  page:number = 1;
+  searchTerm: string = "";
 
   constructor(
     private route: ActivatedRoute,

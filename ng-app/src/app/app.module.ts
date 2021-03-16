@@ -15,6 +15,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { TitleDetailComponent } from './title-detail/title-detail.component';
+import { SearchFilterPipe } from './search-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { TitleDetailComponent } from './title-detail/title-detail.component';
     MessagesComponent,
     HomeComponent,
     SearchResultComponent,
-    TitleDetailComponent
+    TitleDetailComponent,
+    SearchFilterPipe
   ],
   imports: [
     BrowserModule,

@@ -51,16 +51,17 @@
                   Co-actors
               </h3>
   <!-- <ul class="actors" style="float: left;"> -->
+    Filter by name: <input id="coactors" [(ngModel)]="searchTerm">
   <ul class="actors">
 
-    <li *ngFor="let coactor of actor.coactors  | paginate: { itemsPerPage: 10, currentPage: p}">
+    <li *ngFor="let coactor of actor.coactors  | searchFilter: searchTerm | paginate: { itemsPerPage: 10, currentPage: page}">
       <a [routerLink]="['/actor/' +coactor.uid]">{{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
       <!-- {{coactor}} -->
   </li>
   </ul>
   </div>
   <hr/>
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls (pageChange)="page = $event"></pagination-controls>
 
 </mat-tab>
 
@@ -92,6 +93,6 @@
 
 
 <!-- /.row -->
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->
 
 <!-- <div class="removeable" style="clear: left;">here:</div> -->
