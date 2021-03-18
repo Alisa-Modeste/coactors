@@ -163,14 +163,16 @@ class Title(Model):
   def serialize(self):
     return {"uid": self.uid,
           "title": self.title,
-          "released": self.released}
+          "released": self.released,
+          "children_known": self.children_known if self.children_known else False}
           
   def serialize2(self,cast):
     cast_list = []
 
     for actor in cast:
       cast_list.append( {"uid": actor.uid,
-            "name": actor.name})
+            "name": actor.name,
+            "children_known": actor.children_known if actor.children_known else False})
 
     return {"uid": self.uid,
           "title": self.title,

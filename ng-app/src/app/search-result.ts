@@ -2,7 +2,7 @@
 // import { Title } from './title';
 
 export interface SearchResult {
-    unknown: boolean;
+    known: boolean;
     results: Array<any>;
     title_type: string;
 }

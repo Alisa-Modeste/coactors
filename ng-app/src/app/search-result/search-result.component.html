@@ -3,7 +3,7 @@
 <div *ngIf="actors">
     <div *ngFor="let actor of actors">
         <!-- <a routerLink="/actor/{{actor.uid}}"> -->
-        <a routerLink="/actor/{{actor.uid}}" [queryParams]="{unknown: unknown}">
+        <a routerLink="/actor/{{actor.uid}}" [queryParams]="{k: known, ck: actor.children_known}">
             <span class="badge">{{actor.uid}}</span> {{actor.name}}
         </a>
     </div>
@@ -11,7 +11,7 @@
 
 <div *ngIf="titles">
     <div *ngFor="let title of titles">
-        <a routerLink="/title/{{title.uid}}" [queryParams]="{unknown: unknown, title_type: title.title_type}">
+        <a routerLink="/title/{{title.uid}}" [queryParams]="{k: known, title_type: title.title_type, ck: title.children_known}">
             <span class="badge">{{title.uid}}</span> {{title.title}}
         </a>
     </div>

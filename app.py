@@ -51,6 +51,8 @@ def create_actor():
    # uid = "2888"
    # name = "Will Smith"
    uid = request.args.get('uid')
+   uid = uid if uid.isnumeric() else uid[2:]
+   
    if not uid.isnumeric():
       return "404" #here:
    actor = find_actor("na" + uid)
@@ -87,15 +89,25 @@ def create_title():
    # title_type = 'movie'
    uid = request.args.get('uid')
    title_type = request.args.get('title_type')
-   if not uid.isnumeric():
-      return "404" #here:
+   if uid.isnumeric():
+      # return "404" #here:
+      if title_type == "movie":
+         prefix = "mo"
+      elif title_type == "tv":
+         prefix = "tv"
+      else:
+         return {} #here:
+         
+   elif uid[2:].isnumeric():
+      prefix = uid[0:2]
+      if prefix == "mo":
+         title_type = "movie"
+      elif prefix == "tv":
+         title_type = "tv"
 
-   if title_type == "movie":
-      prefix = "mo"
-   elif title_type == "tv":
-      prefix = "tv"
    else:
-      return "404" #here:
+         return {}
+
 
    title = find_title(prefix + uid)
    if title:
@@ -206,7 +218,7 @@ def find_actor(uid):
       # return render_template('actor2.html',actor=actor, coactors=coactors, 
       #    titles=titles, querystring='?')
       # from flask import jsonify
-      actor.serialize()
+      # actor.serialize()
       # return jsonify({'actor': actor.serialize()} )
       return actor.serialize2(titles, coactors)
    else:
@@ -262,17 +274,18 @@ def actor_text_search():
    if actors:
       response = []
       for actor in actors:
-         response.append( {"uid": actor.uid, "name": actor.name} )
+         response.append( {"uid": actor.uid, "name": actor.name,
+            "children_known": actor.children_known if actor.children_known else False} )
       
       # from flask import jsonify
       # return jsonify(response)
-      return {"unknown": False, "results": response}
+      return {"known": True, "results": response}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
    response = API.retrieve('/search/person',{'query': query})
    actors = parse_search_results(response, "actors")
    # return actors
-   return {"unknown": True, "results": actors}
+   return {"known": False, "results": actors}
 
 
 @app.route('/title_search',methods = ['GET'])
@@ -288,13 +301,14 @@ def title_text_search():
       response = []
       for title in titles:
          response.append( {"uid": title.uid, "title": title.title,
-          "released": title.released,"title_type":title.title_type} )
-      return {"unknown": False, "results": response}
+          "released": title.released,"title_type":title.title_type,
+          "children_known": title.children_known if title.children_known else False} )
+      return {"known": True, "results": response}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
    response = API.retrieve('/search/multi',{'query': query})
    titles = parse_search_results(response, "titles")
-   return {"unknown": True, "results": titles}
+   return {"known": False, "results": titles}
 
 @app.route('/actor_children_known/<uid>',methods = ['GET'])
 def actor_children_known(uid):

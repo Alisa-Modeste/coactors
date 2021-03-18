@@ -55,7 +55,7 @@
   <ul class="actors">
 
     <li *ngFor="let coactor of actor.coactors  | searchFilter: searchTerm | paginate: { itemsPerPage: 10, currentPage: page}">
-      <a [routerLink]="['/actor/' +coactor.uid]">{{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
+      <a [routerLink]="['/actor/' +coactor.uid]" [queryParams]="{ck: coactor.children_known}">{{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
       <!-- {{coactor}} -->
   </li>
   </ul>
@@ -80,7 +80,7 @@
 
   <li *ngFor="let title of actor.titles">
     <!-- {{title.title}} -->
-    <a routerLink="/title/{{title.uid}}">
+    <a routerLink="/title/{{title.uid}}" [queryParams]="{ck: title.children_known}">
       <span class="badge">{{title.uid}}</span> {{title.title}} ({{title.released}})
   </a>
 </li>

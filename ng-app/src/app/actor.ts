@@ -5,6 +5,7 @@ export interface Actor {
     titles: Array<titles>;
     coactors: Array<coactors>;
     group_members: Array<group_members>;
+    children_known: string;
 }
 
 interface titles { 

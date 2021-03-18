@@ -51,7 +51,7 @@
   <ul class="actors">
 
     <li *ngFor="let actor of title.cast">
-      <a [routerLink]="['/actor/' +actor.uid]">{{actor.name}}</a>
+      <a [routerLink]="['/actor/' +actor.uid]" [queryParams]="{ck: actor.children_known}">{{actor.name}}</a>
       <!-- {{coactor}} -->
   </li>
   </ul>

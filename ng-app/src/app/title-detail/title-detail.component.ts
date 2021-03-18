@@ -43,11 +43,12 @@ export class TitleDetailComponent implements OnInit {
 
   getTitle(): void {
     const uid = ""+this.route.snapshot.paramMap.get('uid');
-    const unknown = this.route.snapshot.queryParams['unknown']
+    const known = this.route.snapshot.queryParams['k']
     const title_type = this.route.snapshot.queryParams['title_type']
+    const childrenKnown = this.route.snapshot.queryParams['ck']
     console.log("uid:" + uid)
     console.log( this.route)
-    this.titleService.getTitle(uid, unknown, title_type)
+    this.titleService.getTitle(uid, known, title_type, childrenKnown)
       // .subscribe(actor => this.actor = actor);
       .subscribe(title => {
         this.title = title

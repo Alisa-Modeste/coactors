@@ -4,6 +4,7 @@ export interface Title {
     cast: Array<actors>;
     released: number;
     title_type: string;
+    children_known: string;
 }
 
 interface actors { 

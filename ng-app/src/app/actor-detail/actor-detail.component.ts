@@ -44,14 +44,16 @@ export class ActorDetailComponent implements OnInit {
 
   getActor(): void {
     const uid = ""+this.route.snapshot.paramMap.get('uid');
-    const ca = this.route.snapshot.queryParams['ca']
-    const unknown = this.route.snapshot.queryParams['unknown']
+    const coactors = this.route.snapshot.queryParams['ca']
+    // const unknown = this.route.snapshot.queryParams['unknown']
+    const known = this.route.snapshot.queryParams['k']
+    const childrenKnown = this.route.snapshot.queryParams['ck']
 
-    this.actorService.getActor(uid, unknown, ca)
+    this.actorService.getActor(uid, known, coactors, childrenKnown)
       // .subscribe(actor => this.actor = actor);
       .subscribe(actor => {
         this.actor = actor
-        
+        console.log(actor)
         if (this.route.snapshot.queryParams['ca']){
           this.queryString = (this.route.snapshot.queryParams['ca']) + ","
         }

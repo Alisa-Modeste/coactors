@@ -13,7 +13,7 @@ import { Title } from '../title';
 export class SearchResultComponent implements OnInit {
   @Input() actors?: Actor[];
   @Input() titles?: Title[];
-  @Input() unknown?: boolean;
+  @Input() known?: boolean;
   // @Input() ?: Actor;
   constructor(
     private route: ActivatedRoute,
@@ -51,7 +51,7 @@ export class SearchResultComponent implements OnInit {
         this.actors = results.results;
         console.log("this actors")
         console.log(this.actors)
-        this.unknown = results.unknown;
+        this.known = results.known;
       
       });
   }
@@ -69,7 +69,7 @@ export class SearchResultComponent implements OnInit {
         this.titles = results.results;
         console.log("this actors")
         console.log(this.titles)
-        this.unknown = results.unknown;
+        this.known = results.known;
       
       });
   }

@@ -157,7 +157,8 @@ class Actor(Model):
 
   def serialize(self):
     return {"uid": self.uid,
-            "name": self.name}
+            "name": self.name,
+            "children_known": self.children_known if self.children_known else False}
   
   def serialize2(self,titles, coactors, group_members=[]):
     title_list, coactor_list, member_list = [], [], []
@@ -165,15 +166,16 @@ class Actor(Model):
     for title in titles:
       title_list.append( {"uid": title.uid,
       "title": title.title,
-      "released": title.released})
+      "released": title.released,
+      "children_known": title.children_known if title.children_known else False})
 
     for coactor in coactors:
       coactor_list.append( {"uid": coactor.uid,
-            "name": coactor.name})
+            "name": coactor.name, "children_known": coactor.children_known if coactor.children_known else False})
 
     for member in group_members:
       member_list.append( {"uid": member.uid,
-            "name": member.name})
+            "name": member.name, "children_known":member.children_known if member.children_known else False})
 
     return {"uid": self.uid,
             "name": self.name,

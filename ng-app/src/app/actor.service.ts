@@ -33,12 +33,13 @@ export class ActorService {
   }
   
   // getActor(uid: string): Observable<Actor | undefined> {
-  getActor(uid: string, unknown:string, queryString: string = ""): Observable<Actor > {
+  getActor(uid: string, known:string, coactorQueryString: string, childrenKnown:string): Observable<Actor > {
       // TODO: send the message _after_ fetching the actor
       // this.messageService.add(`ActorService: fetched actor id=${id}`);
       // return of(ACTORS.find(actor => actor.uid === uid));
-      console.log("uid: "+ uid+"unknown: "+unknown+"queryString: "+queryString)
-    if(unknown == "true"){
+      console.log("uid: "+ uid+"known: "+known+"queryString: "+coactorQueryString)
+      console.log("known: "+known+"childrenKnown: "+childrenKnown)
+    if(known == "false" || childrenKnown == "false"){
       console.log("if statement")
       this.newActorNotifyDelay();
       let url = `${this.newActorUrl}?uid=${uid}`;
@@ -48,12 +49,12 @@ export class ActorService {
     else {
       console.log("else statement")
       // warn if there will be a delay
-      let childrenStatus = this.childrenKnown(uid);
-      this.notifyDelay(childrenStatus);
+      // let childrenStatus = this.childrenKnown(uid);
+      // this.notifyDelay(childrenStatus);
 
       let url = `${this.actorUrl}/${uid}`;
-      if (queryString){
-        url += `?ca=${queryString}`
+      if (coactorQueryString){
+        url += `?ca=${coactorQueryString}`
       }
 
       console.log('url'+url)
