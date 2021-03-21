@@ -91,15 +91,14 @@ def create_title():
    title_type = request.args.get('title_type')
    if uid.isnumeric():
       # return "404" #here:
-      if title_type == "movie":
-         prefix = "mo"
-      elif title_type == "tv":
-         prefix = "tv"
+      if title_type == "movie" or title_type == "tv":
+         prefix = title_type[0:2]
       else:
          return {} #here:
          
    elif uid[2:].isnumeric():
       prefix = uid[0:2]
+      uid = uid[2:]
       if prefix == "mo":
          title_type = "movie"
       elif prefix == "tv":
@@ -279,12 +278,13 @@ def actor_text_search():
       
       # from flask import jsonify
       # return jsonify(response)
-      return {"known": True, "results": response}
+      return {"known": True, "results": response, "query":query}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
    response = API.retrieve('/search/person',{'query': query})
    actors = parse_search_results(response, "actors")
    # return actors
+   # return {"known": False, "results": actors, "query":""}
    return {"known": False, "results": actors}
 
 
@@ -303,7 +303,7 @@ def title_text_search():
          response.append( {"uid": title.uid, "title": title.title,
           "released": title.released,"title_type":title.title_type,
           "children_known": title.children_known if title.children_known else False} )
-      return {"known": True, "results": response}
+      return {"known": True, "results": response, "query":query}
 
    # response = API.retrieve(f'/{title_type}/{uid}',{'append_to_response': "credits"})
    response = API.retrieve('/search/multi',{'query': query})

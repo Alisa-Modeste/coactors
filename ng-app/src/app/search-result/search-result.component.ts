@@ -14,6 +14,7 @@ export class SearchResultComponent implements OnInit {
   @Input() actors?: Actor[];
   @Input() titles?: Title[];
   @Input() known?: boolean;
+  @Input() query?: string;
   // @Input() ?: Actor;
   constructor(
     private route: ActivatedRoute,
@@ -38,11 +39,13 @@ export class SearchResultComponent implements OnInit {
     }
   }
 
+  
   getActors(): void {
     let query = this.route.snapshot.queryParams['query']
+    let more = this.route.snapshot.queryParams['more']
     // let type = this.route.snapshot.queryParams['type']
 
-    this.searchService.getActors(query)
+    this.searchService.getActors(query, more)
       // .subscribe(actor => this.actor = actor);
       .subscribe(results => {
         console.log('the results are...')
@@ -52,15 +55,17 @@ export class SearchResultComponent implements OnInit {
         console.log("this actors")
         console.log(this.actors)
         this.known = results.known;
+        this.query = query;
       
       });
   }
 
   getTitles(): void {
     let query = this.route.snapshot.queryParams['query']
+    let more = this.route.snapshot.queryParams['more']
     // let type = this.route.snapshot.queryParams['type']
 
-    this.searchService.getTitles(query)
+    this.searchService.getTitles(query, more)
       // .subscribe(actor => this.actor = actor);
       .subscribe(results => {
         console.log('the results are...')
@@ -70,6 +75,7 @@ export class SearchResultComponent implements OnInit {
         console.log("this actors")
         console.log(this.titles)
         this.known = results.known;
+        this.query = query;
       
       });
   }

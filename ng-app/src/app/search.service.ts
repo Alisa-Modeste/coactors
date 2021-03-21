@@ -14,16 +14,17 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
-  getActors(query: string) {
-    let url = this.actorsUrl + `?query=${query}&type=actor`
+  getActors(query: string, more:string = "") {
+    let url = this.actorsUrl + `?query=${query}&type=actor&more=${more}`
     // return this.http.get<Actor[]>(url)
     return this.http.get<SearchResult>(url)
   }
 
-  getTitles(query: string) {
-    let url = this.titlesUrl + `?query=${query}&type=title`
+  getTitles(query: string, more:string = "") {
+    let url = this.titlesUrl + `?query=${query}&type=title&more=${more}`
     
     return this.http.get<SearchResult>(url)
     
   }
-}
+
+  }

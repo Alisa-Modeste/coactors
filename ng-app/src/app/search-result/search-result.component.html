@@ -7,6 +7,7 @@
             <span class="badge">{{actor.uid}}</span> {{actor.name}}
         </a>
     </div>
+    <div *ngIf="known">Actor not shown? <a routerLink="/search" [queryParams]="{query: query, more:1, type: 'actor'}">Search external database</a></div>
 </div>
 
 <div *ngIf="titles">
@@ -15,4 +16,5 @@
             <span class="badge">{{title.uid}}</span> {{title.title}}
         </a>
     </div>
+    <div *ngIf="known">Title not shown? <a routerLink="/search" [queryParams]="{query: query, more:1, type: 'title'}">Search external database</a></div>
 </div>
