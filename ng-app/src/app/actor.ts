@@ -17,11 +17,11 @@ interface titles {
 interface coactors {
     uid: string,
     name: string
-    // titles: Array<Object>;
-    
+    children_known: string
 }
 
 interface group_members {
     uid: string,
-    name: string    
+    name: string,
+    children_known: string
 }

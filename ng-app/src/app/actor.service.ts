@@ -65,25 +65,25 @@ export class ActorService {
     }
   }
 
-  childrenKnown(uid: string): Observable<string> {
-    let url = `${this.actorChildrenUrl}/${uid}`;
-    return this.http.get<string>(url)
-  }
+//   childrenKnown(uid: string): Observable<string> {
+//     let url = `${this.actorChildrenUrl}/${uid}`;
+//     return this.http.get<string>(url)
+//   }
 
-  notifyDelay(response: Observable<string>): void {
-    //
-    response
-      // .subscribe(actor => this.actor = actor);
-      .subscribe(response => {
+//   notifyDelay(response: Observable<string>): void {
+//     //
+//     response
+//       // .subscribe(actor => this.actor = actor);
+//       .subscribe(response => {
 
-          // if(response != "true"){
-          console.log("this.childrenKnow")
-          console.log(response)
-          if(response == "0"){
-          this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
-        }
-  });
-}
+//           // if(response != "true"){
+//           console.log("this.childrenKnow")
+//           console.log(response)
+//           if(response == "0"){
+//           this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
+//         }
+//   });
+// }
 
   newActorNotifyDelay(): void {
     

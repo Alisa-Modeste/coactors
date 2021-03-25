@@ -54,9 +54,9 @@ def create_actor():
    uid = uid if uid.isnumeric() else uid[2:]
    
    if not uid.isnumeric():
-      return "404" #here:
+      return {} #"404" #here:
    actor = find_actor("na" + uid)
-   if actor:
+   if actor and 'children_known' in actor:
       return actor
 
    # actor_data = get_actors_data([{'uid': uid, 'name': name}])
@@ -109,7 +109,7 @@ def create_title():
 
 
    title = find_title(prefix + uid)
-   if title:
+   if title and 'children_known' in title:
       return title
 
    title_data = get_titles_data([{'uid':uid, 'title': "title", 'released': "released",

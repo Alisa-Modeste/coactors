@@ -10,4 +10,5 @@ export interface Title {
 interface actors { 
     uid: string,
     name: string
+    children_known: string
  }
