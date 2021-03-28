@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "coactors": {
+      "hosting": {
+        "coactors": [
+          "coactors"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "staging": "coactors"
+  }
+}

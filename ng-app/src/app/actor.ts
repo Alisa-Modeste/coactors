@@ -12,6 +12,7 @@ interface titles {
     title:string,
     uid:string,
     released:number
+    children_known: string
  }
 
 interface coactors {
