@@ -1,6 +1,10 @@
 from py2neo import Graph #here: here or ogm?
 from py2neo.ogm import Property, Graph, Model
-import py2neo_monkeypatch
+
+try:
+  import coactors.py2neo_monkeypatch
+except ImportError:
+  import py2neo_monkeypatch
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 class Actor(Model):
@@ -84,7 +88,10 @@ class Actor(Model):
       WITH distinct _ """ , {"uid":self.uid})
 
   def get_titles(self):
-    from titles import Title
+    try:
+      from coactors.titles import Title
+    except ImportError:
+      from titles import Title
     return Title.match(graph ).raw_query("MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) ", {"uid":self.uid})
 
   def get_groups_coactors(self, actor_uids):

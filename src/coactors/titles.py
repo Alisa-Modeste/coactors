@@ -1,6 +1,11 @@
 from py2neo import Graph
 from py2neo.ogm import Property, Graph, Model
-import py2neo_monkeypatch
+
+try:
+  import coactors.py2neo_monkeypatch
+except ImportError:
+  import py2neo_monkeypatch
+
 graph = Graph("bolt://neo4j:12345@localhost:7687")
 
 class Title(Model):
@@ -20,7 +25,7 @@ class Title(Model):
     self.title_type = title_type
     
   def create(self, cast_info):
-    from actors import Actor
+    # from coactors.actors import Actor
     if self.level > Title.max_level:
       return
     elif self.level == Title.max_level:
@@ -31,7 +36,10 @@ class Title(Model):
 
     
   def add_cast(self, cast_info):
-    from actors import Actor
+    try:
+      from coactors.actors import Actor
+    except ImportError:
+      from actors import Actor
 
     query = """MERGE (t:Title {uid: $uid}) 
        SET t += {title: $title, released: $released, title_type: $title_type} 

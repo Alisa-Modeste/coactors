@@ -1,8 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 from os import getenv
-from actors import Actor
-from titles import Title
-from api import API
+
+try:
+  from coactors.actors import Actor
+  from coactors.titles import Title
+  from coactors.api import API
+except ImportError:
+  from actors import Actor
+  from titles import Title
+  from api import API
 
 from datetime import datetime
 import re
