@@ -11,6 +11,7 @@ import { SearchService } from './search.service';
 })
 export class AppComponent {
   title = 'Have We Worked Together?';
+  routeSegment = "";
 
   // // @ViewChild('hello', { static: false }) navbar!: ElementRef;
   @ViewChild('theNavbar') navbar!: ElementRef;
@@ -38,19 +39,16 @@ export class AppComponent {
     this.resizeMe()
   }
 
+  ngAfterContentChecked(): void{
+    this.routeSegment = this.router.routerState.snapshot.url;
+    this.routeSegment = this.routeSegment.split("/")[1]
+  }
+
   resizeMe() {
 
     let currentHeight = this.navbar.nativeElement.clientHeight
     this.renderer.setStyle(this.navbarOffset.nativeElement, 'height', currentHeight+20);
   }
-
-  ngAfterViewChecked() {
-   }
-
-  // ngOnInit() {
-  //   this.navbarOffset.nativeElement.style.backgroundColor = 'red';
-  //   this.renderer.setStyle(this.navbarOffset.nativeElement, 'background-color', 'red');
-  // }
 
   @HostListener('window:resize') 
     onResize() {

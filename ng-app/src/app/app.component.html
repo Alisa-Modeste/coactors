@@ -20,20 +20,21 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html">Have We Worked Together?</a>
+            <a class="navbar-brand" href="/">Have We Worked Together?</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="about.html">Site's Technology</a>
+                <li [className]="routeSegment == 'actor'|| routeSegment == 'actors'  ? 'active' : ''">
+                    <a routerLink="/actors">Actors</a> 
                 </li>
-                <li>
-                    <a href="services.html">Services</a>
+                <li [className]="routeSegment == 'title' || routeSegment == 'titles'? 'active' : ''">
+                    <a routerLink="/titles">Titles</a>
                 </li>
-                <li>
-                    <a href="contact.html">Contact</a>
+                <li [className]="routeSegment == 'about' ? 'active' : ''">
+                    <a href="about.html">About the Site</a>
                 </li>
+                
                 <li class="dropdown active">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -100,12 +101,7 @@
 <div class="container">
 <div>
 <!-- <h1>Have We Worked Together?</h1> -->
-<nav>
-  <a routerLink="">Home</a> 
-  <a routerLink="/actors">Actors</a> 
-   
-  <a routerLink="/titles">Titles</a>
-</nav>
+
 <p><input #searchTerm type="text" /></p>
 <button class="clear" 
             (click)="getActors(searchTerm.value)">Search actors</button>
