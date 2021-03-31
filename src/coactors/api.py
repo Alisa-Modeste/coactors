@@ -9,7 +9,7 @@ class API:
     # url = "https://api.themoviedb.org/3/movie/550?api_key="
         url = "https://api.themoviedb.org/3" + route
         
-        api_key = API.get_api_key()
+        api_key = API.get_secret("THEMOVIEDB_APIKEY")
         
         querystring['api_key']= api_key
 
@@ -18,7 +18,7 @@ class API:
         return response.text
 
     @staticmethod
-    def access_secret_version(project_id, secret_id, version_id):
+    def get_secret_helper(project_id, secret_id, version_id):
         """
         Access the payload for the given secret version if one exists. The version
         can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
@@ -39,12 +39,12 @@ class API:
         return response.payload.data.decode("UTF-8")
 
     @staticmethod
-    def get_api_key():
+    def get_secret(key):
         try:
             return os.environ['THEMOVIEDB_APIKEY']
         except KeyError:
             print("getting the secret - print")
 
-            api_key = API.access_secret_version("508429297891", "THEMOVIEDB_APIKEY", 1)
+            api_key = API.access_secret_version("508429297891", key, 1)
             os.environ['THEMOVIEDB_APIKEY'] = api_key
             return api_key

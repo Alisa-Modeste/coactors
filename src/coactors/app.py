@@ -20,36 +20,6 @@ def after_request_func(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
-@app.route('/')
-def student():
-   actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
-    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
-    "John Salley", "RonReaco Lee", "Bo Yokely"]
-   return render_template('actor.html',actors=["ll"])
-
-@app.route('/result',methods = ['POST', 'GET'])
-def result():
-   if request.method == 'POST':
-      result = request.form
-      return render_template("result.html",result = result)
-
-
-# @app.route('/actor/<string:url_frag>')
-# def profiles(url_frag):
-#    pass
-
-
-@app.route('/actordemo',methods = ['GET'])
-def actordemo():
-   t = Demo
-   t.including()
-   actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
-    "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
-    "John Salley", "RonReaco Lee", "Bo Yokely"]
-   return render_template('actor.html',actors=actors)
-
-#remove
-api_count = 0
 
 @app.route('/create_actor',methods = ['GET'])#post
 def create_actor():
@@ -352,6 +322,14 @@ def parse_search_results(response, search_type):
             )
 
    return result
+
+
+@app.route('/tester',methods = ['GET'])#post
+def tester():
+   Actor.tester()
+   api_key = API.get_api_key()
+   print("the api's length is" + str(len(api_key)))
+   return {"jj":4}
 
 if getenv("DEBUGGER") == "True" or  __name__ == '__main__':#here
    app.run()

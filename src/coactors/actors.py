@@ -1,11 +1,11 @@
-from py2neo import Graph #here: here or ogm?
-from py2neo.ogm import Property, Graph, Model
+from py2neo.ogm import Property, Model
 
 try:
   import coactors.py2neo_monkeypatch
+  from coactors.db_admin import graph
 except ImportError:
   import py2neo_monkeypatch
-graph = Graph("bolt://neo4j:12345@localhost:7687")
+  from db_admin import graph
 
 class Actor(Model):
   max_level = 3
@@ -19,11 +19,9 @@ class Actor(Model):
     self.name = name
     self.level = level
     
-  # def add_title(title_uid, title):
-  #   a = Node("Actor", name=name, uid=uid)
-  #   b = Node("Title", title=title, uid=title_uid)
-  #   ACTED_IN = Relationship.type("ACTED_IN")
-  #   graph.merge(ACTED_IN(a, b), "Title", "uid")
+  @staticmethod
+  def tester():
+    graph.run("create (a:Reporter {name: 'susie2'})")
 
   def create(self, titles_info):
     #add titles while possibly creating actor node
@@ -51,7 +49,10 @@ class Actor(Model):
         WITH a 
         CALL {"""
         
-    from titles import Title
+    try:
+      from coactors.titles import Title
+    except ImportError:
+      from titles import Title
     params = {"name": self.name, "uid": self.uid}
 
     # title_uids = []
@@ -119,7 +120,10 @@ class Actor(Model):
     #  WHERE rels = $len(actor_uids) 
     #  RETURN distinct b.uid, b.title""", uid=self.uid)
 
-    from titles import Title
+    try:
+      from coactors.titles import Title
+    except ImportError:
+      from titles import Title
     #here: distinct needed?
     actor_uids.append(self.uid)
     # titles = Title.match(graph ).raw_query("""MATCH(a:Actor)-[:ACTED_IN]->(_:Title) 
@@ -148,19 +152,6 @@ class Actor(Model):
      with collect(c) as cc, bb
      RETURN distinct cc,bb""", actor_uids=actor_uids, rels = len(actor_uids))
 
-
-  def titles_string(self, titles):
-    str = ""
-
-
-  # def toJSON(self):
-  #   import json
-  #   print(self.__dict__)
-  #   print(vars(self))
-  #   print( json.dumps(self, default=lambda o: o.__dict__, 
-  #           sort_keys=True, indent=4) )
-  #   return json.dumps(self, default=lambda o: o.__dict__, 
-  #           sort_keys=True, indent=4)
 
   def serialize(self):
     return {"uid": self.uid,
@@ -241,7 +232,10 @@ class Actor(Model):
   @staticmethod
   def parse_filmography(actor_data):
     import json
-    from titles import Title
+    try:
+      from coactors.titles import Title
+    except ImportError:
+      from titles import Title
 
     actor_data = json.loads(actor_data)
 

@@ -1,12 +1,11 @@
-from py2neo import Graph
-from py2neo.ogm import Property, Graph, Model
+from py2neo.ogm import Property, Model
 
 try:
   import coactors.py2neo_monkeypatch
+  from coactors.db_admin import graph
 except ImportError:
   import py2neo_monkeypatch
-
-graph = Graph("bolt://neo4j:12345@localhost:7687")
+  from db_admin import graph
 
 class Title(Model):
   uid = Property()
@@ -73,7 +72,10 @@ class Title(Model):
 
 
   def get_cast(self):
-    from actors import Actor
+    try:
+      from coactors.actors import Actor
+    except ImportError:
+      from actors import Actor
     return Actor.match(graph ).raw_query("MATCH(t:Title {uid: $uid})<-[:ACTED_IN]-(_:Actor) ", {"uid":self.uid})
   
   # def find():
@@ -83,7 +85,10 @@ class Title(Model):
   @staticmethod
   def parse_cast(title_data, title_type):
     import json
-    from titles import Title
+    try:
+      from coactors.titles import Title
+    except ImportError:
+      from titles import Title
 
     title_data = json.loads(title_data) 
     cast = title_data['credits']['cast'] if 'credits' in title_data else title_data['aggregate_credits']['cast']
