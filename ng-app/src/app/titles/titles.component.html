@@ -1,14 +1,8 @@
-<p>titles works!</p>
+
 <h2>The Titles</h2>
 
-                <h3>Project One</h3>
-                <h4>Subheading</h4>
                 <div class="barred" style="border-left: 30px solid #ccc;">
-                    % for actor in cast %
-                    <!-- <li *ngFor="let title of titles">
-                        <!-- <a href=" url_for('find_actor', uid = actor.uid) " > actor.name  </a> -- >
-                        <span class="badge">{{title.uid}}</span> {{title.title}} ({{title.released}})
-                    </li> -->
+
 
                     <li *ngFor="let title of titles">
                         <!-- <a href=" url_for('find_actor', uid = actor.uid) " > actor.name  </a> -->
@@ -16,7 +10,5 @@
                             <span class="badge">{{title.uid}}</span> {{title.title}} ({{title.released}})
                         </a>
                     </li>
-                    % endfor % 
                 </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium veniam exercitationem expedita laborum at voluptate. Labore, voluptates totam at aut nemo deserunt rem magni pariatur quos perspiciatis atque eveniet unde.</p>
  
