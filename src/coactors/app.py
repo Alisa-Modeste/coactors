@@ -2,13 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 from os import getenv
 
 try:
-  from coactors.actors import Actor
-  from coactors.titles import Title
-  from coactors.api import API
-except ImportError:
   from actors import Actor
   from titles import Title
   from api import API
+except ImportError:
+  from coactors.actors import Actor
+  from coactors.titles import Title
+  from coactors.api import API
 
 from datetime import datetime
 import re
@@ -139,7 +139,6 @@ def get_actors_data(actors_attr):
 
 def get_titles_data(titles_attr): 
     new_titles = []
-    count = 0 #here:
 
     for title in titles_attr:
 
@@ -164,10 +163,6 @@ def get_titles_data(titles_attr):
             cast = Title.parse_cast(response, title_type) 
 
             new_titles.append(cast)
-
-        count += 1
-      #   if count == 2:
-      #      break
 
     return new_titles
 

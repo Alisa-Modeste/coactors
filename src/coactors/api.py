@@ -41,10 +41,10 @@ class API:
     @staticmethod
     def get_secret(key):
         try:
-            return os.environ['THEMOVIEDB_APIKEY']
+            return os.environ[key]
         except KeyError:
             print("getting the secret - print")
 
-            api_key = API.access_secret_version("508429297891", key, 1)
-            os.environ['THEMOVIEDB_APIKEY'] = api_key
-            return api_key
+            secret = API.get_secret_helper("508429297891", key, 1)
+            os.environ[key] = secret
+            return secret

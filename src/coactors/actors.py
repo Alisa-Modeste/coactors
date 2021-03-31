@@ -1,11 +1,11 @@
 from py2neo.ogm import Property, Model
 
 try:
-  import coactors.py2neo_monkeypatch
-  from coactors.db_admin import graph
-except ImportError:
   import py2neo_monkeypatch
   from db_admin import graph
+except ImportError:
+  import coactors.py2neo_monkeypatch
+  from coactors.db_admin import graph
 
 class Actor(Model):
   max_level = 3
@@ -50,9 +50,9 @@ class Actor(Model):
         CALL {"""
         
     try:
-      from coactors.titles import Title
-    except ImportError:
       from titles import Title
+    except ImportError:
+      from coactors.titles import Title
     params = {"name": self.name, "uid": self.uid}
 
     # title_uids = []
@@ -90,9 +90,9 @@ class Actor(Model):
 
   def get_titles(self):
     try:
-      from coactors.titles import Title
-    except ImportError:
       from titles import Title
+    except ImportError:
+      from coactors.titles import Title
     return Title.match(graph ).raw_query("MATCH(a:Actor {uid: $uid})-[:ACTED_IN]->(_:Title) ", {"uid":self.uid})
 
   def get_groups_coactors(self, actor_uids):
@@ -121,9 +121,9 @@ class Actor(Model):
     #  RETURN distinct b.uid, b.title""", uid=self.uid)
 
     try:
-      from coactors.titles import Title
-    except ImportError:
       from titles import Title
+    except ImportError:
+      from coactors.titles import Title
     #here: distinct needed?
     actor_uids.append(self.uid)
     # titles = Title.match(graph ).raw_query("""MATCH(a:Actor)-[:ACTED_IN]->(_:Title) 
@@ -233,9 +233,9 @@ class Actor(Model):
   def parse_filmography(actor_data):
     import json
     try:
-      from coactors.titles import Title
-    except ImportError:
       from titles import Title
+    except ImportError:
+      from coactors.titles import Title
 
     actor_data = json.loads(actor_data)
 

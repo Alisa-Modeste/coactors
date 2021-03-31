@@ -1,11 +1,11 @@
 from py2neo.ogm import Property, Model
 
 try:
-  import coactors.py2neo_monkeypatch
-  from coactors.db_admin import graph
-except ImportError:
   import py2neo_monkeypatch
   from db_admin import graph
+except ImportError:
+  import coactors.py2neo_monkeypatch
+  from coactors.db_admin import graph
 
 class Title(Model):
   uid = Property()
@@ -36,9 +36,9 @@ class Title(Model):
     
   def add_cast(self, cast_info):
     try:
-      from coactors.actors import Actor
-    except ImportError:
       from actors import Actor
+    except ImportError:
+      from coactors.actors import Actor
 
     query = """MERGE (t:Title {uid: $uid}) 
        SET t += {title: $title, released: $released, title_type: $title_type} 
@@ -73,9 +73,9 @@ class Title(Model):
 
   def get_cast(self):
     try:
-      from coactors.actors import Actor
-    except ImportError:
       from actors import Actor
+    except ImportError:
+      from coactors.actors import Actor
     return Actor.match(graph ).raw_query("MATCH(t:Title {uid: $uid})<-[:ACTED_IN]-(_:Actor) ", {"uid":self.uid})
   
   # def find():
@@ -86,9 +86,9 @@ class Title(Model):
   def parse_cast(title_data, title_type):
     import json
     try:
-      from coactors.titles import Title
-    except ImportError:
       from titles import Title
+    except ImportError:
+      from coactors.titles import Title
 
     title_data = json.loads(title_data) 
     cast = title_data['credits']['cast'] if 'credits' in title_data else title_data['aggregate_credits']['cast']
@@ -101,6 +101,7 @@ class Title(Model):
 
     result = []
     min_episodes = int(title_data['number_of_episodes'] * 0.05) if 'number_of_episodes' in title_data else None
+    min_episodes = 0 if min_episodes and cast[0]['total_episode_count'] < min_episodes else min_episodes
     for actor in cast:
       if 'total_episode_count' in actor and actor['total_episode_count'] < min_episodes:
         continue
