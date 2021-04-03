@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 // import {MatTabsModule} from '@angular/material/tabs';
@@ -13,7 +13,7 @@ import { TitlesComponent } from '../titles/titles.component';
   templateUrl: './title-detail.component.html',
   styleUrls: ['./title-detail.component.css']
 })
-export class TitleDetailComponent implements OnInit {
+export class TitleDetailComponent implements OnInit, OnChanges {
 
   @Input() title?: Title;
 

@@ -16,6 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { TitleDetailComponent } from './title-detail/title-detail.component';
 import { SearchFilterPipe } from './search-filter.pipe';
+import { CountdownComponent } from './countdown/countdown.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { SearchFilterPipe } from './search-filter.pipe';
     HomeComponent,
     SearchResultComponent,
     TitleDetailComponent,
-    SearchFilterPipe
+    SearchFilterPipe,
+    CountdownComponent
   ],
   imports: [
     BrowserModule,

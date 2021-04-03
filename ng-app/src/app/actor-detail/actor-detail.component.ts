@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 // import {MatTabsModule} from '@angular/material/tabs';
@@ -12,7 +12,7 @@ import { MessageService } from '../message.service';
   templateUrl: './actor-detail.component.html',
   styleUrls: ['./actor-detail.component.css']
 })
-export class ActorDetailComponent implements OnInit {
+export class ActorDetailComponent implements OnInit, OnChanges {
   @Input() actor?: Actor;
   queryString:string = "";
   page:number = 1;
