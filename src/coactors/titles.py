@@ -13,26 +13,12 @@ class Title(Model):
   released = Property()
   children_known = Property()
   title_type = Property()
-  
-  max_level = 3
 
-  def __init__(self, uid, title, released, title_type, level=1):
+  def __init__(self, uid, title, released, title_type):
     self.uid = uid
     self.title = title
     self.released = released
-    self.level = level
     self.title_type = title_type
-    
-  def create(self, cast_info):
-    # from coactors.actors import Actor
-    if self.level > Title.max_level:
-      return
-    elif self.level == Title.max_level:
-      u = graph.run("MERGE(b:Title {title: $title, uid: $uid})", uid=self.uid, title=self.title)
-      return
-
-    return self.add_cast(cast_info)
-
     
   def add_cast(self, cast_info):
     try:
@@ -41,32 +27,21 @@ class Title(Model):
       from coactors.actors import Actor
 
     query = """MERGE (t:Title {uid: $uid}) 
-       SET t += {title: $title, released: $released, title_type: $title_type} 
+       ON CREATE SET t += {title: $title, released: $released, title_type: $title_type} 
        SET t.children_known = True  
        WITH t 
-       CALL {"""
+       UNWIND $batch as row 
+       MERGE (_:Actor {uid: row.uid}) 
+       ON CREATE SET _ += {name: row.name} 
+       MERGE (_)-[:ACTED_IN]->(t) """
     params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
+    batch = []
 
-    # actor_uids = []
     for i in range(0,len(cast_info)):
 
-      query += "WITH t "
-      query += f"MERGE (a{i}:Actor " + "{uid:$actors" + str(i) + "_uid}) "
-      query += f"SET a{i}.name = $actors" + str(i) + "_name "
-      query += f"""MERGE (a{i})-[:ACTED_IN]->(t) 
-      ON CREATE SET a{i}.found=FALSE 
-      ON MATCH SET a{i}.found=TRUE 
-      RETURN a{i} as _ 
-      UNION """
+      batch.append( {"uid": cast_info[i]["uid"], "name":cast_info[i]["name"]} )
 
-      params[f"actors{i}_uid"] = cast_info[i]["uid"]
-      params[f"actors{i}_name"] = cast_info[i]["name"]
-      # actor_uids.append(cast_info[i]["uid"])
-
-    # graph.run(query, params)
-    query = query[:-6] + "} "
-
-
+    params['batch'] = batch
     return Actor.match(graph ).raw_query(query, params)
 
 

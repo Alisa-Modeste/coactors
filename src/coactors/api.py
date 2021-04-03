@@ -39,12 +39,12 @@ class API:
         return response.payload.data.decode("UTF-8")
 
     @staticmethod
-    def get_secret(key):
+    def get_secret(key, version=1):
         try:
             return os.environ[key]
         except KeyError:
             print("getting the secret - print")
 
-            secret = API.get_secret_helper("508429297891", key, 1)
+            secret = API.get_secret_helper("508429297891", key, version)
             os.environ[key] = secret
             return secret

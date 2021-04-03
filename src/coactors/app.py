@@ -36,10 +36,9 @@ def create_actor():
       return actor
 
    # actor_data = get_actors_data([{'uid': uid, 'name': name}])
-   actor_data = get_actors_data([{'uid': uid,'name': "name"}])
-   level = 1
-   a = Actor(actor_data[0]['uid'], actor_data[0]['name'], level)
-   titles_added = a.create(actor_data[0]['titles'])
+   actor_data = get_actors_data([{'uid': uid}])
+   a = Actor(actor_data[0]['uid'], actor_data[0]['name'])
+   titles_added = a.add_titles(actor_data[0]['titles'])
 
    casts = get_titles_data(titles_added)
 
@@ -49,7 +48,7 @@ def create_actor():
          cast['released'],
          cast['title_type'])
 
-      t.create(cast['cast'])
+      t.add_cast(cast['cast'])
 
    # actors = ["Ricky Whittle", "Lyriq Bent", "Lynn Whitfield", "Ernie Hudson", "Daria Johns",
    #  "Camille Guaty", "Brittany S. Hall", "Terry Serpico", "Jen Harper", "Danielle Lyn", "George Wallace", 
@@ -88,25 +87,23 @@ def create_title():
    if title and 'children_known' in title:
       return title
 
-   title_data = get_titles_data([{'uid':uid, 'title': "title", 'released': "released",
+   title_data = get_titles_data([{'uid':uid,
         "title_type": title_type}])
    t = Title(title_data[0]['uid'],
       title_data[0]['title'],
       title_data[0]['released'],
       title_data[0]['title_type'])
-   actors_added = t.create(title_data[0]['cast'])
+   actors_added = t.add_cast(title_data[0]['cast'])
 
    actors = get_actors_data(actors_added)
 
    for actor in actors:
-       level = 2 #really 1? here:
 
        a = Actor(
           actor['uid'], 
-          actor['name'], 
-          level)
+          actor['name'])
 
-       a.create(actor['titles'])
+       a.add_titles(actor['titles'])
 
    # return "Template here"
    return redirect(url_for('find_title', uid=title_data[0]['uid']))
@@ -114,7 +111,7 @@ def create_title():
 
 def get_actors_data(actors_attr):
     new_actors = []
-    count = 0 #here:
+
     for actor in actors_attr:
        uid = None
        if type(actor) == dict:
@@ -130,10 +127,6 @@ def get_actors_data(actors_attr):
            titles = Actor.parse_filmography(response)
 
            new_actors.append(titles)
-
-      #  count += 1 #here:
-      #  if count == 2:
-      #     break
 
     return new_actors
 
@@ -322,8 +315,12 @@ def parse_search_results(response, search_type):
 @app.route('/tester',methods = ['GET'])#post
 def tester():
    Actor.tester()
-   api_key = API.get_api_key()
-   print("the api's length is" + str(len(api_key)))
+   # api_key = API.get_api_key()
+   # print("the api's length is" + str(len(api_key)))
+   
+   a = Actor("845", "Franny")
+   a.add_titles([{"released":2008,"title":"New Bike", "title_type":"movie", "uid":4851}])
+   
    return {"jj":4}
 
 if getenv("DEBUGGER") == "True" or  __name__ == '__main__':#here
