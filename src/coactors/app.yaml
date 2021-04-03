@@ -1,6 +1,6 @@
 runtime: python37 # or another supported version
 
-entrypoint: gunicorn -b :$PORT app:app
+entrypoint: gunicorn --workers 3 --timeout 180 -b :$PORT app:app
 
 instance_class: F2
 
