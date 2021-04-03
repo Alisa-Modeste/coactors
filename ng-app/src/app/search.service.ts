@@ -3,14 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Actor } from './actor';
 import { SearchResult } from './search-result';
+import { baseUrl } from './base-url';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
 
-  private actorsUrl = 'http://127.0.0.1:5000/actor_search';
-  private titlesUrl = 'http://127.0.0.1:5000/title_search';
+  private actorsUrl = baseUrl + '/actor_search';
+  private titlesUrl = baseUrl + '/title_search';
 
   constructor(private http: HttpClient) { }
 

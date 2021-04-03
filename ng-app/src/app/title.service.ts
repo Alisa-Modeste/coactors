@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Title } from './title';
 import { MessageService } from './message.service';
+import { baseUrl } from './base-url';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,10 @@ import { MessageService } from './message.service';
 export class TitleService {
   // private actorsUrl = '/actors';
   // private actorUrl = '/actor';
-  private titlesUrl = 'http://127.0.0.1:5000/titles';
-  private titleUrl = 'http://127.0.0.1:5000/title';
-  private titleChildrenUrl = 'http://127.0.0.1:5000/title_children_known';
-  private newTitleUrl = 'http://127.0.0.1:5000/create_title';
+  private titlesUrl = baseUrl + '/titles';
+  private titleUrl = baseUrl + '/title';
+  private titleChildrenUrl = baseUrl + '/title_children_known';
+  private newTitleUrl = baseUrl + '/create_title';
 
   constructor(private http: HttpClient,
     // ,private messageService: MessageService) { }
@@ -36,7 +37,7 @@ export class TitleService {
       // TODO: send the message _after_ fetching the actor
       // this.messageService.add(`ActorService: fetched actor id=${id}`);
       // return of(ACTORS.find(actor => actor.uid === uid));
-      console.log("uid: "+ uid+"unknown: "+known+"titleType: "+titleType)
+      console.log("uid: "+ uid+"known: "+known+"titleType: "+titleType+"childrenKnown: "+childrenKnown)
       if(known == "false" || childrenKnown == "false"){
       console.log("if statement")
       this.newTitleNotifyDelay();

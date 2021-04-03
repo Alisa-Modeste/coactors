@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Actor } from './actor';
 import { MessageService } from './message.service';
+import { baseUrl } from './base-url';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,10 @@ import { MessageService } from './message.service';
 export class ActorService {
   // private actorsUrl = '/actors';
   // private actorUrl = '/actor';
-  private actorsUrl = 'http://127.0.0.1:5000/actors';
-  private actorUrl = 'http://127.0.0.1:5000/actor';
-  private actorChildrenUrl = 'http://127.0.0.1:5000/actor_children_known';
-  private newActorUrl = 'http://127.0.0.1:5000/create_actor';
+  private actorsUrl = baseUrl +'/actors';
+  private actorUrl = baseUrl + '/actor';
+  private actorChildrenUrl = baseUrl + '/actor_children_known';
+  private newActorUrl = baseUrl + '/create_actor';
 
   constructor(private http: HttpClient,
     // ,private messageService: MessageService) { }

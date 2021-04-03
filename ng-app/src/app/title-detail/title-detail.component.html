@@ -1,5 +1,3 @@
-<p>title-detail works!</p>
-
 <app-messages></app-messages>
 <div *ngIf="title">
 
@@ -7,7 +5,7 @@
   <div class="row">
       <div class="col-lg-12">
           <h1 class="page-header">{{title.title}} 
-            <span *ngIf="title.released"> ({{title.released}})</span> Details</h1>
+            <span *ngIf="title.released"> ({{title.released}})</span></h1>
     <!-- <div><span>id: </span>{{actor.uid}}</div>
     <div>
       <label>name:
@@ -17,9 +15,9 @@
 
  <!-- <small>Subheading</small> -->
 <ol class="breadcrumb">
-    <li><a href="index.html">Home</a>
+    <li><a href="/">Home</a>
     </li>
-    <li class="active">Two Column Portfolio</li>
+    <li class="active">Title Details</li>
 </ol>
 </div>
 </div>
@@ -52,7 +50,8 @@
   <ul class="actors">
 
     <li *ngFor="let actor of title.cast">
-      <a [routerLink]="['/actor/' +actor.uid]" [queryParams]="{ck: actor.children_known}">{{actor.name}}</a>
+      <a [routerLink]="['/actor/' +actor.uid]" [queryParams]="{ck: actor.children_known}">
+        <span class="badge" *ngIf="actor.children_known">Info known</span> {{actor.name}}</a>
       <!-- {{coactor}} -->
   </li>
   </ul>

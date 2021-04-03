@@ -7,7 +7,7 @@
                     <li *ngFor="let title of titles">
                         <!-- <a href=" url_for('find_actor', uid = actor.uid) " > actor.name  </a> -->
                         <a routerLink="/title/{{title.uid}}" [queryParams]="{ck: title.children_known}">
-                            <span class="badge">{{title.uid}}</span> {{title.title}} ({{title.released}})
+                            <span class="badge" *ngIf="title.children_known">Info known</span> {{title.title}} ({{title.released}})
                         </a>
                     </li>
                 </div>

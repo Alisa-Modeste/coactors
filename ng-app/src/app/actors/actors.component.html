@@ -6,7 +6,7 @@
         (click)="onSelect(actor)"> -->
         <li *ngFor="let actor of actors">
           <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ck: actor.children_known}">
-    <span class="badge">{{actor.uid}}</span> {{actor.name}}
+            <span class="badge" *ngIf="actor.children_known">Info known</span>  {{actor.name}}
           </a>
   </li>
 </ul>
