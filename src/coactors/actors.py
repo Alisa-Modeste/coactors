@@ -32,10 +32,14 @@ class Actor(Model):
             SET a += {children_known: True} 
 
             WITH a 
-            UNWIND $batch as row 
-            MERGE (_:Title {uid: row.uid}) 
-            ON CREATE SET _ += {title: row.title, released: row.released, title_type: row.title_type} 
-            MERGE (a)-[:ACTED_IN]->(_) """
+            CALL {
+              WITH a 
+              UNWIND $batch as row 
+              MERGE (_:Title {uid: row.uid}) 
+              ON CREATE SET _ += {title: row.title, released: row.released, title_type: row.title_type} 
+              MERGE (a)-[:ACTED_IN]->(_) 
+              RETURN _ 
+            }"""
         
     params = {"name": self.name, "uid": self.uid}
     batch = []

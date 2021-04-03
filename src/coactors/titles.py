@@ -30,10 +30,14 @@ class Title(Model):
        ON CREATE SET t += {title: $title, released: $released, title_type: $title_type} 
        SET t.children_known = True  
        WITH t 
-       UNWIND $batch as row 
-       MERGE (_:Actor {uid: row.uid}) 
-       ON CREATE SET _ += {name: row.name} 
-       MERGE (_)-[:ACTED_IN]->(t) """
+       CALL {
+        WITH t 
+        UNWIND $batch as row 
+        MERGE (_:Actor {uid: row.uid}) 
+        ON CREATE SET _ += {name: row.name} 
+        MERGE (_)-[:ACTED_IN]->(t) 
+        RETURN _ 
+       }"""
     params = {"title": self.title, "uid": self.uid, "released": self.released, "title_type":self.title_type}
     batch = []
 
