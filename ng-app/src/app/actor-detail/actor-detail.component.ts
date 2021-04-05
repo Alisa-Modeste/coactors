@@ -16,7 +16,9 @@ export class ActorDetailComponent implements OnInit, OnChanges {
   @Input() actor?: Actor;
   queryString:string = "";
   page:number = 1;
+  numPerPage:number = 25;
   searchTerm: string = "";
+  groupButton: string = "";
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +61,8 @@ export class ActorDetailComponent implements OnInit, OnChanges {
         }
 
         this.messageService.clear();
+
+        this.groupButton = actor.group_members.length > 0 ? "Make a Group With" : "Add to Group";
 
   });
 

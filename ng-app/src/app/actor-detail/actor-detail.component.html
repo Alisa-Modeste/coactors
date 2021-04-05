@@ -54,9 +54,9 @@
     Filter by name: <input id="coactors" [(ngModel)]="searchTerm">
   <ul class="actors">
 
-    <li *ngFor="let coactor of actor.coactors  | searchFilter: searchTerm | paginate: { itemsPerPage: 10, currentPage: page}">
+    <li *ngFor="let coactor of actor.coactors  | searchFilter: searchTerm | paginate: { itemsPerPage: numPerPage, currentPage: page}">
       <a [routerLink]="['/actor/' +coactor.uid]" [queryParams]="{ck: coactor.children_known}">
-        <span class="badge" *ngIf="coactor.children_known">Info known</span> {{coactor.name}}</a> <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">Add to group</a>
+        <span class="badge" *ngIf="coactor.children_known">Info known</span> {{coactor.name}}</a> <a class="group-button" routerLink="/actor/{{actor.uid}}" [queryParams]="{ca: queryString + coactor.uid}">{{groupButton}}</a>
       <!-- {{coactor}} -->
   </li>
   </ul>

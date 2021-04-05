@@ -38,3 +38,14 @@ a {
     display: flex;
     justify-content: flex-end;
 }
+
+.group-button {
+    border: 1px black solid;
+    margin: 10px;
+    padding: 3px
+}
+
+ul.actors > li {
+    margin: 10;
+    list-style: none;
+}
