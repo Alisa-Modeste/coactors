@@ -20,6 +20,9 @@ def after_request_func(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route('/',methods = ['GET'])
+def wake_up_server():
+   return {}
 
 @app.route('/create_actor',methods = ['GET'])#post
 def create_actor():

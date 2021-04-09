@@ -1,8 +1,10 @@
 import { query } from '@angular/animations';
 import { Component, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { SearchService } from './search.service';
+import { baseUrl } from './base-url';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,7 @@ import { SearchService } from './search.service';
 export class AppComponent {
   title = 'Have We Worked Together?';
   routeSegment = "";
+  homepage:string = baseUrl + "/";
 
   // // @ViewChild('hello', { static: false }) navbar!: ElementRef;
   @ViewChild('theNavbar') navbar!: ElementRef;
@@ -24,14 +27,19 @@ export class AppComponent {
     constructor(
       private renderer: Renderer2,
       private searchService: SearchService,
-      private router: Router
-      ) {
+      private router: Router,
+      private http: HttpClient
+    ) {
   
         // so components can be updated when a different param is used
         this.router.routeReuseStrategy.shouldReuseRoute = function () {
           return false;
         };
 
+  }
+
+  ngOnInit() {
+    this.http.get<any>(this.homepage);
   }
 
   ngAfterViewInit() {
