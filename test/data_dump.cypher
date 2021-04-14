@@ -1,4 +1,4 @@
-CREATE (sla:Actor {name:'Sanaa Lanthan', uid:"na1"})
+CREATE (sla:Actor {name:'Sanaa Lathan', uid:"na1"})
 CREATE (avp:Title {title: "Alien vs. Predator", released: '2004',uid:"mo1",title_type: "movie"})
 CREATE (lnb:Title {title: "Love & Basketball", released: "2000",uid:"mo2",title_type: "movie"})
 CREATE (sn:Title {title: "Something New", released: '2006',uid:'mo3',title_type: "movie"})

@@ -160,18 +160,13 @@ class Actor(Model):
   @classmethod
   def find_by_name(cls, query):
     q_parts = query.replace(',',' ').split()
-    params = {}
 
-    if len(q_parts) > 1:
-      
-      where_clause = """WHERE _.name =~ $name1
-       or _.name =~ $name2 """
-
-      params['name1'] = "(?i).*" + q_parts[0] + ".*" + q_parts[1] + ".*"
-      params['name2'] = "(?i).*" + q_parts[1] + ".*" + q_parts[0] + ".*"
-    else:
-      where_clause = "WHERE _.name =~ $name"
-      params['name'] = "(?i)" + query + ".*"
+    where_clause = "WHERE _.name =~ $name"
+    
+    # It’s insensitive. Looks for words/names in any order
+    # (?:(.*?)\\s|)x -- start searching at the beginning of a word
+    # (?=...) -- any order via the lookahead
+    params = {'name': "(?i)^(?=(?:(.*?)\\s|)" + ')(?=(?:(.*?)\\s|)'.join(q_parts) + ").*"}
 
     return cls.match(graph ).raw_query("MATCH (_:Actor) " + where_clause, params)
 

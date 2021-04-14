@@ -108,7 +108,11 @@ class Title(Model):
     q_parts = query.replace(',',' ').split()
  
     where_clause = "WHERE _.title =~ $title"
-    params = {'title': "(?i).*" + '.*'.join(q_parts) + ".*"} #"(?i)" + query + ".*"
+
+    # It’s insensitive. Looks for words in any order
+    # (?:(.*?)\\s|)x -- start searching at the beginning of a word
+    # (?=...) -- any order via the lookahead
+    params = {'title': "(?i)^(?=(?:(.*?)\\s|)" + ')(?=(?:(.*?)\\s|)'.join(q_parts) + ").*"} #"(?i)" + query + ".*"
 
     return cls.match(graph ).raw_query("MATCH (_:Title) " + where_clause, params)
 

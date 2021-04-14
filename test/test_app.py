@@ -56,28 +56,33 @@ def test_find_actor(fill_db):
     assert 0, "Alien vs. Predator not in actor's titles"
 
 def test_actor_text_search_exist_in_db(fill_db):
-    # coactors.app.request = MagicMock()
     with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
-    # coactors.app.request.args = MagicMock()
         mock.patch('coactors.app.request.args', MagicMock())
-    # coactors.app.request.args.get = MagicMock()
-    # coactors.app.request.args.get.side_effect =['s', None]
 
-    # with get_request_context():
-        # print(coactors.app.request.args.get('query'))
-    # with get_request_context():# and 
-    #     with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['s', None])):
-    #         response = app.actor_text_search()
         with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['s', None])):
             response = app.actor_text_search()
 
     assert "uid" in response['results'][0]
     assert "name" in response['results'][0]
-    assert ("Sanaa Lanthan" in response['results'][0]['name'] 
-        or "Simon Baker" in response['results'][0]['name'])
+    assert (response['results'][0]['name'] == "Sanaa Lathan"
+        or response['results'][0]['name'] == "Simon Baker")
 
     assert response['known'] == True
     assert response['query'] == 's'
+
+def test_actor_text_search_exist_in_db_any_order(fill_db):
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+
+        with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['lathan s', None])):
+            response = app.actor_text_search()
+
+    assert "uid" in response['results'][0]
+    assert "name" in response['results'][0]
+    assert response['results'][0]['name'] == "Sanaa Lathan"
+
+    assert response['known'] == True
+    assert response['query'] == 'lathan s'
 
 
 def test_actor_text_search_doesnt_exist_in_db():
@@ -128,9 +133,9 @@ def test_find_title(fill_db):
     assert title['released'] == "2006"
 
     for actor in title['cast']:
-        if "Sanaa Lanthan" == actor['name']:
+        if "Sanaa Lathan" == actor['name']:
             return
-    assert 0, "Sanaa Lanthan not in title's cast"
+    assert 0, "Sanaa Lathan not in title's cast"
 
 def test_tv_text_search_exist_in_db(fill_db):
     with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
@@ -160,6 +165,20 @@ def test_movie_text_search_exist_in_db(fill_db):
     assert response['known'] == True
     assert response['query'] == 'p'
 
+def test_movie_text_search_exist_in_db_any_order(fill_db):
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+
+        with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['predator alien', None])):
+            response = app.title_text_search()
+
+    assert response['results'][0]['uid'] == "mo1"
+    assert response['results'][0]['title'] == "Alien vs. Predator"
+    assert response['results'][0]['released'] == "2004"
+
+    assert response['known'] == True
+    assert response['query'] == 'predator alien'
+
 
 def test_title_text_search_doesnt_exist_in_db():
     with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
@@ -173,3 +192,28 @@ def test_title_text_search_doesnt_exist_in_db():
         assert response['known'] == False
         assert response['results'] == {}
 
+def test_parse_title_search_results():
+    with open("resources/littleMermaidQuery.txt") as file_object:
+        response = file_object.read()
+        parsed = coactors.app.parse_search_results(response, "titles")
+
+    assert "uid" in parsed[0]
+    assert "title" in parsed[0]
+    assert "released" in parsed[0]
+    assert "title_type" in parsed[0]
+
+    assert len(parsed) == 19
+    
+    for el in parsed:
+        if el['title'] == "The Little Mermaid II: Return to the Sea":
+            return
+    
+    assert 0, "The Little Mermaid II: Return to the Sea not in results"
+
+def test_get_titles(fill_db):
+
+    with get_request_context():
+        titles = app.get_titles()
+
+    titles = titles.json
+    assert len(titles) == 5
