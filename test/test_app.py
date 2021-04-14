@@ -57,9 +57,9 @@ def test_find_actor(fill_db):
 
 def test_actor_text_search_exist_in_db(fill_db):
     # coactors.app.request = MagicMock()
-    mock.patch('coactors.app.request', MagicMock())
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
     # coactors.app.request.args = MagicMock()
-    mock.patch('coactors.app.request.args', MagicMock())
+        mock.patch('coactors.app.request.args', MagicMock())
     # coactors.app.request.args.get = MagicMock()
     # coactors.app.request.args.get.side_effect =['s', None]
 
@@ -68,7 +68,7 @@ def test_actor_text_search_exist_in_db(fill_db):
     # with get_request_context():# and 
     #     with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['s', None])):
     #         response = app.actor_text_search()
-    with get_request_context(), mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['s', None])):
+        with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['s', None])):
             response = app.actor_text_search()
 
     assert "uid" in response['results'][0]
@@ -81,16 +81,16 @@ def test_actor_text_search_exist_in_db(fill_db):
 
 
 def test_actor_text_search_doesnt_exist_in_db():
-    coactors.app.request = MagicMock()
-    coactors.app.request.args = MagicMock()
-    # coactors.app.request.args.get = MagicMock(return_value = 's')
-    mock.patch('coactors.app.request.args.get', MagicMock(return_value = 's'))
-    # coactors.app.parse_search_results = MagicMock(return_value = {})
-    
-    with mock.patch('coactors.app.parse_search_results', MagicMock(return_value = {})):
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+        # coactors.app.request.args.get = MagicMock(return_value = 's')
+        mock.patch('coactors.app.request.args.get', MagicMock(return_value = 's'))
+        # coactors.app.parse_search_results = MagicMock(return_value = {})
+        
+        with mock.patch('coactors.app.parse_search_results', MagicMock(return_value = {})):
 
-        # print(coactors.app.request.args.get('query'))
-        response = app.actor_text_search()
+            # print(coactors.app.request.args.get('query'))
+            response = app.actor_text_search()
 
         assert response['known'] == False
         assert response['results'] == {}
@@ -131,3 +131,45 @@ def test_find_title(fill_db):
         if "Sanaa Lanthan" == actor['name']:
             return
     assert 0, "Sanaa Lanthan not in title's cast"
+
+def test_tv_text_search_exist_in_db(fill_db):
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+
+        with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['m', None])):
+            response = app.title_text_search()
+
+    assert response['results'][0]['uid'] == "tv1"
+    assert response['results'][0]['title'] == "The Mentalist"
+    assert response['results'][0]['released'] == "2008"
+
+    assert response['known'] == True
+    assert response['query'] == 'm'
+
+def test_movie_text_search_exist_in_db(fill_db):
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+
+        with mock.patch('coactors.app.request.args.get', MagicMock(side_effect =['p', None])):
+            response = app.title_text_search()
+
+    assert response['results'][0]['uid'] == "mo1"
+    assert response['results'][0]['title'] == "Alien vs. Predator"
+    assert response['results'][0]['released'] == "2004"
+
+    assert response['known'] == True
+    assert response['query'] == 'p'
+
+
+def test_title_text_search_doesnt_exist_in_db():
+    with get_request_context(), mock.patch('coactors.app.request', MagicMock()):
+        mock.patch('coactors.app.request.args', MagicMock())
+        mock.patch('coactors.app.request.args.get', MagicMock(return_value = 'p'))
+        
+        with mock.patch('coactors.app.parse_search_results', MagicMock(return_value = {})):
+
+            response = app.title_text_search()
+
+        assert response['known'] == False
+        assert response['results'] == {}
+

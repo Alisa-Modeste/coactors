@@ -32,3 +32,7 @@ CREATE (tha)-[:ACTED_IN]->(sn),
 CREATE (wsa:Actor {name:'Wesley Snipes', uid:"na11"})
 
 CREATE (wsa)-[:ACTED_IN]->(bl)
+
+CREATE (tm:Title {title: "The Mentalist", released: '2008',uid:"tv1",title_type: "tv"})
+
+CREATE (sba)-[:ACTED_IN]->(tm)
