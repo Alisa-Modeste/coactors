@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { Actor } from '../actor'
+import { HomeService } from '../home.service';
+import { Title } from '../title';
+import { HomeMulti } from '../home-multi';
+
 
 @Component({
   selector: 'app-home',
@@ -7,9 +13,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  @Input() actors?: Actor[];
+  @Input() titles?: Title[];
+  constructor(private homeService: HomeService) { }
 
   ngOnInit(): void {
+    this.getValues();
+  }
+
+  getValues(): void {
+
+    this.homeService.getValues()
+
+      .subscribe(results => {
+
+        this.titles = results.titles;
+        this.actors = results.actors;
+      
+      });
   }
 
 }

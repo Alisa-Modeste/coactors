@@ -272,6 +272,21 @@ def parse_search_results(response, search_type):
 
     return result
 
+@app.route('/multi', methods = ['GET'])
+def get_multi():
+    actors = Actor.get_all(10)
+        
+    actor_list = []
+    for actor in actors:
+        actor_list.append( actor.serialize() )
+
+    titles = Title.get_all(10)
+
+    title_list = []
+    for title in titles:
+        title_list.append( title.serialize() )
+
+    return {'titles': title_list, "actors": actor_list}
 
 if  __name__ == '__main__':
     app.run()
