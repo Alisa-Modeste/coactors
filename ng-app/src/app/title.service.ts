@@ -72,14 +72,14 @@ export class TitleService {
       .subscribe(response => {
 
         if(response == "0"){
-          this.messageService.add("This title's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
+          this.messageService.add("This title's relationships were not in the database. Please wait monetarily while it gets updated.");
         }
   });
 }
 
   newTitleNotifyDelay(): void {
     
-    this.messageService.add("This title's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
+    this.messageService.add("This title's relationships were not in the database. Please wait monetarily while it gets updated.");
      
   }
 }

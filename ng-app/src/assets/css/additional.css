@@ -16,8 +16,8 @@ a {
 }
 
 .navbar-inverse {
-    background-color: #d3d1d1;
-    border-color: #d3d1d1;
+    background-color: #d18686;
+    border-color: #ce6868;
     color: #000;
 }
 
@@ -26,7 +26,7 @@ a {
 }
 
 .navbar-inverse .navbar-nav>li>a {
-    color: #645f5f;
+    color: #000;
 }
 
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
@@ -48,4 +48,55 @@ a {
 ul.actors > li {
     margin: 10;
     list-style: none;
+}
+
+body{
+    font-family: futura-pt,sans-serif;
+    letter-spacing: .9px;
+    font-weight: 400;
+    line-height: 1.8;
+}
+
+
+@media (max-width:1024px){
+    .elementor-row{
+        flex-wrap:wrap
+    }
+}
+@media (min-width:768px){
+    .elementor-column{
+        width:50%
+    }
+}
+@media (max-width: 767px){
+    .elementor-column {
+        width: 100%;
+    }
+}
+
+.elementor-widget-wrap{
+    position:relative;
+    width:100%;
+    flex-wrap:wrap;
+    align-content:flex-start
+}
+
+.elementor-widget-container {
+    padding: 10px 10px 10px 10px;
+    border-style: solid;
+    border-width: 2px 2px 2px 2px;
+    border-radius: 8px 8px 8px 8px;
+}
+
+.elementor-column-wrap {
+    padding: 10px;
+} 
+
+.elementor-row {
+    width: 100%;
+    display: flex;
+}
+
+h4 {
+    text-align: center;
 }

@@ -1,1 +1,50 @@
-<p>home works!</p>
+<div style="margin: auto;text-align: center;margin-top: 10px;"><img src="/assets/images/6834290450_d6e74881b4_b.jpg" style="height: 300px; width: 1004px; border-radius: 10px; margin: auto;"/></div>
+<h1>Yes, in five movies and share 96 coactors.</h1>
+<div>Welcome to the page to explore actors’ relationships to each other. Have you ever noticed some actors keep showing up together in the same movie? I was curious about how often that happened and created this app.</div>
+
+
+<div>Please note this is a DEMO app. If an actor’s or title’s info is not already in database, it may take a few moments to get the data. Those whose data is known have been helpfully tagged with <span class="badge">Info known</span>. The others will be imported.</div>
+
+
+<div class="elementor-row">
+    <div class="elementor-column">
+        <div class="elementor-column-wrap">
+            <div class="elementor-widget-wrap">
+                <div>
+                    <div class="elementor-widget-container">
+                        <div>
+                            <h4>Actors</h4>
+                            <ul>
+                                <li *ngFor="let actor of actors">
+                                    <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ck: actor.children_known}">
+                                      <span class="badge" *ngIf="actor.children_known">Info known</span>  {{actor.name}}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="elementor-column">
+        <div class="elementor-column-wrap">
+            <div class="elementor-widget-wrap">
+                <div>
+                    <div class="elementor-widget-container">
+                        <div>
+                            <h4>Titles</h4>
+                            <ul>
+                                <li *ngFor="let title of titles">
+                                    <a routerLink="/title/{{title.uid}}" [queryParams]="{ck: title.children_known}">
+                                        <span class="badge" *ngIf="title.children_known">Info known</span> {{title.title}} ({{title.released}})
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
