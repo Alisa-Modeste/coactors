@@ -1,7 +1,8 @@
 
 <h2>The Titles</h2>
 
-                <div class="barred" style="border-left: 30px solid #ccc;">
+                <!-- <div class="barred" style="border-left: 30px solid #ccc;"> -->
+                    <ul class="titles">
 
 
                     <li *ngFor="let title of titles">
@@ -10,5 +11,7 @@
                             <span class="badge" *ngIf="title.children_known">Info known</span> {{title.title}} ({{title.released}})
                         </a>
                     </li>
-                </div>
+</ul>
+
+                <!-- </div> -->
  

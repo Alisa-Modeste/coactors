@@ -15,7 +15,7 @@ export class ActorService {
   // private actorUrl = '/actor';
   private actorsUrl = baseUrl +'/actors';
   private actorUrl = baseUrl + '/actor';
-  private actorChildrenUrl = baseUrl + '/actor_children_known';
+  private actorChildrenUrl = baseUrl + '/actor_children_known'; //here:
   private newActorUrl = baseUrl + '/create_actor';
 
   constructor(private http: HttpClient,
@@ -88,7 +88,7 @@ export class ActorService {
 
   newActorNotifyDelay(): void {
     
-    this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated. Thank you");
+    this.messageService.add("This actor's relationships were not in the database. Please wait monetarily while it gets updated.");
      
   }
 }

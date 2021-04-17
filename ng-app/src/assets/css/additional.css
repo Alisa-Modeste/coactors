@@ -45,7 +45,7 @@ a {
     padding: 3px
 }
 
-ul.actors > li {
+ul.actors, ul.titles > li {
     margin: 10;
     list-style: none;
 }

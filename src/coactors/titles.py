@@ -129,7 +129,7 @@ class Title(Model):
     def get_all(cls, skip=0, limit=100):
         #here: created_date or alpha
         return cls.match(graph ).raw_query(
-        "CALL { MATCH (_:Title) return _ skip $skip limit $limit } ", {"skip": skip, "limit": limit}
+        "CALL { MATCH (_:Title) RETURN _ ORDER BY _.children_known skip $skip limit $limit } ", {"skip": skip, "limit": limit}
         ) 
 
     def serialize(self):
