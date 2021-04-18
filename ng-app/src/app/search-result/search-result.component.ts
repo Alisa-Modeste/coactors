@@ -15,7 +15,7 @@ export class SearchResultComponent implements OnInit {
   @Input() titles?: Title[];
   @Input() known?: boolean;
   @Input() query?: string;
-  // @Input() ?: Actor;
+
   constructor(
     private route: ActivatedRoute,
     private searchService: SearchService,
@@ -43,17 +43,11 @@ export class SearchResultComponent implements OnInit {
   getActors(): void {
     let query = this.route.snapshot.queryParams['query']
     let more = this.route.snapshot.queryParams['more']
-    // let type = this.route.snapshot.queryParams['type']
 
     this.searchService.getActors(query, more)
-      // .subscribe(actor => this.actor = actor);
       .subscribe(results => {
-        console.log('the results are...')
-        console.log(results)
-        // this.actors = actors
+
         this.actors = results.results;
-        console.log("this actors")
-        console.log(this.actors)
         this.known = results.known;
         this.query = query;
       
@@ -63,17 +57,11 @@ export class SearchResultComponent implements OnInit {
   getTitles(): void {
     let query = this.route.snapshot.queryParams['query']
     let more = this.route.snapshot.queryParams['more']
-    // let type = this.route.snapshot.queryParams['type']
 
     this.searchService.getTitles(query, more)
-      // .subscribe(actor => this.actor = actor);
       .subscribe(results => {
-        console.log('the results are...')
-        console.log(results)
-        // this.actors = actors
+
         this.titles = results.results;
-        console.log("this actors")
-        console.log(this.titles)
         this.known = results.known;
         this.query = query;
       

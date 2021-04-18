@@ -16,14 +16,11 @@ export class AppComponent {
   routeSegment = "";
   homepage:string = baseUrl + "/";
 
-  // // @ViewChild('hello', { static: false }) navbar!: ElementRef;
   @ViewChild('theNavbar') navbar!: ElementRef;
   @ViewChild('navbarOffset') navbarOffset!: ElementRef;
   @ViewChild('searchTerm') searchTerm!: HTMLInputElement;
   
 
-  // // constructor(private el: ElementRef) {
-  // constructor(private navbarOffset: ElementRef, private navbar: ElementRef, private renderer: Renderer2) {
     constructor(
       private renderer: Renderer2,
       private searchService: SearchService,
@@ -38,9 +35,7 @@ export class AppComponent {
 
   }
 
-  ngOnInit() {
-    this.http.get<any>(this.homepage);
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
 
@@ -65,15 +60,9 @@ export class AppComponent {
   }
 
     getActors(searchTerm: string) {
-      // this.searchService.getActors()
-      //   .subscribe(actors => this.actors = actors);
-
-        // this.router.navigateByUrl('/actor_search');
 
         this.router.navigateByUrl(
           this.router.createUrlTree(
-            // ['actor_search'], {queryParams: {"query": "sana"}}
-            // ['search'], {queryParams: {"query": "sana", "type": "actor"}}
 
             ['search'], {queryParams: {"query": searchTerm, "type": "actor"}}
           )
@@ -83,8 +72,6 @@ export class AppComponent {
     getTitles(searchTerm: string) {
       this.router.navigateByUrl(
         this.router.createUrlTree(
-          // ['actor_search'], {queryParams: {"query": "sana"}}
-          // ['search'], {queryParams: {"query": "sana", "type": "actor"}}
 
           ['search'], {queryParams: {"query": searchTerm, "type": "title"}}
         )

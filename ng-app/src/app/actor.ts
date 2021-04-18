@@ -1,7 +1,6 @@
 export interface Actor {
     uid: string;
     name: string;
-    // titles: Array<Object>;
     titles: Array<titles>;
     coactors: Array<coactors>;
     group_members: Array<group_members>;

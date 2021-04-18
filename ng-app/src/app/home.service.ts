@@ -14,12 +14,7 @@ import { baseUrl } from './base-url';
 export class HomeService {
   private valuesUrl = baseUrl +'/multi';
 
-
   constructor(private http: HttpClient) { }
-
-  // getActors(): Actor[] {
-  //   return ACTORS;
-  // }
 
   getValues() {
     

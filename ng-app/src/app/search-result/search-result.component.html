@@ -1,6 +1,5 @@
 <div *ngIf="actors">
     <div *ngFor="let actor of actors">
-        <!-- <a routerLink="/actor/{{actor.uid}}"> -->
         <a routerLink="/actor/{{actor.uid}}" [queryParams]="{k: known, ck: actor.children_known}">
             <span class="badge" *ngIf="actor.children_known">Info known</span> {{actor.name}}
         </a>

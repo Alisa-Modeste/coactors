@@ -10,9 +10,7 @@ import { TitlesComponent } from './titles/titles.component';
 
 const routes: Routes = [
   { path: 'actors', component: ActorsComponent },
-  // { path: '/', component: HomeComponent },
   { path: '', component: HomeComponent },
-  // { path: '', redirectTo: '/', pathMatch: 'full' }
   { path: 'actor/:uid', component: ActorDetailComponent },
   { path: 'search', component: SearchResultComponent },
   { path: 'titles', component: TitlesComponent },

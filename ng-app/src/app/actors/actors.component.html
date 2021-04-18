@@ -1,25 +1,8 @@
 <h2>The Actors</h2>
 <ul class="actors">
-  <!-- <li *ngFor="let actor of actors"  (click)="onSelect(actor)"> -->
-    <!-- <li *ngFor="let actor of actors"
-        [class.selected]="actor === selectedActor"
-        (click)="onSelect(actor)"> -->
         <li *ngFor="let actor of actors">
           <a routerLink="/actor/{{actor.uid}}" [queryParams]="{ck: actor.children_known}">
             <span class="badge" *ngIf="actor.children_known">Info known</span>  {{actor.name}}
           </a>
   </li>
 </ul>
-
-<!-- <div *ngIf="selectedActor">
-    <h2>{{selectedActor.name | uppercase}} Details</h2>
-    <div><span>id: </span>{{selectedActor.uid}}</div>
-    <div>
-    <label>name:
-        <!-- <input model="selectedActor.name" placeholder="name"/> -- >
-        <input [(ngModel)]="selectedActor.name" placeholder="name"/>
-    </label>
-    </div>
-    
-    <app-actor-detail [actor]="selectedActor"></app-actor-detail>
-</div> -->

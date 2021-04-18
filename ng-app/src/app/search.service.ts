@@ -17,7 +17,6 @@ export class SearchService {
 
   getActors(query: string, more:string = "") {
     let url = this.actorsUrl + `?query=${query}&type=actor&more=${more}`
-    // return this.http.get<Actor[]>(url)
     return this.http.get<SearchResult>(url)
   }
 
@@ -28,4 +27,4 @@ export class SearchService {
     
   }
 
-  }
+}

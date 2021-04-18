@@ -3,7 +3,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Actor } from '../actor'
 import { HomeService } from '../home.service';
 import { Title } from '../title';
-import { HomeMulti } from '../home-multi';
 
 
 @Component({

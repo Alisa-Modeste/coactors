@@ -6,14 +6,8 @@
       <div class="col-lg-12">
           <h1 class="page-header">{{title.title}} 
             <span *ngIf="title.released"> ({{title.released}})</span></h1>
-    <!-- <div><span>id: </span>{{actor.uid}}</div>
-    <div>
-      <label>name:
-        <input [(ngModel)]="actor.name" placeholder="name"/>
-      </label>
-    </div> -->
 
- <!-- <small>Subheading</small> -->
+            
 <ol class="breadcrumb">
     <li><a href="/">Home</a>
     </li>
@@ -23,36 +17,20 @@
 </div>
 <!-- /.row -->
 
-<!-- </div>
-  <a routerLink="/actor/na5411">
-    <span class="badge">na5411</span> Sanaa Lathan
-  </a> <div style="display: inline-block;border: 1px solid black; "><a style="text-decoration: none;" routerLink="/actor/na5411">
-    Make group with
-  </a> </div>
-
-<a [routerLink]="['/actor/na5411']" [queryParams]="{ca: 'na52139'}">Add to group</a> -->
-
-<!-- <div *ngIf="actor"> -->
-
         <!-- Projects Row -->
         <div class="row">
-            <!-- <div class="col-md-6 img-portfolio"> -->
             <div class="img-portfolio">
               <a href="portfolio-item.html">
-                  <!-- <img class="img-responsive img-hover" src="https://placehold.it/700x400" alt=""> -->
               </a>
               
               <h3>
-                  <!-- <a href="portfolio-item.html">Co-actors</a> -->
                   Cast
               </h3>
-  <!-- <ul class="actors" style="float: left;"> -->
   <ul class="actors">
 
     <li *ngFor="let actor of title.cast">
       <a [routerLink]="['/actor/' +actor.uid]" [queryParams]="{ck: actor.children_known}">
         <span class="badge" *ngIf="actor.children_known">Info known</span> {{actor.name}}</a>
-      <!-- {{coactor}} -->
   </li>
   </ul>
   </div>
@@ -62,6 +40,3 @@
 
 
 <!-- /.row -->
-
-
-<!-- <div class="removeable" style="clear: left;">here:</div> -->
