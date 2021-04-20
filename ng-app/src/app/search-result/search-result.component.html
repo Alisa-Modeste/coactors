@@ -10,7 +10,7 @@
 <div *ngIf="titles">
     <div *ngFor="let title of titles">
         <a routerLink="/title/{{title.uid}}" [queryParams]="{k: known, title_type: title.title_type, ck: title.children_known}">
-            <span class="badge" *ngIf="title.children_known">Info known</span> {{title.title}}
+            <span class="badge" *ngIf="title.children_known">Info known</span> {{title.title}} <span *ngIf="title.released"> ({{title.released}})</span>.
         </a>
     </div>
     <div *ngIf="known">Title not shown? <a routerLink="/search" [queryParams]="{query: query, more:1, type: 'title'}">Search external database</a></div>

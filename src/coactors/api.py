@@ -13,7 +13,13 @@ class API:
         
         querystring['api_key']= api_key
 
-        response = requests.request("GET", url, params=querystring)
+        try:
+            response = requests.request("GET", url, params=querystring)
+        except:
+            import time
+            print("API failed")
+            time.sleep(10)
+            response = requests.request("GET", url, params=querystring)
     
         return response.text
 
@@ -43,8 +49,6 @@ class API:
         try:
             return os.environ[key]
         except KeyError:
-            print("getting the secret - print")
-
             secret = API.get_secret_helper("508429297891", key, version)
             os.environ[key] = secret
             return secret
