@@ -56,20 +56,32 @@ body{
     font-weight: 400;
     line-height: 1.8;
 }
-
+#homepage-banner {
+    height: 300px; 
+    border-radius: 10px; 
+    margin: auto;
+}
 
 @media (max-width:1024px){
     .elementor-row{
         flex-wrap:wrap
     }
 }
+
 @media (min-width:768px){
     .elementor-column{
         width:50%
     }
+    #homepage-banner {
+        width: 90%;
+    }
 }
+
 @media (max-width: 767px){
     .elementor-column {
+        width: 100%;
+    }
+    #homepage-banner {
         width: 100%;
     }
 }
